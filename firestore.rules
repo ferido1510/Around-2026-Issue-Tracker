@@ -1,0 +1,54 @@
+rules_version = '2';
+
+// Paste this into Firebase console → Firestore Database → Rules → Publish.
+// Replace the seven emails with your team's Google account emails (lowercase).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isTeam() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() in [
+          'teammate1@gmail.com',
+          'teammate2@gmail.com',
+          'teammate3@gmail.com',
+          'teammate4@gmail.com',
+          'teammate5@gmail.com',
+          'teammate6@gmail.com',
+          'teammate7@gmail.com'
+        ];
+    }
+
+    // One document per task, ID = task ID (e.g. "E3.2"). No document = nobody took it.
+    match /tasks/{taskId} {
+      allow read: if isTeam();
+
+      // Take a free task: it must be recorded as yours.
+      allow create: if isTeam()
+        && request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'startedAt'])
+        && request.resource.data.status == 'in-progress'
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.startedAt == request.time;
+
+      // Mark your own in-progress task done. Nothing else may change.
+      allow update: if isTeam()
+        && resource.data.status == 'in-progress'
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'done'
+        && request.resource.data.doneAt == request.time
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'doneAt']);
+
+      // Release your own task, or reopen any done task.
+      allow delete: if isTeam()
+        && (resource.data.uid == request.auth.uid || resource.data.status == 'done');
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
