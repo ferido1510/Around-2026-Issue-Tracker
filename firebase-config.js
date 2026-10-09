@@ -6,10 +6,10 @@
 // While apiKey still starts with "PASTE", the page runs in demo mode: no sign-in,
 // and the board state lives only in this browser.
 export const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:0000000000000000",
+  apiKey: "AIzaSyDBgVE9mKgJITykCSa6IYZq9TulglRlRo8",
+  authDomain: "around-tracker.firebaseapp.com",
+  projectId: "around-tracker",
+  storageBucket: "around-tracker.firebasestorage.app",
+  messagingSenderId: "79602523181",
+  appId: "1:79602523181:web:a27a88737ffedeed0daca4",
 };
