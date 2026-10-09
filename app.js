@@ -515,11 +515,6 @@ function wire() {
   for (const g of [$("goalMust"), $("goalAll"), $("replayVictory"), $("replayUltra")]) {
     g.onclick = () => celebrate(g.dataset.level);
   }
-
-  // Legends start collapsed on small screens so they don't cover the board.
-  if (window.matchMedia("(max-width: 900px)").matches) {
-    document.querySelectorAll(".legend details").forEach((d) => { d.open = false; });
-  }
 }
 
 async function main() {

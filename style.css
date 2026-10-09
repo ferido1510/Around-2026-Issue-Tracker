@@ -489,7 +489,7 @@ code { font: 0.9em var(--mono); background: var(--surface-2); padding: 1px 5px; 
 
 /* ============ board ============ */
 
-main { padding: 16px 28px 380px; /* room so the fixed legends never hide the last rows */ }
+main { padding: 16px 28px 90px; /* room so the collapsed legends never hide the last row */ }
 
 .board-wrap { position: relative; overflow-x: auto; padding: 6px 4px; }
 .board-wrap.locked .board { opacity: 0.22; pointer-events: none; filter: grayscale(0.7) blur(1px); }
@@ -784,6 +784,8 @@ tr.complete .rcount::after { content: " 🎉"; }
 }
 .legend-left { left: 16px; width: 470px; max-width: calc(50vw - 24px); }
 .legend-right { right: 16px; width: 300px; }
+.legend:not(:has(details[open])) { width: auto; border-radius: 999px; }
+.legend:not(:has(details[open])) summary { padding: 8px 16px; }
 .legend summary {
   cursor: pointer;
   padding: 10px 16px;
