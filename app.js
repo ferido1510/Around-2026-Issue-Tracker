@@ -1,6 +1,7 @@
 import { PLAN } from "./data.js";
 import { firebaseConfig } from "./firebase-config.js";
 import { createDemoStore, createFirebaseStore } from "./store.js";
+import { burst, celebrate } from "./celebrate.js";
 
 const DEMO = !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("PASTE");
 
@@ -25,6 +26,12 @@ let unsubscribe = null;
 let tipFor = null;          // task ID the tooltip shows
 let tipPinned = false;
 let lastPointer = "mouse";
+let prevStatus = new Map();  // for the pop animation when a box changes colour
+let prevLevel = null;       // celebration level at the last render (null = no live data yet)
+
+const ALL_IDS = Object.keys(PLAN.tasks);
+const MUST_IDS = ALL_IDS.filter((id) => PLAN.tasks[id].prio !== "stretch");
+const LEVELS = ["none", "victory", "ultra"];
 
 const isDone = (id) => state.get(id)?.status === "done";
 
@@ -48,17 +55,17 @@ const STATUS_LABEL = { blocked: "Blocked", free: "Free", progress: "In progress"
 function buildBoard() {
   const cols = Math.max(...PLAN.rows.map((r) => r.children.length));
   let html = `<thead><tr><th class="corner" scope="col"><span>Issue</span><span>Sub-issue →</span></th>`;
-  for (let i = 1; i <= cols; i++) html += `<th scope="col" class="colhead">${i}</th>`;
+  for (let i = 1; i <= cols; i++) html += `<th scope="col" class="colhead"><span>${i}</span></th>`;
   html += `</tr></thead><tbody>`;
+  let n = 0;
   for (const row of PLAN.rows) {
-    html += `<tr><th scope="row" class="rowhead${row.prio === "stretch" ? " stretch" : ""}">
-      <span class="rid">${esc(row.id)}</span>
-      <span class="rtitle">${esc(row.title)}</span>
-      <span class="rprog" data-row="${esc(row.id)}"></span></th>`;
+    html += `<tr data-row="${esc(row.id)}"><th scope="row" class="rowhead${row.prio === "stretch" ? " stretch" : ""}">
+      <span class="rtop"><span class="rid">${esc(row.id)}</span><span class="rtitle">${esc(row.title)}</span></span>
+      <span class="rprog"><span class="rbar"><i></i></span><span class="rcount"></span></span></th>`;
     for (let i = 0; i < cols; i++) {
       const id = row.children[i];
       html += id
-        ? `<td><button type="button" class="box" data-id="${esc(id)}" aria-describedby="tip"></button></td>`
+        ? `<td><button type="button" class="box" data-id="${esc(id)}" style="--i:${n++}" aria-describedby="tip"></button></td>`
         : `<td class="empty"></td>`;
     }
     html += `</tr>`;
@@ -79,23 +86,96 @@ function renderBoard() {
       (mine && status === "progress" ? " mine" : "") +
       (status === "progress" && unmet.length ? " stale" : "") +
       (t.prio === "stretch" ? " stretch" : "");
+    if (live && prevStatus.has(id) && prevStatus.get(id) !== status) {
+      btn.classList.add("pop");
+      btn.addEventListener("animationend", () => btn.classList.remove("pop"), { once: true });
+    }
+    if (live) prevStatus.set(id, status);
     btn.innerHTML = `<span class="bid">${esc(id)}</span>` +
       (status === "progress" ? `<span class="who">${esc(mine ? "you" : rec.name)}</span>` : "") +
       (blocking ? `<span class="warn" aria-hidden="true"></span>` : "");
     btn.setAttribute("aria-label", `${id}: ${t.title}. ${STATUS_LABEL[status]}` +
       (status === "progress" ? `, ${rec.name}` : "") + (blocking ? ", other tasks wait on it" : ""));
   }
-  for (const el of document.querySelectorAll(".rprog")) {
-    const row = PLAN.rows.find((r) => r.id === el.dataset.row);
+  for (const tr of document.querySelectorAll(".board tbody tr")) {
+    const row = PLAN.rows.find((r) => r.id === tr.dataset.row);
     const done = row.children.filter(isDone).length;
-    el.textContent = `${done}/${row.children.length} done`;
-    el.classList.toggle("all", done === row.children.length);
+    tr.querySelector(".rbar i").style.width = `${(100 * done) / row.children.length}%`;
+    tr.querySelector(".rcount").textContent = `${done}/${row.children.length}`;
+    tr.classList.toggle("complete", live && done === row.children.length);
   }
-  $("counts").innerHTML = live
-    ? `<span class="c s-blocked"></span>${counts.blocked} blocked · <span class="c s-free"></span>${counts.free} free · ` +
-      `<span class="c s-progress"></span>${counts.progress} in progress · <span class="c s-done"></span>${counts.done} done`
-    : "";
+  renderProgress(counts);
   if (tipFor) renderTip();
+}
+
+// ---------- progress and celebrations ----------
+
+function renderProgress(counts) {
+  const total = ALL_IDS.length;
+  const pct = live ? Math.round((100 * counts.done) / total) : 0;
+  $("pct").textContent = live ? pct : "–";
+  $("barDone").style.width = `${live ? (100 * counts.done) / total : 0}%`;
+  $("barProg").style.left = `${live ? (100 * counts.done) / total : 0}%`;
+  $("barProg").style.width = `${live ? (100 * counts.progress) / total : 0}%`;
+  $("bar").setAttribute("aria-valuenow", String(pct));
+  $("bar").classList.toggle("full", live && counts.done === total);
+  $("progressMeta").textContent = live
+    ? `${counts.done} of ${total} tasks done${counts.progress ? ` · ${counts.progress} in progress` : ""}`
+    : "Sign in to see progress";
+
+  const mustDone = MUST_IDS.filter(isDone).length;
+  $("goalMustCount").textContent = `${live ? mustDone : 0}/${MUST_IDS.length}`;
+  $("goalAllCount").textContent = `${live ? counts.done : 0}/${total}`;
+  const level = !live ? 0 : counts.done === total ? 2 : mustDone === MUST_IDS.length ? 1 : 0;
+  $("goalMust").disabled = level < 1;
+  $("goalAll").disabled = level < 2;
+  $("goalMust").classList.toggle("won", level >= 1);
+  $("goalAll").classList.toggle("won", level >= 2);
+  $("goalMust").title = level >= 1 ? "Play the victory again" : "Finish every must-have task";
+  $("goalAll").title = level >= 2 ? "Play the ultra victory again" : "Finish every task, stretch included";
+
+  for (const [k, n] of Object.entries({ Blocked: counts.blocked, Free: counts.free, Progress: counts.progress, Done: counts.done })) {
+    $(`n${k}`).textContent = live ? n : "–";
+  }
+
+  if (live) checkVictory(level);
+}
+
+// Plays when the board reaches a new level while you watch, or on load if this
+// browser hasn't seen that level yet. Reopening a task lowers the level, so
+// finishing again celebrates again.
+function checkVictory(level) {
+  let seen = 0;
+  try { seen = Number(localStorage.getItem("tracker-celebrated")) || 0; } catch { /* ignore */ }
+  const reached = prevLevel === null ? level > seen : level > prevLevel;
+  if (reached && level > 0) celebrate(LEVELS[level]);
+  prevLevel = level;
+  try { localStorage.setItem("tracker-celebrated", String(level)); } catch { /* ignore */ }
+}
+
+// ---------- theme ----------
+
+const THEMES = ["auto", "light", "dark"];
+const THEME_ICON = { auto: "🌗", light: "☀️", dark: "🌙" };
+
+function applyTheme(t) {
+  if (t === "auto") delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = t;
+  const btn = $("themeBtn");
+  btn.textContent = THEME_ICON[t];
+  btn.setAttribute("aria-label", `Theme: ${t}. Click to change`);
+  btn.title = `Theme: ${t}`;
+}
+
+function currentTheme() {
+  const t = document.documentElement.dataset.theme;
+  return t === "light" || t === "dark" ? t : "auto";
+}
+
+function cycleTheme() {
+  const next = THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length];
+  applyTheme(next);
+  try { localStorage.setItem("tracker-theme", next); } catch { /* ignore */ }
 }
 
 // ---------- tooltip ----------
@@ -165,6 +245,7 @@ function renderTip() {
   const tip = $("tip");
   tip.innerHTML = html;
   tip.classList.toggle("pinned", tipPinned);
+  tip.dataset.status = status;
 }
 
 function actionsHtml(id, status, rec) {
@@ -227,7 +308,15 @@ async function run(act, id) {
     if (act === "close") return hideTip();
     if (!live || !user) return toast("Sign in first", true);
     if (act === "claim") { await store.claim(id, user); toast(`${id} is yours`); }
-    if (act === "finish") { await store.finish(id, user); toast(`${id} done`); }
+    if (act === "finish") {
+      await store.finish(id, user);
+      const box = document.querySelector(`.box[data-id="${CSS.escape(id)}"]`);
+      if (box) {
+        const r = box.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2);
+      }
+      toast(`${id} done 🎉`);
+    }
     if (act === "release") { await store.release(id, user); toast(`${id} released`); }
     if (act === "reopen") {
       if (!confirm(`Reopen ${id}? Tasks that depend on it turn red again.`)) return;
@@ -259,7 +348,7 @@ function renderAccount() {
   if (store.mode === "demo") {
     el.innerHTML = `<span class="pill">Demo mode: Firebase not configured, changes stay in this browser</span>`;
   } else if (user) {
-    el.innerHTML = `<span class="me">${esc(user.name)}</span><span class="email">${esc(user.email)}</span>
+    el.innerHTML = `<span class="me" data-initial="${esc((user.name || "?")[0].toUpperCase())}">${esc(user.name)}</span><span class="email">${esc(user.email)}</span>
       <button type="button" class="btn ghost" id="signOut">Sign out</button>`;
     $("signOut").onclick = () => store.signOut();
   } else {
@@ -280,6 +369,8 @@ function onUser(u) {
   unsubscribe = null;
   state = new Map();
   live = false;
+  prevStatus = new Map();
+  prevLevel = null;
   renderAccount();
   setBanner("");
   $("gate").hidden = !!u;
@@ -331,6 +422,9 @@ function wire() {
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
   window.addEventListener("scroll", () => { if (!tipPinned) hideTip(); }, true);
   $("gateSignIn").onclick = signIn;
+  $("themeBtn").onclick = cycleTheme;
+  applyTheme(currentTheme());
+  for (const g of [$("goalMust"), $("goalAll")]) g.onclick = () => celebrate(g.dataset.level);
 
   // Legends start collapsed on small screens so they don't cover the board.
   if (window.matchMedia("(max-width: 900px)").matches) {

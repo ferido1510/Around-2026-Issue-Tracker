@@ -4,25 +4,80 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Around Sprint 2 Tracker</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6' height='6' rx='1' fill='%23c53b3b'/%3E%3Crect x='9' y='1' width='6' height='6' rx='1' fill='%232f9a5a'/%3E%3Crect x='1' y='9' width='6' height='6' rx='1' fill='%23b8860b'/%3E%3Crect x='9' y='9' width='6' height='6' rx='1' fill='%238f969e'/%3E%3C/svg%3E">
+  <script>
+    // Apply the saved theme before first paint so there is no flash.
+    try { const t = localStorage.getItem("tracker-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+  </script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6' height='6' rx='1.6' fill='%23ef4f5a'/%3E%3Crect x='9' y='1' width='6' height='6' rx='1.6' fill='%2330b86e'/%3E%3Crect x='1' y='9' width='6' height='6' rx='1.6' fill='%23cf9508'/%3E%3Crect x='9' y='9' width='6' height='6' rx='1.6' fill='%23a3a9b3'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@500;700;800&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="backdrop" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span><span class="blob b4"></span>
+  </div>
+
   <header class="topbar">
     <div class="brand">
-      <h1>Around · Sprint 2</h1>
-      <p class="counts" id="counts" aria-live="polite"></p>
+      <div class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div>
+        <h1>Around <span class="sprint">Sprint 2</span></h1>
+        <p class="tagline">Grab a green box, turn it grey, unblock your friends.</p>
+      </div>
     </div>
-    <div class="account" id="account"></div>
+    <div class="top-actions">
+      <div class="account" id="account"></div>
+      <button type="button" class="icon-btn" id="themeBtn" aria-label="Theme"></button>
+    </div>
   </header>
 
   <div class="banner" id="banner" hidden></div>
 
+  <section class="hero" aria-label="Sprint progress">
+    <div class="progress-card card">
+      <div class="progress-head">
+        <div class="pct-wrap">
+          <span class="pct" id="pct">0</span><span class="pct-sign">%</span>
+        </div>
+        <div class="progress-text">
+          <div class="progress-label">Sprint progress</div>
+          <div class="progress-meta" id="progressMeta">Loading…</div>
+        </div>
+        <div class="goals">
+          <button type="button" class="goal" id="goalMust" data-level="victory" disabled>
+            <span class="goal-icon" aria-hidden="true">🏆</span>
+            <span><span class="goal-name">Must-haves</span><b id="goalMustCount">0/0</b></span>
+          </button>
+          <button type="button" class="goal" id="goalAll" data-level="ultra" disabled>
+            <span class="goal-icon" aria-hidden="true">👑</span>
+            <span><span class="goal-name">Everything</span><b id="goalAllCount">0/0</b></span>
+          </button>
+        </div>
+      </div>
+      <div class="bar" id="bar" role="progressbar" aria-label="Tasks done" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="bar-fill" id="barDone"></div>
+        <div class="bar-prog" id="barProg"></div>
+        <span class="tick" style="left:25%"></span><span class="tick" style="left:50%"></span><span class="tick" style="left:75%"></span>
+      </div>
+      <div class="bar-scale" aria-hidden="true"><span>0%</span><span>25</span><span>50</span><span>75</span><span>100%</span></div>
+    </div>
+
+    <ul class="stats" id="stats" aria-live="polite">
+      <li class="stat st-blocked"><span class="stat-dot"></span><b id="nBlocked">–</b><span>blocked</span></li>
+      <li class="stat st-free"><span class="stat-dot"></span><b id="nFree">–</b><span>free</span></li>
+      <li class="stat st-progress"><span class="stat-dot"></span><b id="nProgress">–</b><span>in progress</span></li>
+      <li class="stat st-done"><span class="stat-dot"></span><b id="nDone">–</b><span>done</span></li>
+    </ul>
+  </section>
+
   <main>
-    <div class="board-wrap" id="boardWrap">
+    <div class="board-wrap card" id="boardWrap">
       <table class="board" id="board" aria-label="Tasks by issue (rows) and sub-issue (columns)"></table>
       <div class="gate" id="gate" hidden>
-        <div class="gate-card">
+        <div class="gate-card card">
+          <div class="gate-emoji" aria-hidden="true">🔐</div>
           <h2>Sign in to see the live board</h2>
           <p>Only the seven people on the team list can read or claim tasks.</p>
           <button class="btn primary" id="gateSignIn" type="button">Sign in with Google</button>
@@ -31,7 +86,7 @@
     </div>
   </main>
 
-  <aside class="legend legend-left" aria-label="Blocking kinds">
+  <aside class="legend legend-left card" aria-label="Blocking kinds">
     <details open>
       <summary>Blocking kinds</summary>
       <table class="kinds">
@@ -51,7 +106,7 @@
     </details>
   </aside>
 
-  <aside class="legend legend-right" aria-label="Box colours">
+  <aside class="legend legend-right card" aria-label="Box colours">
     <details open>
       <summary>Box colours</summary>
       <ul class="swatches">
