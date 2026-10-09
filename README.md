@@ -136,6 +136,7 @@ python3 -m http.server 8000
 | File | What it is |
 |---|---|
 | `index.html`, `style.css` | The page and its look, including both legends |
+| `assets/around-logo-*.png` | The Around wordmark (purple for light mode, cream for dark), exported at 4x from the Around Figma file. Colours and fonts in `style.css` follow the same file |
 | `app.js` | Board logic: colours, tooltips, clicks, progress, theme |
 | `celebrate.js` | Confetti and fireworks for the victory animations |
 | `store.js` | Firestore and Google sign-in (plus the local demo store) |
