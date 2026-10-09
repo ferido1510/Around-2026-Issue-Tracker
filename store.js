@@ -1,7 +1,7 @@
 // Two interchangeable stores for the board state.
 //
-// State is one Firestore document per task in the `tasks` collection, keyed by
-// the task ID. A missing document means nobody has picked the task up yet.
+// State is one Firestore document per task at sprints/{sprintId}/tasks/{taskId}.
+// A missing document means nobody has picked the task up yet.
 //   { status: "in-progress" | "done", uid, name, email, startedAt, doneAt? }
 
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
@@ -27,7 +27,7 @@ export async function createFirebaseStore(config) {
     A.connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
     F.connectFirestoreEmulator(db, "localhost", 8080);
   }
-  const ref = (id) => F.doc(db, "tasks", id);
+  const ref = (sprint, id) => F.doc(db, "sprints", sprint, "tasks", id);
 
   return {
     mode: "firebase",
@@ -45,8 +45,8 @@ export async function createFirebaseStore(config) {
     },
     signOut: () => A.signOut(auth),
 
-    subscribe(onData, onError) {
-      return F.onSnapshot(F.collection(db, "tasks"), (snap) => {
+    subscribe(sprint, onData, onError) {
+      return F.onSnapshot(F.collection(db, "sprints", sprint, "tasks"), (snap) => {
         const state = new Map();
         snap.forEach((d) => state.set(d.id, d.data()));
         onData(state);
@@ -54,54 +54,57 @@ export async function createFirebaseStore(config) {
     },
 
     // A transaction so two people clicking the same box at once can't both get it.
-    claim(id, user) {
+    claim(sprint, id, user) {
       return F.runTransaction(db, async (tx) => {
-        const snap = await tx.get(ref(id));
+        const snap = await tx.get(ref(sprint, id));
         if (snap.exists()) {
           throw new Error(`${id} was just taken by ${snap.data().name}`);
         }
-        tx.set(ref(id), {
+        tx.set(ref(sprint, id), {
           status: "in-progress", uid: user.uid, name: user.name, email: user.email,
           startedAt: F.serverTimestamp(),
         });
       });
     },
 
-    finish(id, user) {
+    finish(sprint, id, user) {
       return F.runTransaction(db, async (tx) => {
-        const snap = await tx.get(ref(id));
+        const snap = await tx.get(ref(sprint, id));
         const d = snap.data();
         if (!d || d.status !== "in-progress" || d.uid !== user.uid) {
           throw new Error(`${id} is not in progress for you any more`);
         }
-        tx.update(ref(id), { status: "done", doneAt: F.serverTimestamp() });
+        tx.update(ref(sprint, id), { status: "done", doneAt: F.serverTimestamp() });
       });
     },
 
-    release: (id) => F.deleteDoc(ref(id)),
-    reopen: (id) => F.deleteDoc(ref(id)),
+    release: (sprint, id) => F.deleteDoc(ref(sprint, id)),
+    reopen: (sprint, id) => F.deleteDoc(ref(sprint, id)),
   };
 }
 
-// Demo mode: same API, state kept in localStorage. Lets you try the board before
-// Firebase is configured. Other tabs of the same browser stay in sync.
+// Demo mode: same API, state kept in localStorage per sprint. Lets you try the
+// board before Firebase is configured. Other tabs of the same browser stay in sync.
 export function createDemoStore() {
-  const KEY = "around-tracker-demo-state";
+  const PREFIX = "around-tracker-demo:";
   const user = { uid: "demo", name: "You", email: "demo@example.com" };
-  const listeners = new Set();
+  let current = null;            // { sprint, state, onData }
 
-  const load = () => {
-    try { return new Map(Object.entries(JSON.parse(localStorage.getItem(KEY)) || {})); }
+  const load = (sprint) => {
+    try { return new Map(Object.entries(JSON.parse(localStorage.getItem(PREFIX + sprint)) || {})); }
     catch { return new Map(); }
   };
-  let state = load();
-  const save = () => {
-    try { localStorage.setItem(KEY, JSON.stringify(Object.fromEntries(state))); } catch { /* private window */ }
-    listeners.forEach((cb) => cb(new Map(state)));
+  const save = (sprint, state) => {
+    try { localStorage.setItem(PREFIX + sprint, JSON.stringify(Object.fromEntries(state))); } catch { /* private window */ }
+    if (current?.sprint === sprint) current.onData(new Map(state));
   };
+  const stateOf = (sprint) => (current?.sprint === sprint ? current.state : load(sprint));
   try {
     window.addEventListener("storage", (e) => {
-      if (e.key === KEY) { state = load(); listeners.forEach((cb) => cb(new Map(state))); }
+      if (current && e.key === PREFIX + current.sprint) {
+        current.state = load(current.sprint);
+        current.onData(new Map(current.state));
+      }
     });
   } catch { /* ignore */ }
 
@@ -110,21 +113,23 @@ export function createDemoStore() {
     onAuth(cb) { cb(user); },
     signIn: async () => {},
     signOut: async () => {},
-    subscribe(onData) {
-      listeners.add(onData);
-      onData(new Map(state));
-      return () => listeners.delete(onData);
+    subscribe(sprint, onData) {
+      current = { sprint, state: load(sprint), onData };
+      onData(new Map(current.state));
+      return () => { if (current?.onData === onData) current = null; };
     },
-    async claim(id, u) {
+    async claim(sprint, id, u) {
+      const state = stateOf(sprint);
       if (state.has(id)) throw new Error(`${id} was just taken by ${state.get(id).name}`);
       state.set(id, { status: "in-progress", uid: u.uid, name: u.name, email: u.email, startedAt: Date.now() });
-      save();
+      save(sprint, state);
     },
-    async finish(id) {
+    async finish(sprint, id) {
+      const state = stateOf(sprint);
       state.set(id, { ...state.get(id), status: "done", doneAt: Date.now() });
-      save();
+      save(sprint, state);
     },
-    async release(id) { state.delete(id); save(); },
-    async reopen(id) { state.delete(id); save(); },
+    async release(sprint, id) { const state = stateOf(sprint); state.delete(id); save(sprint, state); },
+    async reopen(sprint, id) { const state = stateOf(sprint); state.delete(id); save(sprint, state); },
   };
 }

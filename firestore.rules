@@ -19,8 +19,9 @@ service cloud.firestore {
         ];
     }
 
-    // One document per task, ID = task ID (e.g. "E3.2"). No document = nobody took it.
-    match /tasks/{taskId} {
+    // One document per task, per sprint: sprints/{sprintId}/tasks/{taskId}
+    // (e.g. sprints/sprint-2/tasks/E3.2). No document = nobody took it.
+    match /sprints/{sprintId}/tasks/{taskId} {
       allow read: if isTeam();
 
       // Take a free task: it must be recorded as yours.

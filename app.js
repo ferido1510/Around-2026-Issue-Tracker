@@ -1,4 +1,3 @@
-import { PLAN } from "./data.js";
 import { firebaseConfig } from "./firebase-config.js";
 import { createDemoStore, createFirebaseStore } from "./store.js";
 import { burst, celebrate } from "./celebrate.js";
@@ -9,14 +8,34 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-// Every edge kept in data.js blocks: hard / file / decision(start) block the start,
-// soft / decision(finish) block the finish, and the board treats both as red.
-const incoming = new Map();
-const outgoing = new Map();
-const storyOf = new Map();
-for (const id of Object.keys(PLAN.tasks)) { incoming.set(id, []); outgoing.set(id, []); }
-for (const e of PLAN.edges) { incoming.get(e.to).push(e); outgoing.get(e.from).push(e); }
-for (const row of PLAN.rows) for (const id of row.children) storyOf.set(id, row);
+// The sprint on screen. Every edge in a sprint file blocks: hard / file /
+// decision(start) block the start, soft / decision(finish) block the finish,
+// and the board treats both as red.
+let SPRINTS = [];           // from sprints/index.json
+let sprintId = null;
+let PLAN = { rows: [], tasks: {}, edges: [] };
+let incoming = new Map();
+let outgoing = new Map();
+let storyOf = new Map();
+let ALL_IDS = [];
+let MUST_IDS = [];
+
+function setPlan(plan) {
+  PLAN = plan;
+  incoming = new Map();
+  outgoing = new Map();
+  storyOf = new Map();
+  for (const id of Object.keys(PLAN.tasks)) { incoming.set(id, []); outgoing.set(id, []); }
+  for (const e of PLAN.edges) { incoming.get(e.to).push(e); outgoing.get(e.from).push(e); }
+  for (const row of PLAN.rows) for (const id of row.children) storyOf.set(id, row);
+  ALL_IDS = Object.keys(PLAN.tasks);
+  MUST_IDS = ALL_IDS.filter((id) => PLAN.tasks[id].prio !== "stretch");
+}
+
+// Small localStorage helpers, scoped to the current sprint where it matters.
+const lsGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch { /* private window */ } };
+const sprintKey = (name) => `tracker-${name}:${sprintId}`;
 
 let store = null;
 let user = null;
@@ -29,8 +48,6 @@ let lastPointer = "mouse";
 let prevStatus = new Map();  // for the pop animation when a box changes colour
 let prevLevel = null;       // celebration level at the last render (null = no live data yet)
 
-const ALL_IDS = Object.keys(PLAN.tasks);
-const MUST_IDS = ALL_IDS.filter((id) => PLAN.tasks[id].prio !== "stretch");
 const LEVELS = ["none", "victory", "ultra"];
 
 const isDone = (id) => state.get(id)?.status === "done";
@@ -145,22 +162,21 @@ function renderProgress(counts) {
 // browser hasn't seen that level yet. Reopening a task lowers the level, so
 // finishing again celebrates again.
 function checkVictory(level) {
-  let seen = 0;
-  try { seen = Number(localStorage.getItem("tracker-celebrated")) || 0; } catch { /* ignore */ }
+  const seen = Number(lsGet(sprintKey("celebrated"))) || 0;
   const reached = prevLevel === null ? level > seen : level > prevLevel;
   if (reached && level > 0) celebrate(LEVELS[level]);
   prevLevel = level;
-  try { localStorage.setItem("tracker-celebrated", String(level)); } catch { /* ignore */ }
+  lsSet(sprintKey("celebrated"), String(level));
   if (level > readUnlocked()) {
-    try { localStorage.setItem("tracker-unlocked", String(level)); } catch { /* ignore */ }
+    lsSet(sprintKey("unlocked"), String(level));
     renderReplays(true);
   }
 }
 
-// Replay buttons appear once a celebration has been unlocked in this browser,
-// and stay even if a task is reopened later.
+// Replay buttons appear once a sprint's celebration has been unlocked in this
+// browser, and stay even if a task is reopened later.
 function readUnlocked() {
-  try { return Number(localStorage.getItem("tracker-unlocked")) || 0; } catch { return 0; }
+  return Number(lsGet(sprintKey("unlocked"))) || 0;
 }
 
 function renderReplays(fresh = false) {
@@ -329,9 +345,9 @@ async function run(act, id) {
     if (act === "signin") return await signIn();
     if (act === "close") return hideTip();
     if (!live || !user) return toast("Sign in first", true);
-    if (act === "claim") { await store.claim(id, user); toast(`${id} is yours`); }
+    if (act === "claim") { await store.claim(sprintId, id, user); toast(`${id} is yours`); }
     if (act === "finish") {
-      await store.finish(id, user);
+      await store.finish(sprintId, id, user);
       const box = document.querySelector(`.box[data-id="${CSS.escape(id)}"]`);
       if (box) {
         const r = box.getBoundingClientRect();
@@ -339,10 +355,10 @@ async function run(act, id) {
       }
       toast(`${id} done 🎉`);
     }
-    if (act === "release") { await store.release(id, user); toast(`${id} released`); }
+    if (act === "release") { await store.release(sprintId, id, user); toast(`${id} released`); }
     if (act === "reopen") {
       if (!confirm(`Reopen ${id}? Tasks that depend on it turn red again.`)) return;
-      await store.reopen(id); toast(`${id} reopened`);
+      await store.reopen(sprintId, id); toast(`${id} reopened`);
     }
     hideTip();
   } catch (err) {
@@ -385,30 +401,75 @@ function setBanner(html) {
   b.innerHTML = html || "";
 }
 
-function onUser(u) {
-  user = u;
+function resetLiveState() {
   unsubscribe?.();
   unsubscribe = null;
   state = new Map();
   live = false;
   prevStatus = new Map();
   prevLevel = null;
+  hideTip();
+}
+
+function subscribe() {
+  if (!user || !sprintId) return;
+  const sprint = sprintId;
+  $("boardWrap").classList.remove("locked");
+  unsubscribe = store.subscribe(
+    sprint,
+    (s) => { if (sprint !== sprintId) return; state = s; live = true; renderBoard(); },
+    (err) => {
+      if (sprint !== sprintId) return;
+      live = false;
+      $("boardWrap").classList.add("locked");
+      setBanner(err.code === "permission-denied"
+        ? `<b>${esc(user.email)}</b> is not on the board's allowlist. Ask whoever runs the board to add it to <code>firestore.rules</code>, then reload.`
+        : `Could not load the board: ${esc(err.message)}`);
+      renderBoard();
+    });
+}
+
+function onUser(u) {
+  user = u;
+  resetLiveState();
   renderAccount();
   setBanner("");
   $("gate").hidden = !!u;
   $("boardWrap").classList.toggle("locked", !u);
-  if (u) {
-    unsubscribe = store.subscribe(
-      (s) => { state = s; live = true; renderBoard(); },
-      (err) => {
-        live = false;
-        $("boardWrap").classList.add("locked");
-        setBanner(err.code === "permission-denied"
-          ? `<b>${esc(u.email)}</b> is not on the board's allowlist. Ask whoever runs the board to add it to <code>firestore.rules</code>, then reload.`
-          : `Could not load the board: ${esc(err.message)}`);
-        renderBoard();
-      });
-  }
+  subscribe();
+  renderBoard();
+}
+
+// ---------- sprints ----------
+
+async function fetchJson(path) {
+  const res = await fetch(path, { cache: "no-cache" });
+  if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`);
+  return res.json();
+}
+
+function renderSprintPicker(title) {
+  $("appTitle").textContent = title;
+  const sel = $("sprintSelect");
+  sel.innerHTML = SPRINTS.map((sp) => `<option value="${esc(sp.id)}">${esc(sp.name)}</option>`).join("");
+  sel.value = sprintId;
+}
+
+async function showSprint(id) {
+  const sp = SPRINTS.find((x) => x.id === id) || SPRINTS[SPRINTS.length - 1];
+  const plan = await fetchJson(`sprints/${encodeURIComponent(sp.id)}.json`);
+  resetLiveState();
+  sprintId = sp.id;
+  setPlan(plan);
+  $("sprintSelect").value = sp.id;
+  document.title = `${$("appTitle").textContent} ${sp.name} · Tracker`;
+  lsSet("tracker-sprint", sp.id);
+  const url = new URL(location.href);
+  url.searchParams.set("sprint", sp.id);
+  history.replaceState(null, "", url);
+  buildBoard();
+  renderReplays();
+  if (store) subscribe();
   renderBoard();
 }
 
@@ -445,11 +506,13 @@ function wire() {
   window.addEventListener("scroll", () => { if (!tipPinned) hideTip(); }, true);
   $("gateSignIn").onclick = signIn;
   $("themeBtn").onclick = cycleTheme;
+  $("sprintSelect").onchange = (e) => {
+    showSprint(e.target.value).catch((err) => toast(`Could not load that sprint: ${err.message}`, true));
+  };
   applyTheme(currentTheme());
   for (const g of [$("goalMust"), $("goalAll"), $("replayVictory"), $("replayUltra")]) {
     g.onclick = () => celebrate(g.dataset.level);
   }
-  renderReplays();
 
   // Legends start collapsed on small screens so they don't cover the board.
   if (window.matchMedia("(max-width: 900px)").matches) {
@@ -458,8 +521,19 @@ function wire() {
 }
 
 async function main() {
-  buildBoard();
   wire();
+  try {
+    const index = await fetchJson("sprints/index.json");
+    SPRINTS = index.sprints || [];
+    if (!SPRINTS.length) throw new Error("sprints/index.json lists no sprints");
+    const wanted = new URL(location.href).searchParams.get("sprint") || lsGet("tracker-sprint");
+    sprintId = (SPRINTS.find((x) => x.id === wanted) || SPRINTS[SPRINTS.length - 1]).id;
+    renderSprintPicker(index.title || "Tracker");
+    await showSprint(sprintId);
+  } catch (err) {
+    setBanner(`Could not load the sprint list: ${esc(err.message)}`);
+    return;
+  }
   try {
     store = DEMO ? createDemoStore() : await createFirebaseStore(firebaseConfig);
   } catch (err) {

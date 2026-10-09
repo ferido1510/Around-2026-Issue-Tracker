@@ -1,6 +1,6 @@
-# Around · Sprint 2 issue tracker
+# Around · sprint tracker
 
-A one-page board for the Sprint 2 plan. Each row is an issue (user story) and each column is one of its sub-issues. The boxes show what is blocked, what is free, who is working on what, and what is done. It updates live for everyone through Firestore.
+A one-page board for the team's sprint plans. Pick a sprint from the dropdown next to the title. Each row is an issue (user story) and each column is one of its sub-issues. The boxes show what is blocked, what is free, who is working on what, and what is done. It updates live for everyone through Firestore.
 
 | Box | Meaning |
 |---|---|
@@ -19,6 +19,7 @@ A one-page board for the Sprint 2 plan. Each row is an issue (user story) and ea
 - The **progress bar** at the top fills from 0 to 100% as tasks are marked done (the striped yellow part is work in progress).
 - When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, stretch included, it plays the **ultra victory** 👑. Each one plays once per browser. Once unlocked, a **Replay victory** / **Replay ultra victory** button appears in the top bar so you can replay it any time for morale (it stays even if a task is reopened later). If someone reopens a task and it gets finished again, it plays again.
 - The 🌗 button switches between automatic, light and dark themes.
+- The **sprint dropdown** next to the title switches sprints. The page opens on the newest sprint, or on the one in the link (`?sprint=sprint-2`), so you can share a link to a specific sprint. Each sprint has its own progress, celebrations and replay buttons.
 
 Every structural blocking kind counts: `hard`, `file`, `soft`, and `decision` (start and finish). The chronological kinds (`owner-queue`, `not-before`, `stretch-gate`) are ignored, because they depend on the plan's owners and dates. The owners and reviewers from the plan are not used at all: whoever clicks a task gets it.
 
@@ -58,7 +59,7 @@ These values are **not secrets**. Every Firebase web app ships them to the brows
 4. Choose **Start in production mode** (everything is locked until you publish the rules below).
 5. Click **Create**.
 
-You don't need to create any collections. The board creates a document in `tasks` the first time someone takes a task.
+You don't need to create any collections. The board creates a document in `sprints/<sprint id>/tasks` the first time someone takes a task in that sprint.
 
 ### 5. Publish the security rules with your seven emails
 
@@ -84,25 +85,39 @@ On a free GitHub account, Pages only works for **public** repositories. Anyone c
 
 ### 7. Check it works
 
-Open the site, click **Sign in with Google**, and take a free task. In the Firebase console under **Firestore Database → Data**, you should see a `tasks` collection with a document named after that task.
+Open the site, click **Sign in with Google**, and take a free task. In the Firebase console under **Firestore Database → Data**, you should see `sprints` → `sprint-2` → `tasks` with a document named after that task.
 
 ---
 
 ## Day-to-day admin
 
-- **Reset the whole board:** in **Firestore Database → Data**, delete the `tasks` collection (⋮ menu → *Delete collection*).
+- **Reset a sprint:** in **Firestore Database → Data**, open `sprints` → the sprint → and delete its `tasks` collection (⋮ menu → *Delete collection*).
 - **Fix one task by hand:** delete its document to make it unassigned, or edit `status` / `name` directly.
 - **Someone left a task in progress:** they can release it, or you can delete its document in the console.
 
-## Changing the plan
+## Adding a new sprint
 
-The tasks and blocking edges come from the JSON block in [`data/sprint-2-blocking-report.md`](data/sprint-2-blocking-report.md) (section 11). After editing it, regenerate `data.js`:
+Each sprint is one file in [`sprints/`](sprints/), listed in [`sprints/index.json`](sprints/index.json). Nothing about a sprint is hardcoded in the page.
 
-```sh
-python3 tools/build_data.py
-```
+1. Get the sprint's blocking report in the same format as [`data/sprint-2-blocking-report.md`](data/sprint-2-blocking-report.md): a Markdown file with a ```` ```json ```` block that has `tasks` and `edges` (section 11 of that report), or that JSON on its own. Save it in `data/`, e.g. `data/sprint-3-blocking-report.md`.
+2. Run:
 
-Task state in Firestore is keyed by task ID, so existing progress is kept as long as IDs don't change.
+   ```sh
+   python3 tools/add_sprint.py data/sprint-3-blocking-report.md --id sprint-3 --name "Sprint 3"
+   ```
+
+   This writes `sprints/sprint-3.json` and adds Sprint 3 to the dropdown. The `--id` goes in links and in Firestore, so use lowercase letters, digits and dashes.
+3. Commit and push. Once GitHub Pages updates, the board opens on the newest sprint, the last one in `sprints/index.json`.
+
+How the board is laid out from the JSON:
+- Each task with `"kind": "story"` becomes a row, in the order they appear. Its `children` are the columns.
+- A task that isn't any story's child goes before its `parent` task (as the contracts do), or into a row named after its parent (e.g. `PROC` → "Process (no user story)"), or into "Other tasks" if it has no parent.
+- Tasks with `"prio": "stretch"` are striped and only count for the 👑 ultra victory.
+- Only `hard`, `file`, `soft` and `decision` edges are used. The script warns about edge kinds it doesn't know.
+
+**To change a sprint's plan**, edit its report and run the same command again with the same `--id`. Progress is stored by sprint ID and task ID, so it is kept as long as the task IDs don't change.
+
+**To rename the project** (the "Around" in the title), change `"title"` in `sprints/index.json`. To rename a sprint or change the dropdown order, edit `sprints/index.json` directly.
 
 ## Running it locally
 
@@ -126,6 +141,8 @@ python3 -m http.server 8000
 | `store.js` | Firestore and Google sign-in (plus the local demo store) |
 | `firebase-config.js` | **Your** Firebase web config |
 | `firestore.rules` | Security rules with the seven-email allowlist |
-| `data.js` | Generated tasks and blocking edges. Don't edit by hand |
-| `tools/build_data.py` | Regenerates `data.js` from the report |
+| `sprints/index.json` | The project title and the list of sprints in the dropdown |
+| `sprints/<id>.json` | One sprint's tasks and blocking edges, generated by `tools/add_sprint.py` |
+| `tools/add_sprint.py` | Adds or updates a sprint from its blocking report |
+| `data/` | The source blocking reports |
 | `firebase.json` | Only for the CLI and emulators (optional) |
