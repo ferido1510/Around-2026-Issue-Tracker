@@ -131,9 +131,17 @@ function renderProgress(counts) {
   const total = ALL_IDS.length;
   const pct = live ? Math.round((100 * counts.done) / total) : 0;
   $("pct").textContent = live ? pct : "–";
-  $("barDone").style.width = `${live ? (100 * counts.done) / total : 0}%`;
-  $("barProg").style.left = `${live ? (100 * counts.done) / total : 0}%`;
-  $("barProg").style.width = `${live ? (100 * counts.progress) / total : 0}%`;
+  // One rounded bar holding two bands: done, then in progress. The done band's
+  // gradient is scaled to the whole track so a short bar shows its start, not
+  // the full gradient squeezed in.
+  const done = live ? counts.done : 0;
+  const filled = done + (live ? counts.progress : 0);
+  // A bar with anything in it is at least as wide as it is tall, so a single
+  // task shows as a round stub rather than an oval.
+  $("barValue").style.width = filled ? `max(var(--bar-h), ${(100 * filled) / total}%)` : "0%";
+  $("barDone").style.width = filled ? `${(100 * done) / filled}%` : "0%";
+  $("barProg").style.width = filled ? `${(100 * (filled - done)) / filled}%` : "0%";
+  $("barDone").style.setProperty("--track-scale", done ? String(total / done) : "1");
   $("bar").setAttribute("aria-valuenow", String(pct));
   $("bar").classList.toggle("full", live && counts.done === total);
   $("progressMeta").textContent = live

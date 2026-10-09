@@ -404,33 +404,54 @@ code { font: 0.9em var(--mono); background: var(--surface-2); padding: 1px 5px; 
 }
 
 .bar {
+  --bar-h: 28px;
   position: relative;
-  height: 28px;
+  height: var(--bar-h);
   border-radius: 999px;
   background: var(--surface-2);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
-.bar-fill, .bar-prog {
+/* the filled part: one pill with a rounded leading edge, holding the done band
+   and the in-progress band side by side with no seam */
+.bar-value {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  transition: width 0.8s cubic-bezier(0.22, 1.4, 0.36, 1), left 0.8s cubic-bezier(0.22, 1.4, 0.36, 1);
+  width: 0;
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  transition: width 0.8s cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+.bar-value::after {   /* shared 3D shading across both bands */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.12), inset 0 3px 0 rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+.bar-fill, .bar-prog {
+  flex: none;
+  height: 100%;
+  transition: width 0.8s cubic-bezier(0.22, 1.2, 0.36, 1);
 }
 .bar-fill {
-  border-radius: 999px;
   background:
     repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.22) 0 12px, transparent 12px 24px),
     linear-gradient(90deg, #5ea89d, #3f9e8e 35%, #6a2fae 75%, #4d0092);
-  background-size: 52px 100%, 100% 100%;
-  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.12), inset 0 3px 0 rgba(255, 255, 255, 0.35);
+  background-size: 52px 100%, calc(var(--track-scale, 1) * 100%) 100%;
   animation: stripes 1.2s linear infinite;
-  z-index: 1;
 }
 .bar-prog {
-  background: repeating-linear-gradient(115deg, var(--progress) 0 8px, var(--progress-hi) 8px 16px);
-  opacity: 0.55;
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.22) 0 12px, transparent 12px 24px),
+    var(--progress);
+  background-size: 52px 100%, 100% 100%;
+  animation: stripes 1.2s linear infinite;
+  opacity: 0.85;
 }
 .bar.full .bar-fill {
   background:
