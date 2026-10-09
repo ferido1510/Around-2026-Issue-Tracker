@@ -17,7 +17,7 @@ A one-page board for the Sprint 2 plan. Each row is an issue (user story) and ea
 - **Click a grey box** to reopen it (if it was marked done by mistake).
 - On a phone, tap a box to see its details and the action buttons.
 - The **progress bar** at the top fills from 0 to 100% as tasks are marked done (the striped yellow part is work in progress).
-- When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, stretch included, it plays the **ultra victory** 👑. Each one plays once per browser; click the trophy or crown next to the progress bar to replay it. If someone reopens a task and it gets finished again, it plays again.
+- When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, stretch included, it plays the **ultra victory** 👑. Each one plays once per browser. Once unlocked, a **Replay victory** / **Replay ultra victory** button appears in the top bar so you can replay it any time for morale (it stays even if a task is reopened later). If someone reopens a task and it gets finished again, it plays again.
 - The 🌗 button switches between automatic, light and dark themes.
 
 Every structural blocking kind counts: `hard`, `file`, `soft`, and `decision` (start and finish). The chronological kinds (`owner-queue`, `not-before`, `stretch-gate`) are ignored, because they depend on the plan's owners and dates. The owners and reviewers from the plan are not used at all: whoever clicks a task gets it.

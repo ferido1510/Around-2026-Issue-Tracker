@@ -242,6 +242,65 @@ code { font: 0.9em var(--mono); background: var(--surface-2); padding: 1px 5px; 
 }
 .icon-btn:hover { transform: rotate(-12deg) scale(1.06); }
 
+/* replay buttons: appear once a celebration is unlocked */
+.replays { display: flex; gap: 8px; flex-wrap: wrap; }
+.replay-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 14px 0 10px;
+  border-radius: 12px;
+  font: 800 14px var(--font);
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.replay-icon { font-size: 20px; display: inline-block; }
+.replay-btn:hover { transform: translateY(-2px) rotate(-2deg); }
+.replay-btn:hover .replay-icon { animation: trophy 0.9s ease-in-out; }
+.replay-btn:active { transform: translateY(2px); }
+.replay-victory {
+  color: #5a3a00;
+  border: 0;
+  background: linear-gradient(135deg, #ffe27a, #ffb020);
+  box-shadow: 0 3px 0 #c27c00, 0 8px 18px -8px rgba(255, 160, 0, 0.7);
+}
+.replay-ultra {
+  color: var(--text);
+  border: 3px solid transparent;
+  background:
+    linear-gradient(var(--surface-solid), var(--surface-solid)) padding-box,
+    conic-gradient(from var(--spin), #ff5d73, #ffb020, #ffe14d, #3ddc84, #3fa7ff, #a66bff, #ff5d73) border-box;
+  box-shadow: 0 3px 0 var(--line), 0 8px 20px -8px rgba(166, 107, 255, 0.7);
+  animation: spin 3s linear infinite;
+}
+/* a shine sweeps across every few seconds */
+.replay-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: skewX(-20deg);
+  animation: shine 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes shine {
+  0%, 70% { left: -60%; }
+  100% { left: 130%; }
+}
+.replay-btn.fresh { animation: unlock 0.9s cubic-bezier(0.3, 1.7, 0.5, 1); }
+.replay-ultra.fresh { animation: unlock 0.9s cubic-bezier(0.3, 1.7, 0.5, 1), spin 3s linear infinite; }
+@keyframes unlock {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60% { transform: scale(1.25) rotate(8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+
 .banner {
   margin: 12px 28px 0;
   padding: 12px 16px;
@@ -879,6 +938,8 @@ body.party-ultra .blob { animation-duration: 2s; opacity: calc(var(--blob-alpha)
   .banner { margin: 12px 16px 0; }
   .rowhead .rtitle { display: none; }
   .account .email { display: none; }
+  .replay-text { display: none; }
+  .replay-btn { padding: 0 10px; }
   .legend { bottom: 12px; max-height: 70vh; }
   .legend-left { left: 12px; width: auto; max-width: calc(100vw - 24px); }
   .legend-right { right: 12px; width: auto; max-width: calc(100vw - 24px); }

@@ -151,6 +151,28 @@ function checkVictory(level) {
   if (reached && level > 0) celebrate(LEVELS[level]);
   prevLevel = level;
   try { localStorage.setItem("tracker-celebrated", String(level)); } catch { /* ignore */ }
+  if (level > readUnlocked()) {
+    try { localStorage.setItem("tracker-unlocked", String(level)); } catch { /* ignore */ }
+    renderReplays(true);
+  }
+}
+
+// Replay buttons appear once a celebration has been unlocked in this browser,
+// and stay even if a task is reopened later.
+function readUnlocked() {
+  try { return Number(localStorage.getItem("tracker-unlocked")) || 0; } catch { return 0; }
+}
+
+function renderReplays(fresh = false) {
+  const unlocked = readUnlocked();
+  for (const [el, need] of [[$("replayVictory"), 1], [$("replayUltra"), 2]]) {
+    const show = unlocked >= need;
+    if (show && el.hidden && fresh) {
+      el.classList.add("fresh");
+      el.addEventListener("animationend", () => el.classList.remove("fresh"), { once: true });
+    }
+    el.hidden = !show;
+  }
 }
 
 // ---------- theme ----------
@@ -424,7 +446,10 @@ function wire() {
   $("gateSignIn").onclick = signIn;
   $("themeBtn").onclick = cycleTheme;
   applyTheme(currentTheme());
-  for (const g of [$("goalMust"), $("goalAll")]) g.onclick = () => celebrate(g.dataset.level);
+  for (const g of [$("goalMust"), $("goalAll"), $("replayVictory"), $("replayUltra")]) {
+    g.onclick = () => celebrate(g.dataset.level);
+  }
+  renderReplays();
 
   // Legends start collapsed on small screens so they don't cover the board.
   if (window.matchMedia("(max-width: 900px)").matches) {
