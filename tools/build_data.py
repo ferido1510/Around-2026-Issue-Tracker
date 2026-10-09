@@ -69,6 +69,7 @@ def main():
             "window": [t.get("windowStartDay"), t.get("windowEndDay")],
             "github": t.get("github"),
             "existing": t.get("existingWork"),
+            "files": t.get("files", []),
         }
 
     edges = []

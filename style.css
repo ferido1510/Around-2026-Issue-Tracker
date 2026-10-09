@@ -305,6 +305,17 @@ main {
 .edges .eid { font: 700 13px ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
 .edges .etitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 .edges .reason { grid-column: 2 / -1; color: var(--muted); font-size: 12px; }
+.files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  font: 12px/1.35 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--muted);
+}
+.files li { padding-left: 14px; text-indent: -14px; overflow-wrap: anywhere; }
+.files li::before { content: "▸"; display: inline-block; width: 14px; text-indent: 0; color: var(--muted); opacity: 0.6; }
 .tip-who { margin-top: 10px; font-size: 13px; }
 .tip-who.stale { color: var(--blocked); }
 .tip-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }

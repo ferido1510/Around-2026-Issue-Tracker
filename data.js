@@ -187,7 +187,10 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/navigation/AppRoot.kt"
+   ]
   },
   "C3": {
    "title": "AuthRepository.currentUserEmail (+ fake + Firebase impl)",
@@ -200,7 +203,10 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/auth/AuthRepository*.kt"
+   ]
   },
   "G2.1": {
    "title": "Show the sign-in flow or the app from the saved session",
@@ -213,7 +219,14 @@ export const PLAN = {
     2
    ],
    "github": null,
-   "existing": "code in PR #86"
+   "existing": "code in PR #86",
+   "files": [
+    "MainActivity.kt",
+    "ui/navigation/AppRoot.kt",
+    "ui/navigation/SessionViewModel.kt",
+    "model/auth/AuthRepositoryProvider.kt",
+    "src/debug/AuthDemoActivity.kt (deleted)"
+   ]
   },
   "G2.2": {
    "title": "Clear the back stack on sign-in and sign-out",
@@ -226,7 +239,10 @@ export const PLAN = {
     2
    ],
    "github": null,
-   "existing": "code in PR #86"
+   "existing": "code in PR #86",
+   "files": [
+    "ui/navigation/AppRoot.kt"
+   ]
   },
   "G2.3": {
    "title": "Route a signed-in user by role",
@@ -239,7 +255,10 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": "RoleNavigation in PR #86"
+   "existing": "RoleNavigation in PR #86",
+   "files": [
+    "ui/navigation/RoleRouting.kt"
+   ]
   },
   "G2.4": {
    "title": "Sign out from the Profile tab",
@@ -252,7 +271,10 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/profile/ProfileScreen.kt"
+   ]
   },
   "G3.1": {
    "title": "Role selection ViewModel",
@@ -265,7 +287,10 @@ export const PLAN = {
     2
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/role/RoleSelectionViewModel.kt"
+   ]
   },
   "G3.2": {
    "title": "Role selection screen (Figma #27)",
@@ -278,7 +303,11 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/role/RoleSelectionScreen.kt",
+    "res/values/role_strings.xml"
+   ]
   },
   "G3.3": {
    "title": "Venue entry: resume onboarding or open venue home (rewrite of #79)",
@@ -291,7 +320,11 @@ export const PLAN = {
     4
    ],
    "github": "#79",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/navigation/VenueOnboardingNavigation.kt",
+    "docs/venue-onboarding-navigation.md"
+   ]
   },
   "V3.1": {
    "title": "Save and load the venue's marker and radius (= contract C4)",
@@ -304,7 +337,12 @@ export const PLAN = {
     1
    ],
    "github": "#88",
-   "existing": "code in PR #92 (opened backwards, closed)"
+   "existing": "code in PR #92 (opened backwards, closed)",
+   "files": [
+    "ui/venue/VenueAreaViewModel.kt",
+    "ui/venue/VenueAreaScreen.kt",
+    "androidTest/ui/venue/VenueAreaScreenDeviceTest.kt"
+   ]
   },
   "V3.2": {
    "title": "Save the picked address with the area",
@@ -317,7 +355,12 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/venue/VenueRepository.kt",
+    "model/venue/FakeVenueRepository.kt",
+    "ui/venue/VenueAreaViewModel.kt"
+   ]
   },
   "V4.1": {
    "title": "Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1)",
@@ -330,7 +373,12 @@ export const PLAN = {
     1
    ],
    "github": "#74",
-   "existing": "PR #76 (draft, complete)"
+   "existing": "PR #76 (draft, complete)",
+   "files": [
+    "model/quest/Quest.kt",
+    "model/quest/QuestRepositoryFirestore.kt",
+    "ui/map/marker/QuestCard.kt"
+   ]
   },
   "C5": {
    "title": "CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs",
@@ -343,7 +391,10 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/quest/create/CreateQuestUiState.kt"
+   ]
   },
   "V4.2": {
    "title": "CreateQuestViewModel logic + tests",
@@ -356,7 +407,10 @@ export const PLAN = {
     3
    ],
    "github": "#75",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/quest/create/CreateQuestViewModel.kt"
+   ]
   },
   "V4.3a": {
    "title": "Create-quest form: layout and text fields",
@@ -369,7 +423,11 @@ export const PLAN = {
     5
    ],
    "github": "#32",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/quest/create/CreateQuestScreen.kt",
+    "res/values/create_quest_strings.xml"
+   ]
   },
   "V4.3b": {
    "title": "Reward type picker and per-type fields",
@@ -382,7 +440,10 @@ export const PLAN = {
     3
    ],
    "github": "#32",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/quest/create/RewardFields.kt"
+   ]
   },
   "V4.3c": {
    "title": "Saving/error states and open the form from the venue home",
@@ -395,7 +456,11 @@ export const PLAN = {
     5
    ],
    "github": "#32",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/quest/create/CreateQuestScreen.kt",
+    "ui/quest/create/CreateQuestDestination.kt"
+   ]
   },
   "C6": {
    "title": "NearbyQuest data class + MapUiState.nearby",
@@ -408,7 +473,11 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/map/NearbyQuests.kt",
+    "ui/map/MapViewModel.kt"
+   ]
   },
   "E3.1": {
    "title": "Sort nearby quests by distance in MapViewModel",
@@ -421,7 +490,11 @@ export const PLAN = {
     2
    ],
    "github": "#91",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/map/NearbyQuests.kt",
+    "ui/map/MapViewModel.kt"
+   ]
   },
   "E3.2": {
    "title": "NearbyQuestList component (rows, empty, location-off)",
@@ -434,7 +507,11 @@ export const PLAN = {
     3
    ],
    "github": "#91",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/map/nearby/NearbyQuestList.kt",
+    "ui/map/nearby/NearbyQuestRow.kt"
+   ]
   },
   "E3.3": {
    "title": "Bottom sheet holding the list on MapScreen",
@@ -447,7 +524,10 @@ export const PLAN = {
     5
    ],
    "github": "#91",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/map/MapScreen.kt"
+   ]
   },
   "E3.4": {
    "title": "Row tap frames venue + opens card; View opens venue page",
@@ -460,7 +540,11 @@ export const PLAN = {
     5
    ],
    "github": "#91",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/map/MapViewModel.kt",
+    "ui/map/MapScreen.kt"
+   ]
   },
   "Q1": {
    "title": "CI emulator = API 37 / Pixel 10a + repo hygiene",
@@ -473,7 +557,14 @@ export const PLAN = {
     2
    ],
    "github": "#95",
-   "existing": null
+   "existing": null,
+   "files": [
+    ".github/workflows/ci.yml",
+    "firestore-debug.log (untrack)",
+    "SimpleData.kt",
+    "PointTest.kt",
+    "ExampleUnitTest.kt"
+   ]
   },
   "Q2": {
    "title": "One tap-the-map-until-it-counts helper for device tests",
@@ -486,7 +577,12 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "androidTest/ui/map/MapViews.kt",
+    "androidTest/ui/map/QuestMarkersDeviceTest.kt",
+    "androidTest/ui/venue/VenueAreaScreenDeviceTest.kt"
+   ]
   },
   "Q3": {
    "title": "Shared Firestore emulator test support",
@@ -499,7 +595,12 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "androidTest/testing/FirestoreTestSupport.kt",
+    "QuestRepositoryFirestoreTest.kt",
+    "ReservationRepositoryFirestoreTest.kt"
+   ]
   },
   "N0": {
    "title": "Route contract: every Sprint 2 route with a Coming-soon stub (= contract C1)",
@@ -512,7 +613,14 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/navigation/Routes.kt",
+    "ui/venuepage/VenuePageDestination.kt",
+    "ui/quest/create/CreateQuestDestination.kt",
+    "ui/dashboard/DashboardDestination.kt",
+    "ui/overview/OverviewDestination.kt"
+   ]
   },
   "N1": {
    "title": "Open the venue page from the map card; Quests tab hosts overview (closes #20 gap)",
@@ -525,7 +633,10 @@ export const PLAN = {
     2
    ],
    "github": "#20",
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/navigation/AroundApp.kt"
+   ]
   },
   "N2": {
    "title": "Venue home shell: Dashboard / Quests (New quest) / Profile",
@@ -538,7 +649,10 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/navigation/VenueHome.kt"
+   ]
   },
   "D1": {
    "title": "Finalize Firestore schema v1 (#23 / PR #25)",
@@ -551,7 +665,10 @@ export const PLAN = {
     2
    ],
    "github": "#23",
-   "existing": "PR #25 (draft since Oct 4)"
+   "existing": "PR #25 (draft since Oct 4)",
+   "files": [
+    "docs/firestore-schema.md"
+   ]
   },
   "D2": {
    "title": "VenueRepositoryFirestore + emulator tests",
@@ -564,7 +681,11 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/venue/VenueRepositoryFirestore.kt",
+    "androidTest/model/venue/VenueRepositoryFirestoreTest.kt"
+   ]
   },
   "D2p": {
    "title": "Switch the venue provider to Firestore",
@@ -577,7 +698,10 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/venue/VenueRepositoryProvider.kt"
+   ]
   },
   "D3": {
    "title": "UserRepositoryFirestore + emulator tests",
@@ -590,7 +714,11 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/user/UserRepositoryFirestore.kt",
+    "androidTest/model/user/UserRepositoryFirestoreTest.kt"
+   ]
   },
   "D3p": {
    "title": "Add and switch the user provider to Firestore",
@@ -603,7 +731,10 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/user/UserRepositoryProvider.kt"
+   ]
   },
   "D4": {
    "title": "Security rules v2, tested and deployed to around-67942",
@@ -616,7 +747,13 @@ export const PLAN = {
     4
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "firestore.rules",
+    "androidTest/model/FirestoreRulesTest.kt",
+    "firebase.json",
+    "README.md (deploy)"
+   ]
   },
   "D5": {
    "title": "Quests + reservations from Firestore; MapDemoData out of src/main",
@@ -629,7 +766,15 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "model/quest/QuestRepositoryProvider.kt",
+    "model/reservation/ReservationRepositoryProvider.kt",
+    "model/demo/MapDemoData.kt (moved to test fixtures)",
+    "test/model/RepositoryProvidersTest.kt",
+    "test/model/demo/MapDemoDataTest.kt",
+    "README.md (demo section)"
+   ]
   },
   "D7a": {
    "title": "Seed tool for the emulator (tools/seed)",
@@ -642,7 +787,11 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "tools/seed/*",
+    "README.md (seed)"
+   ]
   },
   "D7b": {
    "title": "Data day: everyone creates a real venue + quests through the app",
@@ -655,7 +804,8 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "DS0": {
    "title": "Design tokens and fonts in the theme (asset-only PR)",
@@ -668,7 +818,11 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/theme/*",
+    "res/font/*"
+   ]
   },
   "T0": {
    "title": "E2E harness: emulator reset, account helpers, page-object base",
@@ -681,7 +835,11 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "androidTest/e2e/E2eRule.kt",
+    "androidTest/e2e/Accounts.kt"
+   ]
   },
   "T1": {
    "title": "E2E venue journey: sign up -> Venue -> name -> area -> new quest",
@@ -694,7 +852,10 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "androidTest/e2e/VenueJourneyTest.kt"
+   ]
   },
   "T2": {
    "title": "E2E explorer journey: seeded quest -> map -> nearby -> venue page",
@@ -707,7 +868,10 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "androidTest/e2e/ExplorerJourneyTest.kt"
+   ]
   },
   "T3": {
    "title": "E2E: accept -> sign in as venue -> dashboard lists it",
@@ -720,7 +884,10 @@ export const PLAN = {
     7
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "androidTest/e2e/AcceptJourneyTest.kt"
+   ]
   },
   "F1": {
    "title": "Figma: venue page (light/dark, incl. accept-bar state)",
@@ -733,7 +900,8 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "A1": {
    "title": "Import venue page assets (asset-only PR)",
@@ -746,7 +914,11 @@ export const PLAN = {
     4
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "res/drawable/*",
+    "ui/theme/* (only if new tokens)"
+   ]
   },
   "C7": {
    "title": "VenuePageUiState + VenuePageQuest + ViewModel stub",
@@ -759,7 +931,10 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageUiState.kt"
+   ]
   },
   "E4.1": {
    "title": "VenuePageViewModel logic + tests",
@@ -772,7 +947,10 @@ export const PLAN = {
     3
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageViewModel.kt"
+   ]
   },
   "E4.2": {
    "title": "Venue page skeleton: top bar, header, states, questRow/bottomBar slots",
@@ -785,7 +963,12 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageScreen.kt",
+    "ui/venuepage/VenuePageDestination.kt",
+    "res/values/venue_page_strings.xml"
+   ]
   },
   "E4.3": {
    "title": "Quest rows on the venue page",
@@ -798,7 +981,10 @@ export const PLAN = {
     5
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenueQuestRow.kt"
+   ]
   },
   "E4.4": {
    "title": "Quest detail sheet (only if rows are too dense)",
@@ -811,7 +997,10 @@ export const PLAN = {
     7
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/QuestDetailSheet.kt"
+   ]
   },
   "E5.1": {
    "title": "Accept a quest in VenuePageViewModel",
@@ -824,7 +1013,10 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageViewModel.kt"
+   ]
   },
   "E5.2": {
    "title": "AcceptQuestBar component on the venue page",
@@ -837,7 +1029,10 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/venuepage/AcceptQuestBar.kt"
+   ]
   },
   "F2": {
    "title": "Figma: venue dashboard with >= 1 reservation",
@@ -850,7 +1045,8 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "A2": {
    "title": "Import dashboard assets (asset-only PR)",
@@ -863,7 +1059,8 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "V9.1": {
    "title": "DashboardViewModel (first commit = DashboardUiState contract)",
@@ -876,7 +1073,10 @@ export const PLAN = {
     7
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/dashboard/DashboardViewModel.kt"
+   ]
   },
   "V9.2": {
    "title": "Dashboard reservation list (replaces stub; exposes row actions slot)",
@@ -889,7 +1089,11 @@ export const PLAN = {
     7
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/dashboard/DashboardScreen.kt",
+    "ui/dashboard/DashboardDestination.kt"
+   ]
   },
   "V10.1": {
    "title": "Approve / decline on a pending dashboard row",
@@ -902,7 +1106,10 @@ export const PLAN = {
     7
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/dashboard/ReservationActions.kt"
+   ]
   },
   "F3": {
    "title": "Figma: explorer overview showing an accepted quest",
@@ -915,7 +1122,8 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "A3": {
    "title": "Import overview assets (asset-only PR)",
@@ -928,7 +1136,8 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "E6.1": {
    "title": "OverviewViewModel (first commit = OverviewUiState contract)",
@@ -941,7 +1150,10 @@ export const PLAN = {
     6
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/overview/OverviewViewModel.kt"
+   ]
   },
   "E6.2": {
    "title": "Overview screen in the Quests tab (replaces stub)",
@@ -954,7 +1166,11 @@ export const PLAN = {
     7
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": [
+    "ui/overview/OverviewScreen.kt",
+    "ui/overview/OverviewDestination.kt"
+   ]
   },
   "DEC-1": {
    "title": "Party model: a reservation is the party; add leaderUid and partyNames? (= contract C8)",
@@ -967,7 +1183,8 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "DEC-2": {
    "title": "slotStart when accepting a quest (recommendation: now)",
@@ -980,7 +1197,8 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "DEC-3": {
    "title": "Quests needing a party > 1: allow accept and show 'needs N more'?",
@@ -993,7 +1211,8 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "DEC-4": {
    "title": "Real business names in production data: consent or fictional names",
@@ -1006,7 +1225,8 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "DEC-5": {
    "title": "Confirm new story IDs E4/E5/E6 and V1 as persistence parent",
@@ -1019,7 +1239,8 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "DEC-6": {
    "title": "Schema sign-off rule: silence by Day 2 noon = approval",
@@ -1032,7 +1253,8 @@ export const PLAN = {
     1
    ],
    "github": null,
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "HK-1": {
    "title": "Close duplicate/finished issues #9 #22 #26 #29, verify and close #50, file Google sign-in backlog issue",
@@ -1045,7 +1267,8 @@ export const PLAN = {
     1
    ],
    "github": "#9 #22 #26 #29 #50",
-   "existing": null
+   "existing": null,
+   "files": []
   },
   "M1": {
    "title": "M1 deliverables: release APK, wiki links, sprint backlog view",
@@ -1058,7 +1281,8 @@ export const PLAN = {
     7
    ],
    "github": "#12",
-   "existing": null
+   "existing": null,
+   "files": []
   }
  },
  "edges": [

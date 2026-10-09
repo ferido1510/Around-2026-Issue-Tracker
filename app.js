@@ -149,6 +149,11 @@ function renderTip() {
     ? `<ul class="edges">${outs.map((e) => edgeLine(e, e.to, isDone(e.to))).join("")}</ul>`
     : `<p class="none">Nothing</p>`);
 
+  if (t.files.length) {
+    html += `<div class="tip-sec">Touched files</div>
+      <ul class="files">${t.files.map((f) => `<li>${esc(f).replaceAll("/", "/<wbr>")}</li>`).join("")}</ul>`;
+  }
+
   if (status === "progress") {
     html += `<div class="tip-who">${esc(rec.name)} took it ${esc(fmtTime(rec.startedAt))}</div>`;
     if (unmet.length) html += `<div class="tip-who stale">A blocker was reopened after this was taken.</div>`;
