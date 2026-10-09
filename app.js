@@ -362,7 +362,7 @@ async function run(act, id) {
     }
     hideTip();
   } catch (err) {
-    toast(err.code === "permission-denied" ? "Not allowed: check the allowlist in firestore.rules" : err.message, true);
+    toast(err.code === "permission-denied" ? "Not allowed: check the allowlist and that the published Firestore rules are current" : err.message, true);
   }
 }
 
@@ -423,7 +423,9 @@ function subscribe() {
       live = false;
       $("boardWrap").classList.add("locked");
       setBanner(err.code === "permission-denied"
-        ? `<b>${esc(user.email)}</b> is not on the board's allowlist. Ask whoever runs the board to add it to <code>firestore.rules</code>, then reload.`
+        ? `Firestore refused access to <code>sprints/${esc(sprint)}/tasks</code> for <b>${esc(user.email)}</b>. ` +
+          `Either that email isn't in the allowlist, or the rules published in the Firebase console are older than this page. ` +
+          `Whoever runs the board: publish the current <code>firestore.rules</code> with the team's emails, then reload.`
         : `Could not load the board: ${esc(err.message)}`);
       renderBoard();
     });
