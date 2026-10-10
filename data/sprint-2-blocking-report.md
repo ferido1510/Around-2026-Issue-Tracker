@@ -63,7 +63,7 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | `ready-scheduled` | 4 |
 | `blocked` | 32 |
 | `gated` | 3 |
-| `gated+blocked` | 10 |
+| `gated+blocked` | 11 |
 | `pending-decision` | 6 |
 | `open` | 14 |
 
@@ -148,6 +148,7 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | A3 | Import overview assets (asset-only PR) | Yigit | F3 (hard), DS0 (file) | Day 6 |
 | E6.1 | OverviewViewModel (first commit = OverviewUiState contract) | Zaynab | — (gate only) | Day 6 |
 | E6.2 | Overview screen in the Quests tab (replaces stub) | Ferit | E6.1 (hard), N1 (hard), N0 (hard) | Day 6–7 |
+| D8 | Geo-bounded quest query: download only quests near the explorer or the map view | — | D1 (hard), V4.1 (file), D7a (file), E3.4 (file) | Day 6–7 |
 
 ### 3.5 Pending decisions (planning meeting, Day 1)
 
@@ -290,8 +291,8 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | Day 2 | G2.2, G2.3, G2.4, G3.2, D4, D5, D7a, T0 | G2.2, V3.2, V4.3b, E3.2, Q2, N1, F1, E4.1 |
 | Day 3 | E3.3, N2, D2, A1, E5.1 | G2.3, G2.4, G3.2, E3.3, D2, D4, D5 |
 | Day 4 | — | G3.3, V4.3a, N2, D3, D7a, T0, A1, E4.2, E4.3 |
-| Day 5 | V4.3c, E3.4, D2p, D7b, T1, T2, E4.4, E5.2 | V4.3c, E3.4, D2p, T1, T2 |
-| Day 6 | D3p, A2, A3, E6.2 | D3p, D7b, E5.1, E5.2, F2, A2, F3, A3, E6.1, E6.2 |
+| Day 5 | V4.3c, E3.4, D2p, D7b, T1, T2, E4.4, E5.2, D8 | V4.3c, E3.4, D2p, T1, T2 |
+| Day 6 | D3p, A2, A3, E6.2 | D3p, D7b, E5.1, E5.2, F2, A2, F3, A3, E6.1, E6.2, D8 |
 | Day 7 | T3, V9.2, V10.1 | M1, E4.4, T3, V9.1, V9.2, V10.1 |
 
 ## 7. Full task register
@@ -320,7 +321,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | G3.3 | task | Venue entry: resume onboarding or open venue home (rewrite of #79) | G3 | G3 | Ece | Yigit | M | Day 4 | must | C2, V3.1, N0 | G2.3, N2 | — | D7b (h), T1 (h) | `blocked` | #79 |
 | V3.1 = C4 | task | Save and load the venue's marker and radius (= contract C4) | V3 | V3 | Yigit | Ece | S | Day 1 | must | — | — | — | G3.3 (h), V3.2 (h), Q2 (f), D7b (h), T1 (h) | `ready` | #88 · code in PR #92 (opened backwards, closed) |
 | V3.2 | task | Save the picked address with the area | V3 | V3 | Yigit | Ferit | S | Day 2–3 | must | V3.1 | — | — | D2 (h) | `blocked` | — |
-| V4.1 | task | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | V4 | V4 | Zaynab | Ferit | S | Day 1 | must | — | — | — | C5 (h), V4.2 (h), D1 (s), D5 (f), E4.3 (f) | `ready` | #74 · PR #76 (draft, complete) |
+| V4.1 | task | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | V4 | V4 | Zaynab | Ferit | S | Day 1 | must | — | — | — | C5 (h), V4.2 (h), D1 (s), D5 (f), E4.3 (f), D8 (f) | `ready` | #74 · PR #76 (draft, complete) |
 | C5 | contract | CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs | V4 | V4.2 | Zaynab | Ece | S | Day 1 | must | V4.1 | — | — | V4.2 (h), V4.3a (h), V4.3b (h) | `blocked` | — |
 | V4.2 | task | CreateQuestViewModel logic + tests | V4 | V4 | Zaynab | Jiayi | L | Day 1–3 | must | C5, V4.1 | — | — | V4.3a (s), V4.3c (h) | `blocked` | #75 |
 | V4.3a | task | Create-quest form: layout and text fields | V4 | V4 | Zaynab | Ece | M | Day 4–5 | must | C5 | V4.2 | — | V4.3b (s), V4.3c (h) | `blocked` | #32 |
@@ -330,7 +331,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | E3.1 | task | Sort nearby quests by distance in MapViewModel | E3 | E3 | Ferit | Jiayi | M | Day 1–2 | must | C6 | — | — | E3.3 (s) | `blocked` | #91 |
 | E3.2 | task | NearbyQuestList component (rows, empty, location-off) | E3 | E3 | Yigit | Ferit | M | Day 2–3 | must | C6 | — | — | E3.3 (h) | `blocked` | #91 |
 | E3.3 | task | Bottom sheet holding the list on MapScreen | E3 | E3 | Ferit | Yigit | M | Day 3–5 | must | E3.2 | E3.1 | — | E3.4 (h) | `blocked` | #91 |
-| E3.4 | task | Row tap frames venue + opens card; View opens venue page | E3 | E3 | Ferit | Alisher | S | Day 5 | must | E3.3, N1 | — | — | T2 (h) | `blocked` | #91 |
+| E3.4 | task | Row tap frames venue + opens card; View opens venue page | E3 | E3 | Ferit | Alisher | S | Day 5 | must | E3.3, N1 | — | — | T2 (h), D8 (f) | `blocked` | #91 |
 
 ### Tier 1: flaky cleanup
 
@@ -355,15 +356,16 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | ID | Kind | Title | Story | Parent | Owner | Rev. | Size | Window | Prio | Hard / file (start) | Soft (finish) | Decisions | Blocks | Initial | GitHub / existing |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | V1 | story | Venue and user data persists (mocks -> Firestore, real data) | V1,E2 | — | Jiayi | — | — | Day 1–6 | must | — | — | — | — | `open` | #6 #23 |
-| D1 | task | Finalize Firestore schema v1 (#23 / PR #25) | V1 | V1 | Jiayi | alisher+zaynab | M | Day 1–2 | must | — | V4.1 | DEC-1 (finish), DEC-6 (finish) | D2 (s), D3 (s), D4 (h), D7a (h) | `ready` | #23 · PR #25 (draft since Oct 4) |
+| D1 | task | Finalize Firestore schema v1 (#23 / PR #25) | V1 | V1 | Jiayi | alisher+zaynab | M | Day 1–2 | must | — | V4.1 | DEC-1 (finish), DEC-6 (finish) | D2 (s), D3 (s), D4 (h), D7a (h), D8 (h) | `ready` | #23 · PR #25 (draft since Oct 4) |
 | D2 | task | VenueRepositoryFirestore + emulator tests | V1,V3 | V1 | Yigit | Zaynab | L | Day 3–5 | must | V3.2 | Q3, D1 | — | D2p (h) | `blocked` | — |
 | D2p | task | Switch the venue provider to Firestore | V1 | V1 | Yigit | Jiayi | S | Day 5 | must | D2, G2.1 | — | — | D7b (h), T1 (s) | `blocked` | — |
 | D3 | task | UserRepositoryFirestore + emulator tests | V1,G3 | V1 | Ece | Vali | L | Day 4–6 | must | — | Q3, D1 | — | D3p (h) | `ready-scheduled` | — |
 | D3p | task | Add and switch the user provider to Firestore | V1,G3 | V1 | Ece | Vali | S | Day 6 | must | D3, G2.1 | — | — | G2.3 (s), D7b (s), T1 (s) | `blocked` | — |
-| D4 | task | Security rules v2, tested and deployed to around-67942 | V1,E5 | V1 | Alisher | Jiayi | M | Day 3–4 | must | D1 | — | DEC-1 (start) | D5 (s), D7b (h), E5.1 (s) | `blocked` | — |
-| D5 | task | Quests + reservations from Firestore; MapDemoData out of src/main | E2 | V1 | Jiayi | Ferit | S | Day 3 | must | G2.1, V4.1 (f) | D4 | — | D7a (s), D7b (h), T2 (h), E5.1 (s), V9.1 (s), E6.1 (s) | `blocked` | — |
-| D7a | task | Seed tool for the emulator (tools/seed) | V1,E2 | V1 | Jiayi | Alisher | L | Day 4–5 | must | D1 | D5 | — | — | `blocked` | — |
+| D4 | task | Security rules v2, tested and deployed to around-67942 | V1,E5 | V1 | Alisher | Jiayi | M | Day 3–4 | must | D1 | — | DEC-1 (start) | D5 (s), D7b (h), E5.1 (s), D8 (s) | `blocked` | — |
+| D5 | task | Quests + reservations from Firestore; MapDemoData out of src/main | E2 | V1 | Jiayi | Ferit | S | Day 3 | must | G2.1, V4.1 (f) | D4 | — | D7a (s), D7b (h), T2 (h), E5.1 (s), V9.1 (s), E6.1 (s), D8 (s) | `blocked` | — |
+| D7a | task | Seed tool for the emulator (tools/seed) | V1,E2 | V1 | Jiayi | Alisher | L | Day 4–5 | must | D1 | D5 | — | D8 (f) | `blocked` | — |
 | D7b | task | Data day: everyone creates a real venue + quests through the app | V1,E2 | V1 | Team | Jiayi | S | Day 6 | must | G3.3, V3.1, V4.3c, D2p, D5, D4 | D3p | DEC-4 (start) | — | `blocked` | — |
+| D8 | task | Geo-bounded quest query: download only quests near the explorer or the map view | V1,E2 | V1 | — | — | L | Day 6–7 | stretch | D1, V4.1 (f), D7a (f), E3.4 (f) | D5, D4 | — | — | `gated+blocked` | new (file under #6) |
 | DS0 | task | Design tokens and fonts in the theme (asset-only PR) | E2,E4,V4 | V1 | Ferit | Zaynab | S | Day 1 | must | — | — | — | A1 (f), A2 (f), A3 (f) | `ready` | — |
 
 ### Tier 4: end-to-end
@@ -487,6 +489,12 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D7b | D5 | hard | quests must persist in Firestore |
 | D7b | D4 | hard | rules v2 deployed to production |
 | D7b | D3p | soft | without it roles are asked again after restart |
+| D8 | D1 | hard | adds a geohash field to quest documents; schema v1 must define it (docs/firestore-schema.md is Jiayi's) |
+| D8 | V4.1 | file | edits model/quest/Quest.kt and QuestRepositoryFirestore.kt after the Reward change (PR #76) |
+| D8 | D7a | file | the seed tool must write geohash on seeded quests; edit tools/seed after it lands |
+| D8 | E3.4 | file | changes the observeActiveQuests call in ui/map/MapViewModel.kt; goes after Ferit's last MapViewModel task |
+| D8 | D5 | soft | the bounded query only reaches the map once the quest provider serves Firestore; verify in the app after D5 |
+| D8 | D4 | soft | the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy |
 | T0 | Q1 | hard | harness runs on the new CI emulator |
 | T1 | T0 | hard | uses the harness |
 | T1 | G2.3 | hard | role routing |
@@ -563,7 +571,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | E3 | Nearby quests sorted by distance | must | E3.1, E3.2, E3.3, E3.4 | #91 |
 | Q | Make CI trustworthy (map + Firestore tests) | must | Q1, Q2, Q3 | #95 |
 | N | No dead ends between screens | must | N0, N1, N2 | new |
-| V1 | Venue and user data persists (mocks -> Firestore, real data) | must | D1, D2, D2p, D3, D3p, D4, D5, D7a, D7b, DS0 | #6 #23 |
+| V1 | Venue and user data persists (mocks -> Firestore, real data) | must | D1, D2, D2p, D3, D3p, D4, D5, D7a, D7b, D8, DS0 | #6 #23 |
 | T | Core loop works end to end | must | T0, T1, T2, T3 | new |
 | E4 | See a venue's page and its quests | must | F1, A1, E4.1, E4.2, E4.3, E4.4 | new |
 | E5 | Accept a quest and form a party | stretch | E5.1, E5.2 | new |
@@ -609,7 +617,9 @@ Files touched by more than one task, and how the order is enforced. Cross-owner 
 | `ui/theme/*` | DS0, A1, A2, A3 | asset PRs after DS0 (file edge) | DS0 renames fonts and moves tokens |
 | `model/quest/*` | V4.1, D5 | D5 after V4.1 (file edge) | model/quest is Zaynab's; D5 edits only the provider |
 | `ui/map/marker/QuestCard.kt` | V4.1, E4.3 | E4.3 after V4.1 (file edge) | V4.1 changes the reward chip that E4.3 reuses |
-| `ui/map/MapViewModel.kt` | C6, E3.1, E3.4 | same owner, queue order | Ferit only |
+| `ui/map/MapViewModel.kt` | C6, E3.1, E3.4, D8 | Ferit's queue, then D8 (file edge from E3.4) | D8 only changes the `observeActiveQuests` call |
+| `model/quest/QuestRepositoryFirestore.kt` | V4.1, D8 | D8 after V4.1 (file edge) | model/quest is Zaynab's |
+| `tools/seed/*` | D7a, D8 | D8 after D7a (file edge) | D8 adds geohash to seeded quests |
 | `ui/map/MapScreen.kt` | E3.3, E3.4 | same owner, queue order | Ferit only |
 | `ui/venue/VenueAreaViewModel.kt` | V3.1, V3.2 | same owner, hard edge | Yigit only; #90 vs #92 collision is not repeated |
 | `model/venue/VenueRepository.kt (+fake)` | V3.2, D2 | same owner, hard edge | Yigit only |
@@ -678,7 +688,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "E3", "kind": "story", "title": "Nearby quests sorted by distance", "story": ["E3"], "tier": 0, "prio": "must", "owner": "ferit", "windowStartDay": 1, "windowEndDay": 5, "github": "#91", "initialStatus": "open", "children": ["E3.1", "E3.2", "E3.3", "E3.4"]},
     {"id": "Q", "kind": "story", "title": "Make CI trustworthy (map + Firestore tests)", "story": ["E2", "V3", "V4", "V9"], "tier": 1, "prio": "must", "owner": "alisher", "windowStartDay": 1, "windowEndDay": 3, "github": "#95", "initialStatus": "open", "children": ["Q1", "Q2", "Q3"]},
     {"id": "N", "kind": "story", "title": "No dead ends between screens", "story": ["G2", "E4", "V4"], "tier": 2, "prio": "must", "owner": "alisher", "windowStartDay": 1, "windowEndDay": 5, "initialStatus": "open", "children": ["N0", "N1", "N2"]},
-    {"id": "V1", "kind": "story", "title": "Venue and user data persists (mocks -> Firestore, real data)", "story": ["V1", "E2"], "tier": 3, "prio": "must", "owner": "jiayi", "windowStartDay": 1, "windowEndDay": 6, "github": "#6 #23", "initialStatus": "open", "children": ["D1", "D2", "D2p", "D3", "D3p", "D4", "D5", "D7a", "D7b", "DS0"]},
+    {"id": "V1", "kind": "story", "title": "Venue and user data persists (mocks -> Firestore, real data)", "story": ["V1", "E2"], "tier": 3, "prio": "must", "owner": "jiayi", "windowStartDay": 1, "windowEndDay": 6, "github": "#6 #23", "initialStatus": "open", "children": ["D1", "D2", "D2p", "D3", "D3p", "D4", "D5", "D7a", "D7b", "D8", "DS0"]},
     {"id": "T", "kind": "story", "title": "Core loop works end to end", "story": ["V4", "E4"], "tier": 4, "prio": "must", "owner": "alisher", "windowStartDay": 4, "windowEndDay": 6, "initialStatus": "open", "children": ["T0", "T1", "T2", "T3"]},
     {"id": "E4", "kind": "story", "title": "See a venue's page and its quests", "story": ["E4"], "tier": 5, "prio": "must", "owner": "yigit", "windowStartDay": 1, "windowEndDay": 5, "initialStatus": "open", "children": ["F1", "A1", "E4.1", "E4.2", "E4.3", "E4.4"]},
     {"id": "E5", "kind": "story", "title": "Accept a quest and form a party", "story": ["E5"], "tier": 6, "prio": "stretch", "owner": "jiayi", "windowStartDay": 6, "windowEndDay": 7, "initialStatus": "open", "children": ["E5.1", "E5.2"]},
@@ -723,6 +733,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "D5", "kind": "task", "title": "Quests + reservations from Firestore; MapDemoData out of src/main", "story": ["E2"], "parent": "V1", "tier": 3, "prio": "must", "owner": "jiayi", "reviewer": "ferit", "size": "S", "windowStartDay": 3, "windowEndDay": 3, "files": ["model/quest/QuestRepositoryProvider.kt", "model/reservation/ReservationRepositoryProvider.kt", "model/demo/MapDemoData.kt (moved to test fixtures)", "test/model/RepositoryProvidersTest.kt", "test/model/demo/MapDemoDataTest.kt", "README.md (demo section)"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
     {"id": "D7a", "kind": "task", "title": "Seed tool for the emulator (tools/seed)", "story": ["V1", "E2"], "parent": "V1", "tier": 3, "prio": "must", "owner": "jiayi", "reviewer": "alisher", "size": "L", "windowStartDay": 4, "windowEndDay": 5, "files": ["tools/seed/*", "README.md (seed)"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
     {"id": "D7b", "kind": "task", "title": "Data day: everyone creates a real venue + quests through the app", "story": ["V1", "E2"], "parent": "V1", "tier": 3, "prio": "must", "owner": "team", "reviewer": "jiayi", "size": "S", "windowStartDay": 6, "windowEndDay": 6, "initialStatus": "blocked", "earliestStructuralStartDay": 5},
+    {"id": "D8", "kind": "task", "title": "Geo-bounded quest query: download only quests near the explorer or the map view", "story": ["V1", "E2"], "parent": "V1", "tier": 3, "prio": "stretch", "owner": null, "reviewer": null, "size": "L", "windowStartDay": 6, "windowEndDay": 7, "github": "new (file under #6, V1)", "files": ["model/quest/QuestRepository.kt (+ FakeQuestRepository)", "model/quest/QuestRepositoryFirestore.kt (geohash on write, range queries on read)", "model/quest/Quest.kt (geohash)", "ui/map/MapViewModel.kt (pass explorer location, else map camera centre)", "firestore.indexes.json", "tools/seed/* (write geohash)", "docs/firestore-schema.md (geohash field)", "tools/backfill-geohash (one-off, for quests created before D8)"], "initialStatus": "gated+blocked", "earliestStructuralStartDay": 5},
     {"id": "DS0", "kind": "task", "title": "Design tokens and fonts in the theme (asset-only PR)", "story": ["E2", "E4", "V4"], "parent": "V1", "tier": 3, "prio": "must", "owner": "ferit", "reviewer": "zaynab", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/theme/*", "res/font/*"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "T0", "kind": "task", "title": "E2E harness: emulator reset, account helpers, page-object base", "story": ["V4", "E4"], "parent": "T", "tier": 4, "prio": "must", "owner": "alisher", "reviewer": "vali", "size": "M", "windowStartDay": 4, "windowEndDay": 5, "files": ["androidTest/e2e/E2eRule.kt", "androidTest/e2e/Accounts.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
     {"id": "T1", "kind": "task", "title": "E2E venue journey: sign up -> Venue -> name -> area -> new quest", "story": ["V4"], "parent": "T", "tier": 4, "prio": "must", "owner": "alisher", "reviewer": "ece", "size": "M", "windowStartDay": 5, "windowEndDay": 6, "files": ["androidTest/e2e/VenueJourneyTest.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
@@ -817,6 +828,12 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "D5", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "quests must persist in Firestore"},
     {"from": "D4", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "rules v2 deployed to production"},
     {"from": "D3p", "to": "D7b", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "without it roles are asked again after restart"},
+    {"from": "D1", "to": "D8", "kind": "hard", "family": "structural", "blocks": "start", "reason": "adds a geohash field to quest documents; schema v1 must define it (docs/firestore-schema.md is Jiayi's)"},
+    {"from": "V4.1", "to": "D8", "kind": "file", "family": "structural", "blocks": "start", "reason": "edits model/quest/Quest.kt and QuestRepositoryFirestore.kt after the Reward change (PR #76)"},
+    {"from": "D7a", "to": "D8", "kind": "file", "family": "structural", "blocks": "start", "reason": "the seed tool must write geohash on seeded quests; edit tools/seed after it lands"},
+    {"from": "E3.4", "to": "D8", "kind": "file", "family": "structural", "blocks": "start", "reason": "changes the observeActiveQuests call in ui/map/MapViewModel.kt; goes after Ferit's last MapViewModel task"},
+    {"from": "D5", "to": "D8", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "the bounded query only reaches the map once the quest provider serves Firestore; verify in the app after D5"},
+    {"from": "D4", "to": "D8", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy"},
     {"from": "Q1", "to": "T0", "kind": "hard", "family": "structural", "blocks": "start", "reason": "harness runs on the new CI emulator"},
     {"from": "T0", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "uses the harness"},
     {"from": "G2.3", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "role routing"},
@@ -1020,7 +1037,9 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"file": "ui/theme/*", "tasks": ["DS0", "A1", "A2", "A3"], "ordering": "asset PRs after DS0 (file edge)", "note": "DS0 renames fonts and moves tokens"},
     {"file": "model/quest/*", "tasks": ["V4.1", "D5"], "ordering": "D5 after V4.1 (file edge)", "note": "model/quest is Zaynab's; D5 edits only the provider"},
     {"file": "ui/map/marker/QuestCard.kt", "tasks": ["V4.1", "E4.3"], "ordering": "E4.3 after V4.1 (file edge)", "note": "V4.1 changes the reward chip that E4.3 reuses"},
-    {"file": "ui/map/MapViewModel.kt", "tasks": ["C6", "E3.1", "E3.4"], "ordering": "same owner, queue order", "note": "Ferit only"},
+    {"file": "ui/map/MapViewModel.kt", "tasks": ["C6", "E3.1", "E3.4", "D8"], "ordering": "Ferit's queue, then D8 (file edge from E3.4)", "note": "D8 only changes the observeActiveQuests call"},
+    {"file": "model/quest/QuestRepositoryFirestore.kt", "tasks": ["V4.1", "D8"], "ordering": "D8 after V4.1 (file edge)", "note": "model/quest is Zaynab's"},
+    {"file": "tools/seed/*", "tasks": ["D7a", "D8"], "ordering": "D8 after D7a (file edge)", "note": "D8 adds geohash to seeded quests"},
     {"file": "ui/map/MapScreen.kt", "tasks": ["E3.3", "E3.4"], "ordering": "same owner, queue order", "note": "Ferit only"},
     {"file": "ui/venue/VenueAreaViewModel.kt", "tasks": ["V3.1", "V3.2"], "ordering": "same owner, hard edge", "note": "Yigit only; #90 vs #92 collision is not repeated"},
     {"file": "model/venue/VenueRepository.kt (+fake)", "tasks": ["V3.2", "D2"], "ordering": "same owner, hard edge", "note": "Yigit only"},
@@ -1036,3 +1055,40 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
   ]
 }
 ```
+
+## 12. Added after the snapshot
+
+### D8: Geo-bounded quest query (added Day 1, from the E3.1 review)
+
+**Problem.** `QuestRepository.observeActiveQuests()` listens to *every* active quest in the world. Both the map pins and the E3 nearby list are built from that one stream, so download size, memory and listener cost grow with the global number of quests, not with what the explorer can see. Fine for the Sprint 2 data set (seeded Lausanne quests plus the team's venues), but it does not scale.
+
+**Fix.** Store a `geohash` on each quest (from its venue's location) and replace the global listener with geohash range queries around a centre: the explorer's location when permission is granted (fine or approximate), otherwise the map camera's centre. The radius is `NEARBY_RADIUS_METERS` or the visible area, whichever is larger. An exact distance filter runs on the client to drop the corners of the geohash cells. The nearby list (E3.1) and the pins then hold only what this query returns, with no change to `nearbyQuests(...)`.
+
+**Done when**
+- [ ] `observeActiveQuests(center, radiusMeters)` uses `status == ACTIVE` + geohash ranges (GeoFire common utilities), with emulator tests: inside, outside, cell-corner, moving centre
+- [ ] Quests get `geohash` on write; a one-off backfill covers quests created before D8 (for example on data day)
+- [ ] `docs/firestore-schema.md` documents the field; the composite index (`status`, `geohash`) is in `firestore.indexes.json` and deployed
+- [ ] The seed tool writes `geohash`
+- [ ] `MapViewModel` passes the explorer location, else the camera centre (re-querying when it moves beyond half the radius)
+
+**Placement.** V1 (Tier 3, mocks → Firestore), next to D5, which switches the quest provider to Firestore. Story tags `[V1·E2]`.
+
+**Priority: stretch.** Nothing in Sprint 2 fails without it, and the must-haves already have little slack (§4).
+
+**Blocked by**
+| Blocker | Kind | Why |
+|---|---|---|
+| D1 | hard | adds a geohash field to quest documents; schema v1 must define it (docs/firestore-schema.md is Jiayi's) |
+| V4.1 | file | edits model/quest/Quest.kt and QuestRepositoryFirestore.kt after the Reward change (PR #76) |
+| D7a | file | the seed tool must write geohash on seeded quests; edit tools/seed after it lands |
+| E3.4 | file | changes the observeActiveQuests call in ui/map/MapViewModel.kt; goes after Ferit's last MapViewModel task |
+| D5 | soft | the bounded query only reaches the map once the quest provider serves Firestore; verify in the app after D5 |
+| D4 | soft | the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy |
+
+**Blocks: nothing.**
+- E3.1 is not blocked. Its no-location case lists every valid quest the repository delivers, so it is bounded automatically once D8 lands, with no change to E3.1.
+- D7b (data day) is not blocked. Quests created before D8 are covered by the backfill instead of making data day wait.
+- T2 is not blocked. It only needs the seeded quest to have a `geohash`, which the D7a file edge guarantees.
+
+**Out of scope (team decision, not D8):** IP-based geolocation for explorers without any location permission (privacy and cost).
+

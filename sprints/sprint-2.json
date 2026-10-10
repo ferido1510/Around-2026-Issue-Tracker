@@ -91,6 +91,7 @@
     "D5",
     "D7a",
     "D7b",
+    "D8",
     "DS0"
    ]
   },
@@ -805,6 +806,29 @@
    "github": null,
    "existing": null,
    "files": []
+  },
+  "D8": {
+   "title": "Geo-bounded quest query: download only quests near the explorer or the map view",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "L",
+   "window": [
+    6,
+    7
+   ],
+   "github": "new (file under #6, V1)",
+   "existing": null,
+   "files": [
+    "model/quest/QuestRepository.kt (+ FakeQuestRepository)",
+    "model/quest/QuestRepositoryFirestore.kt (geohash on write, range queries on read)",
+    "model/quest/Quest.kt (geohash)",
+    "ui/map/MapViewModel.kt (pass explorer location, else map camera centre)",
+    "firestore.indexes.json",
+    "tools/seed/* (write geohash)",
+    "docs/firestore-schema.md (geohash field)",
+    "tools/backfill-geohash (one-off, for quests created before D8)"
+   ]
   },
   "DS0": {
    "title": "Design tokens and fonts in the theme (asset-only PR)",
@@ -1767,6 +1791,48 @@
    "kind": "soft",
    "blocks": "finish",
    "reason": "without it roles are asked again after restart"
+  },
+  {
+   "from": "D1",
+   "to": "D8",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "adds a geohash field to quest documents; schema v1 must define it (docs/firestore-schema.md is Jiayi's)"
+  },
+  {
+   "from": "V4.1",
+   "to": "D8",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "edits model/quest/Quest.kt and QuestRepositoryFirestore.kt after the Reward change (PR #76)"
+  },
+  {
+   "from": "D7a",
+   "to": "D8",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "the seed tool must write geohash on seeded quests; edit tools/seed after it lands"
+  },
+  {
+   "from": "E3.4",
+   "to": "D8",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "changes the observeActiveQuests call in ui/map/MapViewModel.kt; goes after Ferit's last MapViewModel task"
+  },
+  {
+   "from": "D5",
+   "to": "D8",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the bounded query only reaches the map once the quest provider serves Firestore; verify in the app after D5"
+  },
+  {
+   "from": "D4",
+   "to": "D8",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy"
   },
   {
    "from": "Q1",
