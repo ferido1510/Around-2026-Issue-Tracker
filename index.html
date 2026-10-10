@@ -141,9 +141,10 @@
     </details>
   </aside>
 
-  <aside class="legend legend-right card" aria-label="Box colours">
+  <aside class="legend legend-right card" aria-label="Boxes: colours and IDs">
     <details>
-      <summary>Box colours</summary>
+      <summary>Boxes</summary>
+      <h3 class="legend-sub">Colours</h3>
       <ul class="swatches">
         <li><span class="box mini s-blocked">ID</span><span><b>Blocked</b>: waiting on a task that isn't done</span></li>
         <li><span class="box mini s-free">ID</span><span><b>Free</b>: nothing blocks it, and nothing waits on it</span></li>
@@ -152,6 +153,17 @@
         <li><span class="box mini s-done">ID</span><span><b>Done</b>: click to reopen</span></li>
         <li><span class="box mini s-free stretch">ID</span><span><b>Striped</b>: stretch task</span></li>
       </ul>
+      <h3 class="legend-sub">Letters after an ID</h3>
+      <dl class="id-suffixes">
+        <div>
+          <dt><code>p</code></dt>
+          <dd><b>Provider switch.</b> A one-file follow-up that switches the app from the fake repository to the Firestore one built in the same-numbered task (D2 → D2p).<span class="suffix-eg" id="suffixP"></span></dd>
+        </div>
+        <div>
+          <dt><code>a b c</code></dt>
+          <dd><b>Parts of one item</b> that was too big for one PR (V4.3 → V4.3a, V4.3b, V4.3c). Each part is its own task with its own blockers.<span class="suffix-eg" id="suffixParts"></span></dd>
+        </div>
+      </dl>
       <p class="note">Click a free box to take it. Hover any box for its blockers.</p>
     </details>
   </aside>

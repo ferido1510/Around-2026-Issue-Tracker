@@ -11,6 +11,13 @@ A one-page board for the team's sprint plans. Pick a sprint from the dropdown ne
 | Grey ✓ | Done |
 | Striped | Stretch task |
 
+Letters after a task ID (also explained in the board's **Boxes** legend):
+
+| Suffix | Meaning | Example |
+|---|---|---|
+| `p` | Provider switch: a one-file follow-up that switches the app from the fake repository to the Firestore one built in the same-numbered task | D2 → D2p |
+| `a`, `b`, `c` | Parts of one item that was too big for one PR; each part is its own task with its own blockers | V4.3 → V4.3a, V4.3b, V4.3c |
+
 - **Hover** a box to see its title, what blocks it, what it blocks, and the kind of each block (hard / soft / file / decision).
 - **Click** a free box to take it. It turns yellow with your name on it.
 - **Click your own yellow box** to *Mark done* or *Release* it. Marking done turns grey and unblocks whatever was waiting on it.

@@ -804,7 +804,7 @@ tr.complete .rcount::after { content: " 🎉"; }
   border-radius: 18px;
 }
 .legend-left { left: 16px; width: 470px; max-width: calc(50vw - 24px); }
-.legend-right { right: 16px; width: 300px; }
+.legend-right { right: 16px; width: 340px; }
 .legend:not(:has(details[open])) { width: auto; border-radius: 999px; }
 .legend:not(:has(details[open])) summary { padding: 8px 16px; }
 .legend summary {
@@ -832,7 +832,29 @@ tr.complete .rcount::after { content: " 🎉"; }
 .kinds tr.ignored td { color: var(--muted); }
 .kinds tr.ignored td:not(:first-child) { text-decoration: line-through; text-decoration-color: var(--k-off); }
 
-.swatches { list-style: none; margin: 0; padding: 12px 16px 0; display: grid; gap: 10px; }
+.legend-sub {
+  margin: 12px 16px 0;
+  font: 800 11px var(--font);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.swatches { list-style: none; margin: 0; padding: 10px 16px 0; display: grid; gap: 10px; }
+.id-suffixes { margin: 8px 16px 0; display: grid; gap: 10px; font-size: 13px; }
+.id-suffixes > div { display: grid; grid-template-columns: 46px 1fr; gap: 12px; align-items: baseline; }
+.id-suffixes dt { margin: 0; white-space: nowrap; }
+.id-suffixes dt code {
+  display: block;
+  text-align: center;
+  font: 800 13px/20px var(--heading);
+  letter-spacing: 0.04em;
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 999px;
+  box-shadow: 0 2px 0 var(--accent-lo);
+}
+.id-suffixes dd { margin: 0; line-height: 1.4; }
+.suffix-eg { color: var(--muted); }
 .swatches li { display: flex; align-items: center; gap: 12px; font-size: 13px; }
 .box.mini {
   --box-w: 46px;

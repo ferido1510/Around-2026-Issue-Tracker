@@ -226,6 +226,20 @@ function cycleTheme() {
   try { localStorage.setItem("tracker-theme", next); } catch { /* ignore */ }
 }
 
+// ---------- ID legend ----------
+
+// Fill the "letters after an ID" legend with this sprint's own examples.
+function renderIdLegend() {
+  const ids = Object.keys(PLAN.tasks);
+  const withP = ids.filter((id) => /\dp$/.test(id));
+  const parts = ids.filter((id) => /\d[a-oq-z]$/.test(id));
+  const show = (el, list) => {
+    el.textContent = list.length ? ` In this sprint: ${list.join(", ")}.` : " None in this sprint.";
+  };
+  show($("suffixP"), withP);
+  show($("suffixParts"), parts);
+}
+
 // ---------- tooltip ----------
 
 function fmtTime(v) {
@@ -547,6 +561,7 @@ async function showSprint(id) {
   url.searchParams.set("sprint", sp.id);
   history.replaceState(null, "", url);
   buildBoard();
+  renderIdLegend();
   renderReplays();
   if (store) subscribe();
   renderBoard();
