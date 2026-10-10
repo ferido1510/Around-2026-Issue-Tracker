@@ -845,6 +845,26 @@ tr.complete .rcount::after { content: " 🎉"; }
 }
 .box.mini .warn { width: 16px; height: 15px; top: -7px; right: -7px; }
 
+/* ============ debug tools (only shown to DEBUG_EMAILS) ============ */
+
+.debug-btn[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent-lo); }
+.debug-panel {
+  position: fixed;
+  top: 84px;
+  right: 16px;
+  z-index: 40;
+  width: 240px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 2px dashed var(--accent-2);
+}
+.debug-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.debug-head b { font: 700 16px var(--heading); }
+.debug-head span { color: var(--muted); font-size: 12px; }
+.debug-actions { display: grid; gap: 8px; }
+.debug-actions .btn { text-align: left; }
+.debug-note { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+
 /* ============ toast ============ */
 
 .toast {

@@ -45,6 +45,7 @@ let unsubscribe = null;
 let tipFor = null;          // task ID the tooltip shows
 let tipPinned = false;
 let lastPointer = "mouse";
+let sweeping = false;        // the debug "fill the progress bar" demo is running
 let prevStatus = new Map();  // for the pop animation when a box changes colour
 let prevLevel = null;       // celebration level at the last render (null = no live data yet)
 
@@ -128,6 +129,7 @@ function renderBoard() {
 // ---------- progress and celebrations ----------
 
 function renderProgress(counts) {
+  if (sweeping) return;       // the debug demo owns the bar for a few seconds
   const total = ALL_IDS.length;
   const pct = live ? Math.round((100 * counts.done) / total) : 0;
   $("pct").textContent = live ? pct : "–";
@@ -390,6 +392,7 @@ async function signIn() {
 // ---------- auth / data ----------
 
 function renderAccount() {
+  renderDebug();
   const el = $("account");
   if (store.mode === "demo") {
     el.innerHTML = `<span class="pill">Demo mode: Firebase not configured, changes stay in this browser</span>`;
@@ -401,6 +404,72 @@ function renderAccount() {
     el.innerHTML = `<button type="button" class="btn primary" id="signIn">Sign in with Google</button>`;
     $("signIn").onclick = signIn;
   }
+}
+
+// ---------- debug tools (demo the animations) ----------
+// Only shown to these accounts. This is a convenience, not security: the
+// buttons only play animations locally and never write to Firestore.
+const DEBUG_EMAILS = ["feritbatuhatip@gmail.com"];
+
+const isDebugUser = () => !!user?.email && DEBUG_EMAILS.includes(user.email.toLowerCase());
+
+function renderDebug() {
+  const allowed = isDebugUser();
+  const open = allowed && lsGet("tracker-debug") === "1";
+  $("debugBtn").hidden = !allowed;
+  $("debugBtn").setAttribute("aria-pressed", String(open));
+  $("debugPanel").hidden = !open;
+}
+
+function toggleDebug() {
+  lsSet("tracker-debug", $("debugPanel").hidden ? "1" : "0");
+  renderDebug();
+}
+
+function sweepProgressBar() {
+  if (sweeping) return;
+  sweeping = true;
+  const value = $("barValue");
+  value.style.transition = "none";
+  value.style.width = "0%";
+  $("barDone").style.width = "100%";
+  $("barProg").style.width = "0%";
+  $("barDone").style.setProperty("--track-scale", "1");
+  void value.offsetWidth;               // apply the 0% before animating
+  value.style.transition = "width 2.4s cubic-bezier(0.45, 0, 0.2, 1)";
+  value.style.width = "100%";
+  const started = performance.now();
+  const tick = (now) => {
+    const t = Math.min(1, (now - started) / 2400);
+    $("pct").textContent = Math.round(100 * (1 - Math.pow(1 - t, 2)));
+    if (t < 1) requestAnimationFrame(tick);
+    else $("bar").classList.add("full");
+  };
+  requestAnimationFrame(tick);
+  setTimeout(() => {
+    sweeping = false;
+    value.style.transition = "";
+    $("bar").classList.remove("full");
+    renderBoard();
+  }, 5000);
+}
+
+function popEveryBox() {
+  document.querySelectorAll(".board .box").forEach((box, i) => {
+    box.style.animationDelay = `${i * 12}ms`;
+    box.classList.remove("pop");
+    void box.offsetWidth;
+    box.classList.add("pop");
+    box.addEventListener("animationend", () => { box.classList.remove("pop"); box.style.animationDelay = ""; }, { once: true });
+  });
+}
+
+function runDebug(action) {
+  if (!isDebugUser()) return;
+  if (action === "victory" || action === "ultra") celebrate(action);
+  if (action === "confetti") burst(innerWidth / 2, innerHeight / 3);
+  if (action === "pop") popEveryBox();
+  if (action === "sweep") sweepProgressBar();
 }
 
 function setBanner(html) {
@@ -516,6 +585,11 @@ function wire() {
   window.addEventListener("scroll", () => { if (!tipPinned) hideTip(); }, true);
   $("gateSignIn").onclick = signIn;
   $("themeBtn").onclick = cycleTheme;
+  $("debugBtn").onclick = toggleDebug;
+  $("debugPanel").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-debug]");
+    if (b) runDebug(b.dataset.debug);
+  });
   $("sprintSelect").onchange = (e) => {
     showSprint(e.target.value).catch((err) => toast(`Could not load that sprint: ${err.message}`, true));
   };

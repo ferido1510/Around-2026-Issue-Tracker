@@ -46,9 +46,25 @@
         </button>
       </div>
       <div class="account" id="account"></div>
+      <button type="button" class="icon-btn debug-btn" id="debugBtn" aria-pressed="false" aria-controls="debugPanel" title="Debug tools" hidden>🛠</button>
       <button type="button" class="icon-btn" id="themeBtn" aria-label="Theme"></button>
     </div>
   </header>
+
+  <aside class="debug-panel card" id="debugPanel" aria-label="Debug tools" hidden>
+    <div class="debug-head">
+      <b>Debug</b>
+      <span>only you see this</span>
+    </div>
+    <div class="debug-actions">
+      <button type="button" class="btn" data-debug="victory">🏆 Victory</button>
+      <button type="button" class="btn" data-debug="ultra">👑 Ultra victory</button>
+      <button type="button" class="btn" data-debug="confetti">🎉 Confetti pop</button>
+      <button type="button" class="btn" data-debug="pop">💥 Pop every box</button>
+      <button type="button" class="btn" data-debug="sweep">📈 Fill the progress bar</button>
+    </div>
+    <p class="debug-note">Plays on this screen only. Nothing is saved, and nobody else sees it.</p>
+  </aside>
 
   <div class="banner" id="banner" hidden></div>
 
