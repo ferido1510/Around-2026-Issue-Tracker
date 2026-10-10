@@ -59,9 +59,9 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 
 | Status | Count |
 |---|---|
-| `ready` | 13 |
+| `ready` | 14 |
 | `ready-scheduled` | 4 |
-| `blocked` | 32 |
+| `blocked` | 31 |
 | `gated` | 3 |
 | `gated+blocked` | 11 |
 | `pending-decision` | 6 |
@@ -84,6 +84,7 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | D1 | Finalize Firestore schema v1 (#23 / PR #25) | Jiayi | M | PR #25 (draft since Oct 4) |
 | DS0 | Design tokens and fonts in the theme (asset-only PR) | Ferit | S | — |
 | C7 | VenuePageUiState + VenuePageQuest + ViewModel stub | Jiayi | S | — |
+| V4.2 | Quest form: text fields (title, description, requirements) | — | M | — |
 
 ### 3.2 Ready, but scheduled later (no structural blocker)
 
@@ -105,11 +106,10 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | G3.2 | Role selection screen (Figma #27) | Ece | G3.1 (hard) | Day 2 | Day 3 |
 | G3.3 | Venue entry: resume onboarding or open venue home (rewrite of #79) | Ece | C2 (hard), V3.1 (hard), N0 (hard) | Day 1 | Day 4 |
 | V3.2 | Save the picked address with the area | Yigit | V3.1 (hard) | Day 1 | Day 2–3 |
-| C5 | CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs | Zaynab | V4.1 (hard) | Day 1 | Day 1 |
-| V4.2 | CreateQuestViewModel logic + tests | Zaynab | C5 (hard), V4.1 (hard) | Day 1 | Day 1–3 |
-| V4.3a | Create-quest form: layout and text fields | Zaynab | C5 (hard) | Day 1 | Day 4–5 |
-| V4.3b | Reward type picker and per-type fields | Ece | C5 (hard) | Day 1 | Day 2–3 |
-| V4.3c | Saving/error states and open the form from the venue home | Zaynab | V4.2 (hard), V4.3a (hard), N0 (hard), N2 (hard) | Day 5 | Day 5 |
+| V4.3 | Activity settings (proof type, radius, party size) | — | V4.2 (hard) | Day 2 | Day 3 |
+| V4.4 | Reward picker + Discount fields | — | V4.2 (hard), V4.1 (hard) | Day 2 | Day 3 |
+| V4.5 | Free item, Other and reward expiry | — | V4.4 (hard) | Day 3 | Day 4 |
+| V4.6 | Save quest, saving/error states, open from venue home | — | V4.2 (hard), V4.3 (hard), V4.5 (hard), N0 (hard), N2 (hard) | Day 5 | Day 5 |
 | E3.1 | Sort nearby quests by distance in MapViewModel | Ferit | C6 (hard) | Day 1 | Day 1–2 |
 | E3.2 | NearbyQuestList component (rows, empty, location-off) | Yigit | C6 (hard) | Day 1 | Day 2–3 |
 | E3.3 | Bottom sheet holding the list on MapScreen | Ferit | E3.2 (hard) | Day 3 | Day 3–5 |
@@ -122,9 +122,9 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | D4 | Security rules v2, tested and deployed to around-67942 | Alisher | D1 (hard), DEC-1 (decision) | Day 2 | Day 3–4 |
 | D5 | Quests + reservations from Firestore; MapDemoData out of src/main | Jiayi | G2.1 (hard), V4.1 (file) | Day 2 | Day 3 |
 | D7a | Seed tool for the emulator (tools/seed) | Jiayi | D1 (hard) | Day 2 | Day 4–5 |
-| D7b | Data day: everyone creates a real venue + quests through the app | Team | DEC-4 (decision), G3.3 (hard), V3.1 (hard), V4.3c (hard), D2p (hard), D5 (hard), D4 (hard) | Day 5 | Day 6 |
+| D7b | Data day: everyone creates a real venue + quests through the app | Team | DEC-4 (decision), G3.3 (hard), V3.1 (hard), V4.6 (hard), D2p (hard), D5 (hard), D4 (hard) | Day 5 | Day 6 |
 | T0 | E2E harness: emulator reset, account helpers, page-object base | Alisher | Q1 (hard) | Day 2 | Day 4–5 |
-| T1 | E2E venue journey: sign up -> Venue -> name -> area -> new quest | Alisher | T0 (hard), G2.3 (hard), G3.2 (hard), G3.3 (hard), V3.1 (hard), N2 (hard), V4.3c (hard) | Day 5 | Day 5–6 |
+| T1 | E2E venue journey: sign up -> Venue -> name -> area -> new quest | Alisher | T0 (hard), G2.3 (hard), G3.2 (hard), G3.3 (hard), V3.1 (hard), N2 (hard), V4.6 (hard) | Day 5 | Day 5–6 |
 | T2 | E2E explorer journey: seeded quest -> map -> nearby -> venue page | Vali | T0 (hard), G2.3 (hard), G3.2 (hard), E3.4 (hard), E4.2 (hard), D5 (hard) | Day 5 | Day 5–6 |
 | A1 | Import venue page assets (asset-only PR) | Zaynab | F1 (hard), DS0 (file) | Day 3 | Day 4 |
 | E4.1 | VenuePageViewModel logic + tests | Jiayi | C7 (hard) | Day 1 | Day 2–3 |
@@ -167,7 +167,7 @@ These are chains of `hard` edges with the planned windows. A slip anywhere on th
 
 | # | Chain | Ends | Slack | Mitigation |
 |---|---|---|---|---|
-| CP-1 | C2 (Day 1) → G2.1 (Day 1–2) → G2.4 (Day 3) → **N2 (Day 4–5)** → V4.3c (Day 5) → T1 (Day 5–6) | Day 6 | 1 day | N2 ships the Quests tab with the *New quest* button first (split N2 if needed). V4.3c and T1 are the most exposed |
+| CP-1 | C2 (Day 1) → G2.1 (Day 1–2) → G2.4 (Day 3) → **N2 (Day 4–5)** → V4.6 (Day 5) → T1 (Day 5–6) | Day 6 | 1 day | N2 ships the Quests tab with the *New quest* button first (split N2 if needed). V4.6 and T1 are the most exposed. V4.6 also ends the V4.2 → V4.4 → V4.5 chain |
 | CP-2 | C6 (Day 1) → E3.2 (Day 2–3) → **E3.3 (Day 3–5)** → E3.4 (Day 5) → T2 (Day 5–6) | Day 6 | 1 day | E3.3 can start with a static list. T2 can be written step by step from Day 5 |
 | CP-3 | C2 → G2.1 (Day 2) → D5 (Day 3) → T2 (Day 5–6) | Day 6 | 2 days | Only real wait on auth: rules need sign-in to read quests |
 | CP-4 | V3.1 (Day 1) → V3.2 (Day 2–3) → **D2 (Day 3–5)** → D2p (Day 5) → D7b data day (Day 6) | Day 6 | 1 day | Data day can run on Day 7 if D2 slips |
@@ -177,6 +177,8 @@ These are chains of `hard` edges with the planned windows. A slip anywhere on th
 ## 5. Chronological blocking: owner queues
 
 Each owner's tasks in planned order. A task's `owner-queue` blocker is the row above it. Rows after **— stretch gate —** wait until all rows above are done.
+
+V4.2–V4.6 (the V4 re-split, §12) are unassigned: they are taken on the board and are not in any queue below.
 
 ### Ferit (@ferido1510)
 
@@ -197,15 +199,11 @@ Each owner's tasks in planned order. A task's `owner-queue` blocker is the row a
 | # | ID | Title | Window | Size | Structural blockers owned by others |
 |---|---|---|---|---|---|
 | 1 | V4.1 | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | Day 1 | S | — |
-| 2 | C5 | CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs | Day 1 | S | — |
-| 3 | V4.2 | CreateQuestViewModel logic + tests | Day 1–3 | L | — |
-| 4 | F1 | Figma: venue page (light/dark, incl. accept-bar state) | Day 2–3 | M | — |
-| 5 | A1 | Import venue page assets (asset-only PR) | Day 4 | S | DS0 (Ferit, file) |
-| 6 | V4.3a | Create-quest form: layout and text fields | Day 4–5 | M | — |
-| 7 | V4.3c | Saving/error states and open the form from the venue home | Day 5 | S | N0 (Alisher, hard), N2 (Vali, hard), V4.3b (Ece, soft) |
+| 2 | F1 | Figma: venue page (light/dark, incl. accept-bar state) | Day 2–3 | M | — |
+| 3 | A1 | Import venue page assets (asset-only PR) | Day 4 | S | DS0 (Ferit, file) |
 | | **— stretch gate —** | | | | |
-| 8 | E6.1 | OverviewViewModel (first commit = OverviewUiState contract) | Day 6 | M | D5 (Jiayi, soft) |
-| 9 | E4.4 | Quest detail sheet (only if rows are too dense) | Day 7 | S | E4.3 (Ferit, hard) |
+| 4 | E6.1 | OverviewViewModel (first commit = OverviewUiState contract) | Day 6 | M | D5 (Jiayi, soft) |
+| 5 | E4.4 | Quest detail sheet (only if rows are too dense) | Day 7 | S | E4.3 (Ferit, hard) |
 
 ### Yigit (@yeet-yildiz)
 
@@ -226,15 +224,14 @@ Each owner's tasks in planned order. A task's `owner-queue` blocker is the row a
 | # | ID | Title | Window | Size | Structural blockers owned by others |
 |---|---|---|---|---|---|
 | 1 | G3.1 | Role selection ViewModel | Day 1–2 | S | C3 (Vali, soft) |
-| 2 | V4.3b | Reward type picker and per-type fields | Day 2–3 | M | C5 (Zaynab, hard), V4.3a (Zaynab, soft) |
-| 3 | G3.2 | Role selection screen (Figma #27) | Day 3 | M | C2 (Vali, soft) |
-| 4 | G3.3 | Venue entry: resume onboarding or open venue home (rewrite of #79) | Day 4 | M | C2 (Vali, hard), V3.1 (Yigit, hard), N0 (Alisher, hard), G2.3 (Vali, soft), N2 (Vali, soft) |
-| 5 | D3 | UserRepositoryFirestore + emulator tests | Day 4–6 | L | Q3 (Jiayi, soft), D1 (Jiayi, soft) |
-| 6 | D3p | Add and switch the user provider to Firestore | Day 6 | S | G2.1 (Vali, hard) |
+| 2 | G3.2 | Role selection screen (Figma #27) | Day 3 | M | C2 (Vali, soft) |
+| 3 | G3.3 | Venue entry: resume onboarding or open venue home (rewrite of #79) | Day 4 | M | C2 (Vali, hard), V3.1 (Yigit, hard), N0 (Alisher, hard), G2.3 (Vali, soft), N2 (Vali, soft) |
+| 4 | D3 | UserRepositoryFirestore + emulator tests | Day 4–6 | L | Q3 (Jiayi, soft), D1 (Jiayi, soft) |
+| 5 | D3p | Add and switch the user provider to Firestore | Day 6 | S | G2.1 (Vali, hard) |
 | | **— stretch gate —** | | | | |
-| 7 | F2 | Figma: venue dashboard with >= 1 reservation | Day 6 | M | DEC-1 (Jiayi, decision) |
-| 8 | A2 | Import dashboard assets (asset-only PR) | Day 6 | S | DS0 (Ferit, file) |
-| 9 | V9.2 | Dashboard reservation list (replaces stub; exposes row actions slot) | Day 7 | M | V9.1 (Jiayi, hard), N2 (Vali, hard), N0 (Alisher, hard) |
+| 6 | F2 | Figma: venue dashboard with >= 1 reservation | Day 6 | M | DEC-1 (Jiayi, decision) |
+| 7 | A2 | Import dashboard assets (asset-only PR) | Day 6 | S | DS0 (Ferit, file) |
+| 8 | V9.2 | Dashboard reservation list (replaces stub; exposes row actions slot) | Day 7 | M | V9.1 (Jiayi, hard), N2 (Vali, hard), N0 (Alisher, hard) |
 
 ### Vali (@valigadayev-lgtm)
 
@@ -278,7 +275,7 @@ Each owner's tasks in planned order. A task's `owner-queue` blocker is the row a
 | 3 | N1 | Open the venue page from the map card; Quests tab hosts overview (closes #20 gap) | Day 2 | S | — |
 | 4 | D4 | Security rules v2, tested and deployed to around-67942 | Day 3–4 | M | D1 (Jiayi, hard), DEC-1 (Jiayi, decision) |
 | 5 | T0 | E2E harness: emulator reset, account helpers, page-object base | Day 4–5 | M | — |
-| 6 | T1 | E2E venue journey: sign up -> Venue -> name -> area -> new quest | Day 5–6 | M | G2.3 (Vali, hard), G3.2 (Ece, hard), G3.3 (Ece, hard), V3.1 (Yigit, hard), N2 (Vali, hard), V4.3c (Zaynab, hard), Q2 (Ferit, soft), D2p (Yigit, soft), D3p (Ece, soft) |
+| 6 | T1 | E2E venue journey: sign up -> Venue -> name -> area -> new quest | Day 5–6 | M | G2.3 (Vali, hard), G3.2 (Ece, hard), G3.3 (Ece, hard), V3.1 (Yigit, hard), N2 (Vali, hard), V4.6 (unassigned, hard), Q2 (Ferit, soft), D2p (Yigit, soft), D3p (Ece, soft) |
 | 7 | M1 | M1 deliverables: release APK, wiki links, sprint backlog view | Day 7 | S | T2 (Vali, soft) |
 
 ## 6. Unblock timeline (if every task merges by the end of its window)
@@ -287,11 +284,11 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 
 | Day | Becomes structurally unblocked | Planned to start |
 |---|---|---|
-| Day 1 | G2.1, G3.3, V3.2, C5, V4.2, V4.3a, V4.3b, E3.1, E3.2, Q2, N1, E4.1, E4.2, E4.3, V9.1 | HK-1, C2, C3, G2.1, G3.1, V3.1, V4.1, C5, V4.2, C6, E3.1, Q1, Q3, N0, D1, DS0, C7 |
-| Day 2 | G2.2, G2.3, G2.4, G3.2, D4, D5, D7a, T0 | G2.2, V3.2, V4.3b, E3.2, Q2, N1, F1, E4.1 |
-| Day 3 | E3.3, N2, D2, A1, E5.1 | G2.3, G2.4, G3.2, E3.3, D2, D4, D5 |
-| Day 4 | — | G3.3, V4.3a, N2, D3, D7a, T0, A1, E4.2, E4.3 |
-| Day 5 | V4.3c, E3.4, D2p, D7b, T1, T2, E4.4, E5.2, D8 | V4.3c, E3.4, D2p, T1, T2 |
+| Day 1 | G2.1, G3.3, V3.2, E3.1, E3.2, Q2, N1, E4.1, E4.2, E4.3, V9.1 | HK-1, C2, C3, G2.1, G3.1, V3.1, V4.1, V4.2, C6, E3.1, Q1, Q3, N0, D1, DS0, C7 |
+| Day 2 | G2.2, G2.3, G2.4, G3.2, D4, D5, D7a, T0, V4.3, V4.4 | G2.2, V3.2, E3.2, Q2, N1, F1, E4.1 |
+| Day 3 | E3.3, N2, D2, A1, E5.1, V4.5 | G2.3, G2.4, G3.2, E3.3, D2, D4, D5 |, V4.3, V4.4
+| Day 4 | — | G3.3, V4.5, N2, D3, D7a, T0, A1, E4.2, E4.3 |
+| Day 5 | V4.6, E3.4, D2p, D7b, T1, T2, E4.4, E5.2, D8 | V4.6, E3.4, D2p, T1, T2 |
 | Day 6 | D3p, A2, A3, E6.2 | D3p, D7b, E5.1, E5.2, F2, A2, F3, A3, E6.1, E6.2, D8 |
 | Day 7 | T3, V9.2, V10.1 | M1, E4.4, T3, V9.1, V9.2, V10.1 |
 
@@ -321,12 +318,12 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | G3.3 | task | Venue entry: resume onboarding or open venue home (rewrite of #79) | G3 | G3 | Ece | Yigit | M | Day 4 | must | C2, V3.1, N0 | G2.3, N2 | — | D7b (h), T1 (h) | `blocked` | #79 |
 | V3.1 = C4 | task | Save and load the venue's marker and radius (= contract C4) | V3 | V3 | Yigit | Ece | S | Day 1 | must | — | — | — | G3.3 (h), V3.2 (h), Q2 (f), D7b (h), T1 (h) | `ready` | #88 · code in PR #92 (opened backwards, closed) |
 | V3.2 | task | Save the picked address with the area | V3 | V3 | Yigit | Ferit | S | Day 2–3 | must | V3.1 | — | — | D2 (h) | `blocked` | — |
-| V4.1 | task | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | V4 | V4 | Zaynab | Ferit | S | Day 1 | must | — | — | — | C5 (h), V4.2 (h), D1 (s), D5 (f), E4.3 (f), D8 (f) | `ready` | #74 · PR #76 (draft, complete) |
-| C5 | contract | CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs | V4 | V4.2 | Zaynab | Ece | S | Day 1 | must | V4.1 | — | — | V4.2 (h), V4.3a (h), V4.3b (h) | `blocked` | — |
-| V4.2 | task | CreateQuestViewModel logic + tests | V4 | V4 | Zaynab | Jiayi | L | Day 1–3 | must | C5, V4.1 | — | — | V4.3a (s), V4.3c (h) | `blocked` | #75 |
-| V4.3a | task | Create-quest form: layout and text fields | V4 | V4 | Zaynab | Ece | M | Day 4–5 | must | C5 | V4.2 | — | V4.3b (s), V4.3c (h) | `blocked` | #32 |
-| V4.3b | task | Reward type picker and per-type fields | V4 | V4 | Ece | Zaynab | M | Day 2–3 | must | C5 | V4.3a | — | V4.3c (s) | `blocked` | #32 |
-| V4.3c | task | Saving/error states and open the form from the venue home | V4 | V4 | Zaynab | Vali | S | Day 5 | must | V4.2, V4.3a, N0, N2 | V4.3b | — | D7b (h), T1 (h) | `blocked` | #32 |
+| V4.1 | task | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | V4 | V4 | Zaynab | Ferit | S | Day 1 | must | — | — | — | V4.4 (h), D1 (s), D5 (f), E4.3 (f), D8 (f) | `ready` | #74 · PR #76 (draft, complete) |
+| V4.2 | task | Quest form: text fields (title, description, requirements) | V4 | V4 | — | — | M | Day 1–2 | must | — | — | — | V4.3 (h), V4.4 (h), V4.6 (h) | `ready` | #75 #32 |
+| V4.3 | task | Activity settings (proof type, radius, party size) | V4 | V4 | — | — | S | Day 3 | must | V4.2 | — | — | V4.6 (h) | `blocked` | #32 |
+| V4.4 | task | Reward picker + Discount fields | V4 | V4 | — | — | M | Day 3 | must | V4.2, V4.1 | — | — | V4.5 (h) | `blocked` | #32 |
+| V4.5 | task | Free item, Other and reward expiry | V4 | V4 | — | — | S | Day 4 | must | V4.4 | — | — | V4.6 (h) | `blocked` | #32 |
+| V4.6 | task | Save quest, saving/error states, open from venue home | V4 | V4 | — | — | M | Day 5 | must | V4.2, V4.3, V4.5, N0, N2 | — | — | D7b (h), T1 (h) | `blocked` | #32 |
 | C6 | contract | NearbyQuest data class + MapUiState.nearby | E3 | E3.1 | Ferit | Yigit | S | Day 1 | must | — | — | — | E3.1 (h), E3.2 (h) | `ready` | — |
 | E3.1 | task | Sort nearby quests by distance in MapViewModel | E3 | E3 | Ferit | Jiayi | M | Day 1–2 | must | C6 | — | — | E3.3 (s) | `blocked` | #91 |
 | E3.2 | task | NearbyQuestList component (rows, empty, location-off) | E3 | E3 | Yigit | Ferit | M | Day 2–3 | must | C6 | — | — | E3.3 (h) | `blocked` | #91 |
@@ -347,9 +344,9 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | ID | Kind | Title | Story | Parent | Owner | Rev. | Size | Window | Prio | Hard / file (start) | Soft (finish) | Decisions | Blocks | Initial | GitHub / existing |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | N | story | No dead ends between screens | G2,E4,V4 | — | Alisher | — | — | Day 1–5 | must | — | — | — | — | `open` | — |
-| N0 = C1 | contract | Route contract: every Sprint 2 route with a Coming-soon stub (= contract C1) | G2 | N | Alisher | Vali | S | Day 1 | must | — | — | — | G3.3 (h), V4.3c (h), N1 (h), N2 (h), E4.2 (h), V9.2 (h), E6.2 (h) | `ready` | — |
+| N0 = C1 | contract | Route contract: every Sprint 2 route with a Coming-soon stub (= contract C1) | G2 | N | Alisher | Vali | S | Day 1 | must | — | — | — | G3.3 (h), V4.6 (h), N1 (h), N2 (h), E4.2 (h), V9.2 (h), E6.2 (h) | `ready` | — |
 | N1 | task | Open the venue page from the map card; Quests tab hosts overview (closes #20 gap) | E4 | N | Alisher | Ferit | S | Day 2 | must | N0 | — | — | E3.4 (h), E6.2 (h) | `blocked` | #20 |
-| N2 | task | Venue home shell: Dashboard / Quests (New quest) / Profile | V4,V9 | N | Vali | Alisher | M | Day 4–5 | must | N0, G2.4 | G2.3 | — | G3.3 (s), V4.3c (h), T1 (h), V9.2 (h) | `blocked` | — |
+| N2 | task | Venue home shell: Dashboard / Quests (New quest) / Profile | V4,V9 | N | Vali | Alisher | M | Day 4–5 | must | N0, G2.4 | G2.3 | — | G3.3 (s), V4.6 (h), T1 (h), V9.2 (h) | `blocked` | — |
 
 ### Tier 3: mocks → Firestore
 
@@ -364,7 +361,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D4 | task | Security rules v2, tested and deployed to around-67942 | V1,E5 | V1 | Alisher | Jiayi | M | Day 3–4 | must | D1 | — | DEC-1 (start) | D5 (s), D7b (h), E5.1 (s), D8 (s) | `blocked` | — |
 | D5 | task | Quests + reservations from Firestore; MapDemoData out of src/main | E2 | V1 | Jiayi | Ferit | S | Day 3 | must | G2.1, V4.1 (f) | D4 | — | D7a (s), D7b (h), T2 (h), E5.1 (s), V9.1 (s), E6.1 (s), D8 (s) | `blocked` | — |
 | D7a | task | Seed tool for the emulator (tools/seed) | V1,E2 | V1 | Jiayi | Alisher | L | Day 4–5 | must | D1 | D5 | — | D8 (f) | `blocked` | — |
-| D7b | task | Data day: everyone creates a real venue + quests through the app | V1,E2 | V1 | Team | Jiayi | S | Day 6 | must | G3.3, V3.1, V4.3c, D2p, D5, D4 | D3p | DEC-4 (start) | — | `blocked` | — |
+| D7b | task | Data day: everyone creates a real venue + quests through the app | V1,E2 | V1 | Team | Jiayi | S | Day 6 | must | G3.3, V3.1, V4.6, D2p, D5, D4 | D3p | DEC-4 (start) | — | `blocked` | — |
 | D8 | task | Geo-bounded quest query: download only quests near the explorer or the map view | V1,E2 | V1 | — | — | L | Day 6–7 | stretch | D1, V4.1 (f), D7a (f), E3.4 (f) | D5, D4 | — | — | `gated+blocked` | new (file under #6) |
 | DS0 | task | Design tokens and fonts in the theme (asset-only PR) | E2,E4,V4 | V1 | Ferit | Zaynab | S | Day 1 | must | — | — | — | A1 (f), A2 (f), A3 (f) | `ready` | — |
 
@@ -374,7 +371,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | T | story | Core loop works end to end | V4,E4 | — | Alisher | — | — | Day 4–6 | must | — | — | — | — | `open` | — |
 | T0 | task | E2E harness: emulator reset, account helpers, page-object base | V4,E4 | T | Alisher | Vali | M | Day 4–5 | must | Q1 | — | — | T1 (h), T2 (h) | `blocked` | — |
-| T1 | task | E2E venue journey: sign up -> Venue -> name -> area -> new quest | V4 | T | Alisher | Ece | M | Day 5–6 | must | T0, G2.3, G3.2, G3.3, V3.1, N2, V4.3c | Q2, D2p, D3p | — | M1 (s) | `blocked` | — |
+| T1 | task | E2E venue journey: sign up -> Venue -> name -> area -> new quest | V4 | T | Alisher | Ece | M | Day 5–6 | must | T0, G2.3, G3.2, G3.3, V3.1, N2, V4.6 | Q2, D2p, D3p | — | M1 (s) | `blocked` | — |
 | T2 | task | E2E explorer journey: seeded quest -> map -> nearby -> venue page | E4 | T | Vali | Ferit | M | Day 5–6 | must | T0, G2.3, G3.2, E3.4, E4.2, D5 | E4.3 | — | M1 (s), T3 (h) | `blocked` | — |
 
 ### Tier 5: venue page
@@ -438,18 +435,15 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | G3.3 | G2.3 | soft | final registration in the role router |
 | G3.3 | N2 | soft | venue home is a stub until N2 |
 | V3.2 | V3.1 | hard | extends the save path and the same ViewModel |
-| C5 | V4.1 | hard | the form state references the Reward subtypes |
-| V4.2 | C5 | hard | implements the contract |
-| V4.2 | V4.1 | hard | saves typed rewards |
-| V4.3a | C5 | hard | renders CreateQuestUiState |
-| V4.3a | V4.2 | soft | real validation only with the ViewModel logic |
-| V4.3b | C5 | hard | stateless over RewardFormState |
-| V4.3b | V4.3a | soft | plugged into the form's rewardFields slot |
-| V4.3c | V4.2 | hard | states come from the ViewModel |
-| V4.3c | V4.3a | hard | same screen file |
-| V4.3c | N0 | hard | replaces the create-quest stub destination |
-| V4.3c | N2 | hard | entry point is the venue home's New quest button |
-| V4.3c | V4.3b | soft | reward fields plugged in |
+| V4.3 | V4.2 | hard | extends V4.2's state, ViewModel and screen |
+| V4.4 | V4.2 | hard | adds the reward picker to V4.2's state, ViewModel and screen |
+| V4.4 | V4.1 | hard | needs the typed Reward variants (PR #76, feature/quest-reward) |
+| V4.5 | V4.4 | hard | adds the remaining variants to RewardFormState and RewardFields |
+| V4.6 | V4.2 | hard | saves the quest the form describes |
+| V4.6 | V4.3 | hard | the saved quest includes the activity settings |
+| V4.6 | V4.5 | hard | the saved quest includes every reward variant |
+| V4.6 | N0 | hard | replaces the create-quest stub destination (CreateQuestDestination.kt) |
+| V4.6 | N2 | hard | the Create quest button lives in the venue home's Quests tab |
 | E3.1 | C6 | hard | fills the contract |
 | E3.2 | C6 | hard | renders NearbyQuest |
 | E3.3 | E3.2 | hard | hosts the list component |
@@ -484,7 +478,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D7b | DEC-4 | decision | start: which names to use |
 | D7b | G3.3 | hard | onboarding reachable in the app |
 | D7b | V3.1 | hard | area must save |
-| D7b | V4.3c | hard | quests creatable from the venue home |
+| D7b | V4.6 | hard | quests creatable from the venue home |
 | D7b | D2p | hard | venues must persist in Firestore |
 | D7b | D5 | hard | quests must persist in Firestore |
 | D7b | D4 | hard | rules v2 deployed to production |
@@ -502,7 +496,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | T1 | G3.3 | hard | onboarding in the app |
 | T1 | V3.1 | hard | save the area |
 | T1 | N2 | hard | venue home |
-| T1 | V4.3c | hard | create quest from the home |
+| T1 | V4.6 | hard | create quest from the home |
 | T1 | Q2 | soft | map taps via the shared helper |
 | T1 | D2p | soft | assert in Firestore once venues are real |
 | T1 | D3p | soft | assert role in Firestore once users are real |
@@ -567,7 +561,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | G2 | Route users by session and role | must | C2, C3, G2.1, G2.2, G2.3, G2.4 | #7 |
 | G3 | Choose a role and finish venue onboarding | must | G3.1, G3.2, G3.3 | #79 (absorbed) |
 | V3 | Confirm the venue's area (save/load + address) | must | V3.1, V3.2 | #88 #89 |
-| V4 | Create a quest | must | V4.1, V4.2, V4.3a, V4.3b, V4.3c | #73 |
+| V4 | Create a quest | must | V4.1, V4.2, V4.3, V4.4, V4.5, V4.6 | #73 |
 | E3 | Nearby quests sorted by distance | must | E3.1, E3.2, E3.3, E3.4 | #91 |
 | Q | Make CI trustworthy (map + Firestore tests) | must | Q1, Q2, Q3 | #95 |
 | N | No dead ends between screens | must | N0, N1, N2 | new |
@@ -580,7 +574,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | E6 | See my accepted quest (explorer overview) | stretch | F3, A3, E6.1, E6.2 | new |
 | PROC | Process (no user story) | must | DEC-1, DEC-2, DEC-3, DEC-4, DEC-5, DEC-6, HK-1, M1 | — |
 
-Contracts belong to the task they start: C5 → V4.2, C6 → E3.1, C7 → E4.1 (their `parent` field). C2 and C3 are part of G2.
+Contracts belong to the task they start: C6 → E3.1, C7 → E4.1 (their `parent` field). C5 was retired by the V4 re-split (§12): V4.2 now creates the form state itself. C2 and C3 are part of G2.
 
 ## 8. Structural blocking: integration points (slots)
 
@@ -595,8 +589,8 @@ A screen is *visible in the app* only once it is plugged into its slot or route.
 | venueOnboardingDestinations.locationScreen | existing | VenueAreaScreen(venueId,onSaved,onBack) | V3.1 | Ece | G3.3 plugs it |
 | MapScreen.onOpenVenue | existing | venue/{venueId} route | N0 | Alisher (AroundApp.kt) | N1 plugs it |
 | MapScreen nearby sheet | C6 | NearbyQuestList | E3.2 | Ferit | E3.3 plugs it |
-| CreateQuestScreen.rewardFields | C5 | RewardFields | V4.3b | Zaynab | later of V4.3a/V4.3b plugs it, Zaynab reviews |
-| VenueHome Quests tab -> create quest | N0 | CreateQuestScreen | V4.3c | Zaynab (CreateQuestDestination.kt) | V4.3c replaces the stub |
+| CreateQuestScreen.rewardFields | V4.4 | RewardFields | V4.4, V4.5 | V4 | V4.4 adds the slot and plugs RewardFields; V4.5 extends RewardFields |
+| VenueHome Quests tab -> create quest | N0 | CreateQuestScreen | V4.6 | V4 (CreateQuestDestination.kt) | V4.6 replaces the stub |
 | VenueHome Profile tab | G2.4 | ProfileScreen | G2.4 | Vali | N2 plugs it |
 | VenuePageScreen.questRow | C7 | VenueQuestRow | E4.3 | Yigit | later of E4.2/E4.3 plugs it, Yigit reviews |
 | VenuePageScreen.bottomBar | C7 | AcceptQuestBar | E5.2 | Yigit | E5.2 plugs it (E4.2 is earlier), Yigit reviews |
@@ -626,7 +620,7 @@ Files touched by more than one task, and how the order is enforced. Cross-owner 
 | `ui/navigation/AppRoot.kt, MainActivity.kt` | C2, G2.1, G2.2, G2.3, G3.2, G3.3 | Vali's files; G3.x plug-ins follow the later-PR rule | slot plug-ins are 1-5 lines |
 | `ui/navigation/AroundApp.kt` | N1 | single editor this sprint | G2.x wraps it without editing |
 | `ui/venuepage/VenuePageDestination.kt` | N0, E4.2, E4.3, E5.2 | N0 creates; Yigit owns from E4.2; plug-ins reviewed by Yigit | — |
-| `ui/quest/create/CreateQuestScreen.kt` | V4.3a, V4.3c | same owner, hard edge | V4.3b lives in RewardFields.kt |
+| `ui/quest/create/CreateQuestScreen.kt` | V4.2, V4.3, V4.4, V4.6 | V4.2 first; V4.3 and V4.4 both extend it in parallel (rebase the later one); V4.6 last | V4.4/V4.5 reward UI lives in RewardFields.kt |
 | `ui/dashboard/DashboardScreen.kt` | V9.2, V10.1 | V10.1 uses V9.2's row-actions slot | avoids V10.1 editing Ece's file |
 | `firestore.rules` | D4 | single editor (Alisher) | E5 rule needs are folded into D4 |
 | `README.md` | D4, D5, D7a | different sections; trivial conflicts | deploy command / demo section / seed section |
@@ -646,11 +640,11 @@ Files touched by more than one task, and how the order is enforced. Cross-owner 
 | #23 | D1 | update |
 | #26 | HK-1 | close (superseded by #27, #28) |
 | #29 | HK-1 | close after confirming the empty My-quests frame |
-| #32 | V4.3a, V4.3b, V4.3c | split |
+| #32 | V4.2–V4.6 | split (V4 re-split, §12) |
 | #50 | HK-1 | verify and close; Google sign-in to backlog |
 | #73 | V4 | keep, update the task list |
 | #74 | V4.1 | doc checkbox moved to D1 |
-| #75 | V4.2 (+C5) | update: contract first |
+| #75 | V4.2 | update: now the text-field form (state, ViewModel, screen) |
 | #79 | G3.3 | rewrite |
 | #88 | V3.1 | rewrite; reopen the PR in the right direction |
 | #89 | V3.2 | gap: address not saved |
@@ -684,7 +678,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "G2", "kind": "story", "title": "Route users by session and role", "story": ["G2"], "tier": 0, "prio": "must", "owner": "vali", "windowStartDay": 1, "windowEndDay": 3, "github": "#7", "existingWork": "PR #86 (draft)", "initialStatus": "open", "children": ["C2", "C3", "G2.1", "G2.2", "G2.3", "G2.4"]},
     {"id": "G3", "kind": "story", "title": "Choose a role and finish venue onboarding", "story": ["G3"], "tier": 0, "prio": "must", "owner": "ece", "windowStartDay": 1, "windowEndDay": 4, "github": "#79 (absorbed)", "initialStatus": "open", "children": ["G3.1", "G3.2", "G3.3"]},
     {"id": "V3", "kind": "story", "title": "Confirm the venue's area (save/load + address)", "story": ["V3"], "tier": 0, "prio": "must", "owner": "yigit", "windowStartDay": 1, "windowEndDay": 3, "github": "#88 #89", "initialStatus": "open", "children": ["V3.1", "V3.2"]},
-    {"id": "V4", "kind": "story", "title": "Create a quest", "story": ["V4"], "tier": 0, "prio": "must", "owner": "zaynab", "windowStartDay": 1, "windowEndDay": 5, "github": "#73", "initialStatus": "open", "children": ["V4.1", "V4.2", "V4.3a", "V4.3b", "V4.3c"]},
+    {"id": "V4", "kind": "story", "title": "Create a quest", "story": ["V4"], "tier": 0, "prio": "must", "owner": "zaynab", "windowStartDay": 1, "windowEndDay": 5, "github": "#73", "initialStatus": "open", "children": ["V4.1", "V4.2", "V4.3", "V4.4", "V4.5", "V4.6"]},
     {"id": "E3", "kind": "story", "title": "Nearby quests sorted by distance", "story": ["E3"], "tier": 0, "prio": "must", "owner": "ferit", "windowStartDay": 1, "windowEndDay": 5, "github": "#91", "initialStatus": "open", "children": ["E3.1", "E3.2", "E3.3", "E3.4"]},
     {"id": "Q", "kind": "story", "title": "Make CI trustworthy (map + Firestore tests)", "story": ["E2", "V3", "V4", "V9"], "tier": 1, "prio": "must", "owner": "alisher", "windowStartDay": 1, "windowEndDay": 3, "github": "#95", "initialStatus": "open", "children": ["Q1", "Q2", "Q3"]},
     {"id": "N", "kind": "story", "title": "No dead ends between screens", "story": ["G2", "E4", "V4"], "tier": 2, "prio": "must", "owner": "alisher", "windowStartDay": 1, "windowEndDay": 5, "initialStatus": "open", "children": ["N0", "N1", "N2"]},
@@ -708,11 +702,11 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "V3.1", "alias": "C4", "kind": "task", "title": "Save and load the venue's marker and radius (= contract C4)", "story": ["V3"], "parent": "V3", "tier": 0, "prio": "must", "owner": "yigit", "reviewer": "ece", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "github": "#88", "existingWork": "code in PR #92 (opened backwards, closed)", "files": ["ui/venue/VenueAreaViewModel.kt", "ui/venue/VenueAreaScreen.kt", "androidTest/ui/venue/VenueAreaScreenDeviceTest.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "V3.2", "kind": "task", "title": "Save the picked address with the area", "story": ["V3"], "parent": "V3", "tier": 0, "prio": "must", "owner": "yigit", "reviewer": "ferit", "size": "S", "windowStartDay": 2, "windowEndDay": 3, "files": ["model/venue/VenueRepository.kt", "model/venue/FakeVenueRepository.kt", "ui/venue/VenueAreaViewModel.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
     {"id": "V4.1", "kind": "task", "title": "Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1)", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": "zaynab", "reviewer": "ferit", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "github": "#74", "existingWork": "PR #76 (draft, complete)", "files": ["model/quest/Quest.kt", "model/quest/QuestRepositoryFirestore.kt", "ui/map/marker/QuestCard.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
-    {"id": "C5", "kind": "contract", "title": "CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs", "story": ["V4"], "parent": "V4.2", "tier": 0, "prio": "must", "owner": "zaynab", "reviewer": "ece", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/quest/create/CreateQuestUiState.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
-    {"id": "V4.2", "kind": "task", "title": "CreateQuestViewModel logic + tests", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": "zaynab", "reviewer": "jiayi", "size": "L", "windowStartDay": 1, "windowEndDay": 3, "github": "#75", "files": ["ui/quest/create/CreateQuestViewModel.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1, "children": ["C5"]},
-    {"id": "V4.3a", "kind": "task", "title": "Create-quest form: layout and text fields", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": "zaynab", "reviewer": "ece", "size": "M", "windowStartDay": 4, "windowEndDay": 5, "github": "#32", "files": ["ui/quest/create/CreateQuestScreen.kt", "res/values/create_quest_strings.xml"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
-    {"id": "V4.3b", "kind": "task", "title": "Reward type picker and per-type fields", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": "ece", "reviewer": "zaynab", "size": "M", "windowStartDay": 2, "windowEndDay": 3, "github": "#32", "files": ["ui/quest/create/RewardFields.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
-    {"id": "V4.3c", "kind": "task", "title": "Saving/error states and open the form from the venue home", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": "zaynab", "reviewer": "vali", "size": "S", "windowStartDay": 5, "windowEndDay": 5, "github": "#32", "files": ["ui/quest/create/CreateQuestScreen.kt", "ui/quest/create/CreateQuestDestination.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
+    {"id": "V4.2", "kind": "task", "title": "Quest form: text fields (title, description, requirements)", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": null, "reviewer": null, "size": "M", "estimate": "~450–550 lines incl. tests", "windowStartDay": 1, "windowEndDay": 2, "github": "#75 #32", "files": ["ui/quest/create/CreateQuestUiState.kt", "ui/quest/create/CreateQuestViewModel.kt", "ui/quest/create/CreateQuestScreen.kt", "test: CreateQuestViewModelTest.kt", "test: CreateQuestScreenTest.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
+    {"id": "V4.3", "kind": "task", "title": "Activity settings (proof type, radius, party size)", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": null, "reviewer": null, "size": "S", "estimate": "~350–450 lines incl. tests", "windowStartDay": 3, "windowEndDay": 3, "github": "#32", "files": ["ui/quest/create/* (state, ViewModel, screen)", "tests"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
+    {"id": "V4.4", "kind": "task", "title": "Reward picker + Discount fields", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": null, "reviewer": null, "size": "M", "estimate": "~450–550 lines incl. tests", "windowStartDay": 3, "windowEndDay": 3, "github": "#32", "files": ["ui/quest/create/RewardFormState.kt", "ui/quest/create/RewardFields.kt", "ui/quest/create/CreateQuestViewModel.kt", "ui/quest/create/CreateQuestScreen.kt", "tests"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
+    {"id": "V4.5", "kind": "task", "title": "Free item, Other and reward expiry", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": null, "reviewer": null, "size": "S", "estimate": "~350–450 lines incl. tests", "windowStartDay": 4, "windowEndDay": 4, "github": "#32", "files": ["ui/quest/create/RewardFormState.kt", "ui/quest/create/RewardFields.kt", "tests"], "initialStatus": "blocked", "earliestStructuralStartDay": 3},
+    {"id": "V4.6", "kind": "task", "title": "Save quest, saving/error states, open from venue home", "story": ["V4"], "parent": "V4", "tier": 0, "prio": "must", "owner": null, "reviewer": null, "size": "M", "estimate": "~450–550 lines incl. tests", "windowStartDay": 5, "windowEndDay": 5, "github": "#32", "files": ["ui/quest/create/CreateQuestViewModel.kt", "ui/quest/create/CreateQuestScreen.kt", "ui/quest/create/CreateQuestDestination.kt (replaces N0's stub)", "venue home Quests tab (N2) for the Create quest button", "tests (incl. navigation)"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
     {"id": "C6", "kind": "contract", "title": "NearbyQuest data class + MapUiState.nearby", "story": ["E3"], "parent": "E3.1", "tier": 0, "prio": "must", "owner": "ferit", "reviewer": "yigit", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/map/NearbyQuests.kt", "ui/map/MapViewModel.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "E3.1", "kind": "task", "title": "Sort nearby quests by distance in MapViewModel", "story": ["E3"], "parent": "E3", "tier": 0, "prio": "must", "owner": "ferit", "reviewer": "jiayi", "size": "M", "windowStartDay": 1, "windowEndDay": 2, "github": "#91", "files": ["ui/map/NearbyQuests.kt", "ui/map/MapViewModel.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1, "children": ["C6"]},
     {"id": "E3.2", "kind": "task", "title": "NearbyQuestList component (rows, empty, location-off)", "story": ["E3"], "parent": "E3", "tier": 0, "prio": "must", "owner": "yigit", "reviewer": "ferit", "size": "M", "windowStartDay": 2, "windowEndDay": 3, "github": "#91", "files": ["ui/map/nearby/NearbyQuestList.kt", "ui/map/nearby/NearbyQuestRow.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
@@ -777,18 +771,6 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "G2.3", "to": "G3.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "final registration in the role router"},
     {"from": "N2", "to": "G3.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "venue home is a stub until N2"},
     {"from": "V3.1", "to": "V3.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "extends the save path and the same ViewModel"},
-    {"from": "V4.1", "to": "C5", "kind": "hard", "family": "structural", "blocks": "start", "reason": "the form state references the Reward subtypes"},
-    {"from": "C5", "to": "V4.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "implements the contract"},
-    {"from": "V4.1", "to": "V4.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "saves typed rewards"},
-    {"from": "C5", "to": "V4.3a", "kind": "hard", "family": "structural", "blocks": "start", "reason": "renders CreateQuestUiState"},
-    {"from": "V4.2", "to": "V4.3a", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "real validation only with the ViewModel logic"},
-    {"from": "C5", "to": "V4.3b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "stateless over RewardFormState"},
-    {"from": "V4.3a", "to": "V4.3b", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "plugged into the form's rewardFields slot"},
-    {"from": "V4.2", "to": "V4.3c", "kind": "hard", "family": "structural", "blocks": "start", "reason": "states come from the ViewModel"},
-    {"from": "V4.3a", "to": "V4.3c", "kind": "hard", "family": "structural", "blocks": "start", "reason": "same screen file"},
-    {"from": "N0", "to": "V4.3c", "kind": "hard", "family": "structural", "blocks": "start", "reason": "replaces the create-quest stub destination"},
-    {"from": "N2", "to": "V4.3c", "kind": "hard", "family": "structural", "blocks": "start", "reason": "entry point is the venue home's New quest button"},
-    {"from": "V4.3b", "to": "V4.3c", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "reward fields plugged in"},
     {"from": "C6", "to": "E3.1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "fills the contract"},
     {"from": "C6", "to": "E3.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "renders NearbyQuest"},
     {"from": "E3.2", "to": "E3.3", "kind": "hard", "family": "structural", "blocks": "start", "reason": "hosts the list component"},
@@ -823,7 +805,6 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "DEC-4", "to": "D7b", "kind": "decision", "family": "structural", "blocks": "start", "reason": "start: which names to use"},
     {"from": "G3.3", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "onboarding reachable in the app"},
     {"from": "V3.1", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "area must save"},
-    {"from": "V4.3c", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "quests creatable from the venue home"},
     {"from": "D2p", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "venues must persist in Firestore"},
     {"from": "D5", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "quests must persist in Firestore"},
     {"from": "D4", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "rules v2 deployed to production"},
@@ -841,7 +822,6 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "G3.3", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "onboarding in the app"},
     {"from": "V3.1", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "save the area"},
     {"from": "N2", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "venue home"},
-    {"from": "V4.3c", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "create quest from the home"},
     {"from": "Q2", "to": "T1", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "map taps via the shared helper"},
     {"from": "D2p", "to": "T1", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "assert in Firestore once venues are real"},
     {"from": "D3p", "to": "T1", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "assert role in Firestore once users are real"},
@@ -909,20 +889,11 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "day:3", "to": "G2.3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
     {"from": "G2.3", "to": "G2.4", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Vali's previous task in the plan"},
     {"from": "day:3", "to": "G2.4", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
-    {"from": "V4.3b", "to": "G3.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
     {"from": "day:3", "to": "G3.2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
     {"from": "G3.2", "to": "G3.3", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
     {"from": "day:4", "to": "G3.3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"},
     {"from": "E3.2", "to": "V3.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Yigit's previous task in the plan"},
     {"from": "day:2", "to": "V3.2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 2"},
-    {"from": "V4.1", "to": "C5", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
-    {"from": "C5", "to": "V4.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
-    {"from": "A1", "to": "V4.3a", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
-    {"from": "day:4", "to": "V4.3a", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"},
-    {"from": "G3.1", "to": "V4.3b", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
-    {"from": "day:2", "to": "V4.3b", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 2"},
-    {"from": "V4.3a", "to": "V4.3c", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
-    {"from": "day:5", "to": "V4.3c", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 5"},
     {"from": "DS0", "to": "E3.1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ferit's previous task in the plan"},
     {"from": "V3.1", "to": "E3.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Yigit's previous task in the plan"},
     {"from": "day:2", "to": "E3.2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 2"},
@@ -961,7 +932,6 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "day:5", "to": "T1", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 5"},
     {"from": "N2", "to": "T2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Vali's previous task in the plan"},
     {"from": "day:5", "to": "T2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 5"},
-    {"from": "V4.2", "to": "F1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
     {"from": "day:2", "to": "F1", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 2"},
     {"from": "F1", "to": "A1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
     {"from": "day:4", "to": "A1", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"},
@@ -973,7 +943,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "E3.3", "to": "E4.3", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ferit's previous task in the plan"},
     {"from": "day:4", "to": "E4.3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"},
     {"from": "E6.1", "to": "E4.4", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
-    {"from": "V4.1|C5|V4.2|F1|A1|V4.3a|V4.3c", "to": "E4.4", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Zaynab has finished all must-haves"},
+    {"from": "V4.1|F1|A1", "to": "E4.4", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Zaynab has finished all must-haves"},
     {"from": "day:7", "to": "E4.4", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 7"},
     {"from": "D7a", "to": "E5.1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Jiayi's previous task in the plan"},
     {"from": "DEC-1|C7|Q3|HK-1|D1|E4.1|D5|D7a", "to": "E5.1", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Jiayi has finished all must-haves"},
@@ -985,16 +955,16 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "C2|C3|G2.1|G2.2|G2.3|G2.4|N2|T2", "to": "T3", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Vali has finished all must-haves"},
     {"from": "day:7", "to": "T3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 7"},
     {"from": "D3p", "to": "F2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
-    {"from": "G3.1|V4.3b|G3.2|G3.3|D3|D3p", "to": "F2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ece has finished all must-haves"},
+    {"from": "G3.1|G3.2|G3.3|D3|D3p", "to": "F2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ece has finished all must-haves"},
     {"from": "day:6", "to": "F2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 6"},
     {"from": "F2", "to": "A2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
-    {"from": "G3.1|V4.3b|G3.2|G3.3|D3|D3p", "to": "A2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ece has finished all must-haves"},
+    {"from": "G3.1|G3.2|G3.3|D3|D3p", "to": "A2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ece has finished all must-haves"},
     {"from": "day:6", "to": "A2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 6"},
     {"from": "E5.1", "to": "V9.1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Jiayi's previous task in the plan"},
     {"from": "DEC-1|C7|Q3|HK-1|D1|E4.1|D5|D7a", "to": "V9.1", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Jiayi has finished all must-haves"},
     {"from": "day:7", "to": "V9.1", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 7"},
     {"from": "A2", "to": "V9.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
-    {"from": "G3.1|V4.3b|G3.2|G3.3|D3|D3p", "to": "V9.2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ece has finished all must-haves"},
+    {"from": "G3.1|G3.2|G3.3|D3|D3p", "to": "V9.2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ece has finished all must-haves"},
     {"from": "day:7", "to": "V9.2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 7"},
     {"from": "V9.1", "to": "V10.1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Jiayi's previous task in the plan"},
     {"from": "DEC-1|C7|Q3|HK-1|D1|E4.1|D5|D7a", "to": "V10.1", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Jiayi has finished all must-haves"},
@@ -1005,12 +975,29 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "F3", "to": "A3", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Yigit's previous task in the plan"},
     {"from": "V3.1|E3.2|V3.2|D2|E4.2|D2p", "to": "A3", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Yigit has finished all must-haves"},
     {"from": "day:6", "to": "A3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 6"},
-    {"from": "V4.3c", "to": "E6.1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
-    {"from": "V4.1|C5|V4.2|F1|A1|V4.3a|V4.3c", "to": "E6.1", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Zaynab has finished all must-haves"},
+    {"from": "V4.1|F1|A1", "to": "E6.1", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Zaynab has finished all must-haves"},
     {"from": "day:6", "to": "E6.1", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 6"},
     {"from": "E3.4", "to": "E6.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ferit's previous task in the plan"},
     {"from": "C6|DS0|E3.1|Q2|E3.3|E4.3|E3.4", "to": "E6.2", "kind": "stretch-gate", "family": "chronological", "blocks": "start", "advisory": false, "reason": "Ferit has finished all must-haves"},
-    {"from": "day:6", "to": "E6.2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 6"}
+    {"from": "day:6", "to": "E6.2", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 6"},
+    {"from": "V4.1", "to": "F1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
+    {"from": "A1", "to": "E6.1", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Zaynab's previous task in the plan"},
+    {"from": "G3.1", "to": "G3.2", "kind": "owner-queue", "family": "chronological", "blocks": "start", "advisory": true, "reason": "Ece's previous task in the plan"},
+    {"from": "V4.2", "to": "V4.3", "kind": "hard", "family": "structural", "blocks": "start", "reason": "extends V4.2's state, ViewModel and screen"},
+    {"from": "V4.2", "to": "V4.4", "kind": "hard", "family": "structural", "blocks": "start", "reason": "adds the reward picker to V4.2's state, ViewModel and screen"},
+    {"from": "V4.1", "to": "V4.4", "kind": "hard", "family": "structural", "blocks": "start", "reason": "needs the typed Reward variants (PR #76, feature/quest-reward)"},
+    {"from": "V4.4", "to": "V4.5", "kind": "hard", "family": "structural", "blocks": "start", "reason": "adds the remaining variants to RewardFormState and RewardFields"},
+    {"from": "V4.2", "to": "V4.6", "kind": "hard", "family": "structural", "blocks": "start", "reason": "saves the quest the form describes"},
+    {"from": "V4.3", "to": "V4.6", "kind": "hard", "family": "structural", "blocks": "start", "reason": "the saved quest includes the activity settings"},
+    {"from": "V4.5", "to": "V4.6", "kind": "hard", "family": "structural", "blocks": "start", "reason": "the saved quest includes every reward variant"},
+    {"from": "N0", "to": "V4.6", "kind": "hard", "family": "structural", "blocks": "start", "reason": "replaces the create-quest stub destination (CreateQuestDestination.kt)"},
+    {"from": "N2", "to": "V4.6", "kind": "hard", "family": "structural", "blocks": "start", "reason": "the Create quest button lives in the venue home's Quests tab"},
+    {"from": "V4.6", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "quests creatable from the venue home"},
+    {"from": "V4.6", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "create quest from the home"},
+    {"from": "day:3", "to": "V4.3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
+    {"from": "day:3", "to": "V4.4", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
+    {"from": "day:4", "to": "V4.5", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"},
+    {"from": "day:5", "to": "V4.6", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 5"}
   ],
   "integrationPoints": [
     {"slot": "AppRoot.authFlow", "definedBy": "C2", "filledBy": "AuthScreen (exists)", "fillerTask": "G2.1", "hostOwner": "Vali", "plugIn": "G2.1 plugs it"},
@@ -1020,8 +1007,8 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"slot": "venueOnboardingDestinations.locationScreen", "definedBy": "existing", "filledBy": "VenueAreaScreen(venueId,onSaved,onBack)", "fillerTask": "V3.1", "hostOwner": "Ece", "plugIn": "G3.3 plugs it"},
     {"slot": "MapScreen.onOpenVenue", "definedBy": "existing", "filledBy": "venue/{venueId} route", "fillerTask": "N0", "hostOwner": "Alisher (AroundApp.kt)", "plugIn": "N1 plugs it"},
     {"slot": "MapScreen nearby sheet", "definedBy": "C6", "filledBy": "NearbyQuestList", "fillerTask": "E3.2", "hostOwner": "Ferit", "plugIn": "E3.3 plugs it"},
-    {"slot": "CreateQuestScreen.rewardFields", "definedBy": "C5", "filledBy": "RewardFields", "fillerTask": "V4.3b", "hostOwner": "Zaynab", "plugIn": "later of V4.3a/V4.3b plugs it, Zaynab reviews"},
-    {"slot": "VenueHome Quests tab -> create quest", "definedBy": "N0", "filledBy": "CreateQuestScreen", "fillerTask": "V4.3c", "hostOwner": "Zaynab (CreateQuestDestination.kt)", "plugIn": "V4.3c replaces the stub"},
+    {"slot": "CreateQuestScreen.rewardFields", "definedBy": "V4.4", "filledBy": "RewardFields", "fillerTask": "V4.4, V4.5", "hostOwner": "V4 (CreateQuestScreen.kt)", "plugIn": "V4.4 adds the slot and plugs RewardFields; V4.5 extends RewardFields"},
+    {"slot": "VenueHome Quests tab -> create quest", "definedBy": "N0", "filledBy": "CreateQuestScreen", "fillerTask": "V4.6", "hostOwner": "V4 (CreateQuestDestination.kt)", "plugIn": "V4.6 replaces the stub"},
     {"slot": "VenueHome Profile tab", "definedBy": "G2.4", "filledBy": "ProfileScreen", "fillerTask": "G2.4", "hostOwner": "Vali", "plugIn": "N2 plugs it"},
     {"slot": "VenuePageScreen.questRow", "definedBy": "C7", "filledBy": "VenueQuestRow", "fillerTask": "E4.3", "hostOwner": "Yigit", "plugIn": "later of E4.2/E4.3 plugs it, Yigit reviews"},
     {"slot": "VenuePageScreen.bottomBar", "definedBy": "C7", "filledBy": "AcceptQuestBar", "fillerTask": "E5.2", "hostOwner": "Yigit", "plugIn": "E5.2 plugs it (E4.2 is earlier), Yigit reviews"},
@@ -1046,7 +1033,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"file": "ui/navigation/AppRoot.kt, MainActivity.kt", "tasks": ["C2", "G2.1", "G2.2", "G2.3", "G3.2", "G3.3"], "ordering": "Vali's files; G3.x plug-ins follow the later-PR rule", "note": "slot plug-ins are 1-5 lines"},
     {"file": "ui/navigation/AroundApp.kt", "tasks": ["N1"], "ordering": "single editor this sprint", "note": "G2.x wraps it without editing"},
     {"file": "ui/venuepage/VenuePageDestination.kt", "tasks": ["N0", "E4.2", "E4.3", "E5.2"], "ordering": "N0 creates; Yigit owns from E4.2; plug-ins reviewed by Yigit", "note": ""},
-    {"file": "ui/quest/create/CreateQuestScreen.kt", "tasks": ["V4.3a", "V4.3c"], "ordering": "same owner, hard edge", "note": "V4.3b lives in RewardFields.kt"},
+    {"file": "ui/quest/create/CreateQuestScreen.kt", "tasks": ["V4.2", "V4.3", "V4.4", "V4.6"], "ordering": "V4.2 first; V4.3 and V4.4 both extend it (parallel, rebase the later); V4.6 last", "note": "V4.4/V4.5 reward UI lives in RewardFields.kt"},
     {"file": "ui/dashboard/DashboardScreen.kt", "tasks": ["V9.2", "V10.1"], "ordering": "V10.1 uses V9.2's row-actions slot", "note": "avoids V10.1 editing Ece's file"},
     {"file": "firestore.rules", "tasks": ["D4"], "ordering": "single editor (Alisher)", "note": "E5 rule needs are folded into D4"},
     {"file": "README.md", "tasks": ["D4", "D5", "D7a"], "ordering": "different sections; trivial conflicts", "note": "deploy command / demo section / seed section"},
@@ -1092,3 +1079,53 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
 
 **Out of scope (team decision, not D8):** IP-based geolocation for explorers without any location permission (privacy and cost).
 
+### V4 re-split: C5, V4.2, V4.3a–c replaced by V4.2–V4.6
+
+**V4:** As a Venue, I want to create a quest with a title, description and activity requirements, so that I can choose the activity Explorers perform. Split into 5 issues of 400–600 lines each, each with its tests in the same PR. They replace C5, V4.2 (old), V4.3a, V4.3b and V4.3c. V4.1 (Reward model, PR #76) is unchanged.
+
+| ID | Title | Size | Lines | Window | Blocked by | Blocks |
+|---|---|---|---|---|---|---|
+| V4.2 | Quest form: text fields (title, description, requirements) | M | ~450–550 | Day 1–2 | none (doesn't touch Reward) | V4.3, V4.4, V4.6 |
+| V4.3 | Activity settings (proof type, radius, party size) | S | ~350–450 | Day 3 | V4.2 | V4.6 |
+| V4.4 | Reward picker + Discount fields | M | ~450–550 | Day 3 | V4.1 (merge PR #76), V4.2 | V4.5 |
+| V4.5 | Free item, Other and reward expiry | S | ~350–450 | Day 4 | V4.4 | V4.6 |
+| V4.6 | Save quest, saving/error states, open from venue home | M | ~450–550 | Day 5 | V4.2, V4.3, V4.5, N0, N2 | D7b, T1 |
+
+**V4.2: Quest form: text fields (title, description, requirements).** Touches: `ui/quest/create/CreateQuestUiState.kt`, `ui/quest/create/CreateQuestViewModel.kt`, `ui/quest/create/CreateQuestScreen.kt`, `test: CreateQuestViewModelTest.kt`, `test: CreateQuestScreenTest.kt`.
+- CreateQuestUiState (text fields + per-field errors), CreateQuestViewModel (updates, blank/length validation against QuestLimits, canSubmit)
+- CreateQuestScreen: layout, 3 text fields, errors, character counters
+- Tests: ViewModel unit tests (valid / blank / too long), Compose tests
+
+**V4.3: Activity settings (proof type, radius, party size).** Touches: `ui/quest/create/* (state, ViewModel, screen)`, `tests`.
+- proofType selection, radiusMeters clamped between MIN and MAX, minPartySize ≥ MIN
+- UI: proof-type selector, radius slider, party-size stepper
+- Tests: unit tests (bounds, defaults), Compose tests
+
+**V4.4: Reward picker + Discount fields.** Touches: `ui/quest/create/RewardFormState.kt`, `ui/quest/create/RewardFields.kt`, `ui/quest/create/CreateQuestViewModel.kt`, `ui/quest/create/CreateQuestScreen.kt`, `tests`.
+- RewardType (NONE, DISCOUNT, FREE_ITEM, OTHER), RewardFormState with toReward(): Reward? + validation
+- ViewModel: select type, discount amount/unit/specifics
+- UI: type picker + Discount fields (amount, % or CHF, specifics)
+- Tests: type switching, amount parsing/validation, toReward, Compose tests
+
+**V4.5: Free item, Other and reward expiry.** Touches: `ui/quest/create/RewardFormState.kt`, `ui/quest/create/RewardFields.kt`, `tests`.
+- FreeItem fields (name, specifics), Other field (description), optional expiry date picker (must be in the future)
+- Tests: toReward per variant, expiry validation, Compose tests
+
+**V4.6: Save quest, saving/error states, open from venue home.** Touches: `ui/quest/create/CreateQuestViewModel.kt`, `ui/quest/create/CreateQuestScreen.kt`, `ui/quest/create/CreateQuestDestination.kt (replaces N0's stub)`, `venue home Quests tab (N2) for the Create quest button`, `tests (incl. navigation)`.
+- submit(): build a Quest (venue id/name/location copied from the venue, status ACTIVE) and call QuestRepository.createQuest
+- UI states Idle/Saving/Success/Error: disable form while saving, snackbar on error, navigate back on success
+- "Create quest" button on the venue home + nav route
+- Tests: ScriptedQuestRepository (success, failure, double-submit blocked), Compose tests, navigation test
+
+**Edges kept from the old chain.** The split above lists only the edges inside V4. These cross-story edges move from V4.3c to V4.6, so nothing outside V4 loses a dependency:
+- N0 → V4.6 (hard): V4.6 replaces the create-quest stub route that N0 adds (`CreateQuestDestination.kt`).
+- N2 → V4.6 (hard): the Create quest button goes in the venue home's Quests tab, which N2 builds. This answers the note that no venue home or route exists yet in `ui/navigation/`. It arrives with N0 and N2, so V4.6 doesn't create one. V4.6 should plug into `CreateQuestDestination.kt` and N2's tab instead of editing `AroundApp.kt` (Alisher's file, §2.2).
+- V4.6 → D7b and V4.6 → T1 (hard): data day and the E2E venue journey both need a quest to be creatable.
+
+**Notes**
+- V4.4 can't start until PR #76 is merged: the typed Reward variants only exist on `feature/quest-reward`. Do V4.2 and V4.3 first.
+- V4.3 and V4.4 both extend V4.2's state, ViewModel and screen in parallel. Whoever merges second rebases.
+- V4.6 is the most likely to go over 600 lines. If it does, move the venue-home button and navigation into their own issue (~150 lines).
+- C5 (the Day 1 contract) is retired: V4.2 creates `CreateQuestUiState` itself, and V4.4 creates `RewardFormState`/`RewardType`.
+- V4.2 keeps its ID but now means the text-field form. Board progress is stored by task ID, so a claim on the old V4.2 would carry over to the new one.
+- V4.2–V4.6 are unassigned. The owner-queue and stretch-gate edges that referred to the retired tasks were removed from §11.

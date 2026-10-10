@@ -38,11 +38,11 @@
    "prio": "must",
    "children": [
     "V4.1",
-    "C5",
     "V4.2",
-    "V4.3a",
-    "V4.3b",
-    "V4.3c"
+    "V4.3",
+    "V4.4",
+    "V4.5",
+    "V4.6"
    ]
   },
   {
@@ -380,77 +380,87 @@
     "ui/map/marker/QuestCard.kt"
    ]
   },
-  "C5": {
-   "title": "CreateQuestUiState, RewardFormState, RewardType + ViewModel stubs",
-   "kind": "contract",
-   "alias": null,
-   "prio": "must",
-   "size": "S",
-   "window": [
-    1,
-    1
-   ],
-   "github": null,
-   "existing": null,
-   "files": [
-    "ui/quest/create/CreateQuestUiState.kt"
-   ]
-  },
   "V4.2": {
-   "title": "CreateQuestViewModel logic + tests",
-   "kind": "task",
-   "alias": null,
-   "prio": "must",
-   "size": "L",
-   "window": [
-    1,
-    3
-   ],
-   "github": "#75",
-   "existing": null,
-   "files": [
-    "ui/quest/create/CreateQuestViewModel.kt"
-   ]
-  },
-  "V4.3a": {
-   "title": "Create-quest form: layout and text fields",
+   "title": "Quest form: text fields (title, description, requirements)",
    "kind": "task",
    "alias": null,
    "prio": "must",
    "size": "M",
+   "window": [
+    1,
+    2
+   ],
+   "github": "#75 #32",
+   "existing": null,
+   "files": [
+    "ui/quest/create/CreateQuestUiState.kt",
+    "ui/quest/create/CreateQuestViewModel.kt",
+    "ui/quest/create/CreateQuestScreen.kt",
+    "test: CreateQuestViewModelTest.kt",
+    "test: CreateQuestScreenTest.kt"
+   ]
+  },
+  "V4.3": {
+   "title": "Activity settings (proof type, radius, party size)",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "S",
+   "window": [
+    3,
+    3
+   ],
+   "github": "#32",
+   "existing": null,
+   "files": [
+    "ui/quest/create/* (state, ViewModel, screen)",
+    "tests"
+   ]
+  },
+  "V4.4": {
+   "title": "Reward picker + Discount fields",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "M",
+   "window": [
+    3,
+    3
+   ],
+   "github": "#32",
+   "existing": null,
+   "files": [
+    "ui/quest/create/RewardFormState.kt",
+    "ui/quest/create/RewardFields.kt",
+    "ui/quest/create/CreateQuestViewModel.kt",
+    "ui/quest/create/CreateQuestScreen.kt",
+    "tests"
+   ]
+  },
+  "V4.5": {
+   "title": "Free item, Other and reward expiry",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "S",
    "window": [
     4,
-    5
+    4
    ],
    "github": "#32",
    "existing": null,
    "files": [
-    "ui/quest/create/CreateQuestScreen.kt",
-    "res/values/create_quest_strings.xml"
+    "ui/quest/create/RewardFormState.kt",
+    "ui/quest/create/RewardFields.kt",
+    "tests"
    ]
   },
-  "V4.3b": {
-   "title": "Reward type picker and per-type fields",
+  "V4.6": {
+   "title": "Save quest, saving/error states, open from venue home",
    "kind": "task",
    "alias": null,
    "prio": "must",
    "size": "M",
-   "window": [
-    2,
-    3
-   ],
-   "github": "#32",
-   "existing": null,
-   "files": [
-    "ui/quest/create/RewardFields.kt"
-   ]
-  },
-  "V4.3c": {
-   "title": "Saving/error states and open the form from the venue home",
-   "kind": "task",
-   "alias": null,
-   "prio": "must",
-   "size": "S",
    "window": [
     5,
     5
@@ -458,8 +468,11 @@
    "github": "#32",
    "existing": null,
    "files": [
+    "ui/quest/create/CreateQuestViewModel.kt",
     "ui/quest/create/CreateQuestScreen.kt",
-    "ui/quest/create/CreateQuestDestination.kt"
+    "ui/quest/create/CreateQuestDestination.kt (replaces N0's stub)",
+    "venue home Quests tab (N2) for the Create quest button",
+    "tests (incl. navigation)"
    ]
   },
   "C6": {
@@ -1436,90 +1449,6 @@
    "reason": "extends the save path and the same ViewModel"
   },
   {
-   "from": "V4.1",
-   "to": "C5",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "the form state references the Reward subtypes"
-  },
-  {
-   "from": "C5",
-   "to": "V4.2",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "implements the contract"
-  },
-  {
-   "from": "V4.1",
-   "to": "V4.2",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "saves typed rewards"
-  },
-  {
-   "from": "C5",
-   "to": "V4.3a",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "renders CreateQuestUiState"
-  },
-  {
-   "from": "V4.2",
-   "to": "V4.3a",
-   "kind": "soft",
-   "blocks": "finish",
-   "reason": "real validation only with the ViewModel logic"
-  },
-  {
-   "from": "C5",
-   "to": "V4.3b",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "stateless over RewardFormState"
-  },
-  {
-   "from": "V4.3a",
-   "to": "V4.3b",
-   "kind": "soft",
-   "blocks": "finish",
-   "reason": "plugged into the form's rewardFields slot"
-  },
-  {
-   "from": "V4.2",
-   "to": "V4.3c",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "states come from the ViewModel"
-  },
-  {
-   "from": "V4.3a",
-   "to": "V4.3c",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "same screen file"
-  },
-  {
-   "from": "N0",
-   "to": "V4.3c",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "replaces the create-quest stub destination"
-  },
-  {
-   "from": "N2",
-   "to": "V4.3c",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "entry point is the venue home's New quest button"
-  },
-  {
-   "from": "V4.3b",
-   "to": "V4.3c",
-   "kind": "soft",
-   "blocks": "finish",
-   "reason": "reward fields plugged in"
-  },
-  {
    "from": "C6",
    "to": "E3.1",
    "kind": "hard",
@@ -1758,13 +1687,6 @@
    "reason": "area must save"
   },
   {
-   "from": "V4.3c",
-   "to": "D7b",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "quests creatable from the venue home"
-  },
-  {
    "from": "D2p",
    "to": "D7b",
    "kind": "hard",
@@ -1882,13 +1804,6 @@
    "kind": "hard",
    "blocks": "start",
    "reason": "venue home"
-  },
-  {
-   "from": "V4.3c",
-   "to": "T1",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "create quest from the home"
   },
   {
    "from": "Q2",
@@ -2281,6 +2196,83 @@
    "kind": "soft",
    "blocks": "finish",
    "reason": "an accepted quest exists only once accepting works"
+  },
+  {
+   "from": "V4.2",
+   "to": "V4.3",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "extends V4.2's state, ViewModel and screen"
+  },
+  {
+   "from": "V4.2",
+   "to": "V4.4",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "adds the reward picker to V4.2's state, ViewModel and screen"
+  },
+  {
+   "from": "V4.1",
+   "to": "V4.4",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "needs the typed Reward variants (PR #76, feature/quest-reward)"
+  },
+  {
+   "from": "V4.4",
+   "to": "V4.5",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "adds the remaining variants to RewardFormState and RewardFields"
+  },
+  {
+   "from": "V4.2",
+   "to": "V4.6",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "saves the quest the form describes"
+  },
+  {
+   "from": "V4.3",
+   "to": "V4.6",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the saved quest includes the activity settings"
+  },
+  {
+   "from": "V4.5",
+   "to": "V4.6",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the saved quest includes every reward variant"
+  },
+  {
+   "from": "N0",
+   "to": "V4.6",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "replaces the create-quest stub destination (CreateQuestDestination.kt)"
+  },
+  {
+   "from": "N2",
+   "to": "V4.6",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the Create quest button lives in the venue home's Quests tab"
+  },
+  {
+   "from": "V4.6",
+   "to": "D7b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "quests creatable from the venue home"
+  },
+  {
+   "from": "V4.6",
+   "to": "T1",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "create quest from the home"
   }
  ]
 }
