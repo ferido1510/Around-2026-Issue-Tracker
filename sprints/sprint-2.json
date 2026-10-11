@@ -15,7 +15,7 @@
   },
   {
    "id": "G3",
-   "title": "Choose a role and finish venue onboarding",
+   "title": "Create an account and finish venue onboarding",
    "prio": "must",
    "children": [
     "G3.1",
@@ -177,7 +177,7 @@
  ],
  "tasks": {
   "C2": {
-   "title": "AppRoot slot signature: authFlow, roleSelection, explorerHome, venueEntry",
+   "title": "AppRoot slot signature: authFlow, accountSetup, explorerHome, venueEntry",
    "kind": "contract",
    "alias": null,
    "prio": "must",
@@ -245,7 +245,7 @@
    ]
   },
   "G2.3": {
-   "title": "Route a signed-in user by role",
+   "title": "Route a signed-in user by their saved role",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -277,7 +277,7 @@
    ]
   },
   "G3.1": {
-   "title": "Role selection ViewModel",
+   "title": "Create the user profile with the registration account type",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -289,11 +289,12 @@
    "github": null,
    "existing": null,
    "files": [
-    "ui/role/RoleSelectionViewModel.kt"
+    "ui/account/AccountSetupViewModel.kt (create users/{uid} + write-once setRole with the registration type)",
+    "ui/account/PendingAccountType.kt (the chosen flow, kept until the profile is saved)"
    ]
   },
   "G3.2": {
-   "title": "Role selection screen (Figma #27)",
+   "title": "Wire explorer and venue registration flows",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -305,8 +306,8 @@
    "github": null,
    "existing": null,
    "files": [
-    "ui/role/RoleSelectionScreen.kt",
-    "res/values/role_strings.xml"
+    "ui/auth/* registration callbacks: Create account → Explorer, venue hyperlink → venue registration (auth screen owner reviews)",
+    "ui/account/AccountSetupDestination.kt (fills the accountSetup slot; reuses the registration flow, no new screen)"
    ]
   },
   "G3.3": {
@@ -878,7 +879,7 @@
    ]
   },
   "T1": {
-   "title": "E2E venue journey: sign up -> Venue -> name -> area -> new quest",
+   "title": "E2E venue journey: venue link -> register -> name -> area -> new quest",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -894,7 +895,7 @@
    ]
   },
   "T2": {
-   "title": "E2E explorer journey: seeded quest -> map -> nearby -> venue page",
+   "title": "E2E explorer journey: register -> seeded quest -> map -> nearby -> venue page",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -1369,7 +1370,7 @@
    "to": "G2.3",
    "kind": "soft",
    "blocks": "finish",
-   "reason": "real roles only once the user provider serves Firestore; fake until then"
+   "reason": "real saved roles only once the user provider serves Firestore; fake until then"
   },
   {
    "from": "G2.1",
@@ -1397,14 +1398,14 @@
    "to": "G3.2",
    "kind": "hard",
    "blocks": "start",
-   "reason": "screen renders the ViewModel's state"
+   "reason": "calls G3.1 with the flow's account type (Explorer or Venue)"
   },
   {
    "from": "C2",
    "to": "G3.2",
    "kind": "soft",
    "blocks": "finish",
-   "reason": "plugs into the roleSelection slot"
+   "reason": "wires the authFlow registration callbacks and fills the accountSetup slot"
   },
   {
    "from": "C2",
@@ -1432,7 +1433,7 @@
    "to": "G3.3",
    "kind": "soft",
    "blocks": "finish",
-   "reason": "final registration in the role router"
+   "reason": "final registration in the saved-role router"
   },
   {
    "from": "N2",
@@ -1712,7 +1713,7 @@
    "to": "D7b",
    "kind": "soft",
    "blocks": "finish",
-   "reason": "without it roles are asked again after restart"
+   "reason": "without it the profile is lost on restart and the user lands in account setup"
   },
   {
    "from": "D1",
@@ -1775,14 +1776,14 @@
    "to": "T1",
    "kind": "hard",
    "blocks": "start",
-   "reason": "role routing"
+   "reason": "saved-role routing"
   },
   {
    "from": "G3.2",
    "to": "T1",
    "kind": "hard",
    "blocks": "start",
-   "reason": "pick Venue"
+   "reason": "register through the venue link"
   },
   {
    "from": "G3.3",
@@ -1838,14 +1839,14 @@
    "to": "T2",
    "kind": "hard",
    "blocks": "start",
-   "reason": "role routing"
+   "reason": "saved-role routing"
   },
   {
    "from": "G3.2",
    "to": "T2",
    "kind": "hard",
    "blocks": "start",
-   "reason": "pick Explorer"
+   "reason": "register through the normal Create account flow"
   },
   {
    "from": "E3.4",

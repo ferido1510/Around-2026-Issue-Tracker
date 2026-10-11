@@ -72,9 +72,9 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | ID | Title | Owner | Size | Existing work |
 |---|---|---|---|---|
 | HK-1 | Close duplicate/finished issues #9 #22 #26 #29, verify and close #50, file Google sign-in backlog issue | Jiayi | S | — |
-| C2 | AppRoot slot signature: authFlow, roleSelection, explorerHome, venueEntry | Vali | S | — |
+| C2 | AppRoot slot signature: authFlow, accountSetup, explorerHome, venueEntry | Vali | S | — |
 | C3 | AuthRepository.currentUserEmail (+ fake + Firebase impl) | Vali | S | — |
-| G3.1 | Role selection ViewModel | Ece | S | — |
+| G3.1 | Create the user profile with the registration account type | Ece | S | — |
 | V3.1 | Save and load the venue's marker and radius (= contract C4) | Yigit | S | code in PR #92 (opened backwards, closed) |
 | V4.1 | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | Zaynab | S | PR #76 (draft, complete) |
 | C6 | NearbyQuest data class + MapUiState.nearby | Ferit | S | — |
@@ -101,9 +101,9 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 |---|---|---|---|---|---|
 | G2.1 | Show the sign-in flow or the app from the saved session | Vali | C2 (hard) | Day 1 | Day 1–2 |
 | G2.2 | Clear the back stack on sign-in and sign-out | Vali | G2.1 (hard) | Day 2 | Day 2 |
-| G2.3 | Route a signed-in user by role | Vali | G2.1 (hard) | Day 2 | Day 3 |
+| G2.3 | Route a signed-in user by their saved role | Vali | G2.1 (hard) | Day 2 | Day 3 |
 | G2.4 | Sign out from the Profile tab | Vali | G2.1 (hard) | Day 2 | Day 3 |
-| G3.2 | Role selection screen (Figma #27) | Ece | G3.1 (hard) | Day 2 | Day 3 |
+| G3.2 | Wire explorer and venue registration flows | Ece | G3.1 (hard) | Day 2 | Day 3 |
 | G3.3 | Venue entry: resume onboarding or open venue home (rewrite of #79) | Ece | C2 (hard), V3.1 (hard), N0 (hard) | Day 1 | Day 4 |
 | V3.2 | Save the picked address with the area | Yigit | V3.1 (hard) | Day 1 | Day 2–3 |
 | V4.3 | Activity settings (proof type, radius, party size) | — | V4.2 (hard) | Day 2 | Day 3 |
@@ -124,8 +124,8 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | D7a | Seed tool for the emulator (tools/seed) | Jiayi | D1 (hard) | Day 2 | Day 4–5 |
 | D7b | Data day: everyone creates a real venue + quests through the app | Team | DEC-4 (decision), G3.3 (hard), V3.1 (hard), V4.6 (hard), D2p (hard), D5 (hard), D4 (hard) | Day 5 | Day 6 |
 | T0 | E2E harness: emulator reset, account helpers, page-object base | Alisher | Q1 (hard) | Day 2 | Day 4–5 |
-| T1 | E2E venue journey: sign up -> Venue -> name -> area -> new quest | Alisher | T0 (hard), G2.3 (hard), G3.2 (hard), G3.3 (hard), V3.1 (hard), N2 (hard), V4.6 (hard) | Day 5 | Day 5–6 |
-| T2 | E2E explorer journey: seeded quest -> map -> nearby -> venue page | Vali | T0 (hard), G2.3 (hard), G3.2 (hard), E3.4 (hard), E4.2 (hard), D5 (hard) | Day 5 | Day 5–6 |
+| T1 | E2E venue journey: venue link -> register -> name -> area -> new quest | Alisher | T0 (hard), G2.3 (hard), G3.2 (hard), G3.3 (hard), V3.1 (hard), N2 (hard), V4.6 (hard) | Day 5 | Day 5–6 |
+| T2 | E2E explorer journey: register -> seeded quest -> map -> nearby -> venue page | Vali | T0 (hard), G2.3 (hard), G3.2 (hard), E3.4 (hard), E4.2 (hard), D5 (hard) | Day 5 | Day 5–6 |
 | A1 | Import venue page assets (asset-only PR) | Zaynab | F1 (hard), DS0 (file) | Day 3 | Day 4 |
 | E4.1 | VenuePageViewModel logic + tests | Jiayi | C7 (hard) | Day 1 | Day 2–3 |
 | E4.2 | Venue page skeleton: top bar, header, states, questRow/bottomBar slots | Yigit | C7 (hard), N0 (hard) | Day 1 | Day 4–5 |
@@ -223,8 +223,8 @@ V4.2–V4.6 (the V4 re-split, §12) are unassigned: they are taken on the board 
 
 | # | ID | Title | Window | Size | Structural blockers owned by others |
 |---|---|---|---|---|---|
-| 1 | G3.1 | Role selection ViewModel | Day 1–2 | S | C3 (Vali, soft) |
-| 2 | G3.2 | Role selection screen (Figma #27) | Day 3 | M | C2 (Vali, soft) |
+| 1 | G3.1 | Create the user profile with the registration account type | Day 1–2 | S | C3 (Vali, soft) |
+| 2 | G3.2 | Wire explorer and venue registration flows | Day 3 | M | C2 (Vali, soft) |
 | 3 | G3.3 | Venue entry: resume onboarding or open venue home (rewrite of #79) | Day 4 | M | C2 (Vali, hard), V3.1 (Yigit, hard), N0 (Alisher, hard), G2.3 (Vali, soft), N2 (Vali, soft) |
 | 4 | D3 | UserRepositoryFirestore + emulator tests | Day 4–6 | L | Q3 (Jiayi, soft), D1 (Jiayi, soft) |
 | 5 | D3p | Add and switch the user provider to Firestore | Day 6 | S | G2.1 (Vali, hard) |
@@ -237,14 +237,14 @@ V4.2–V4.6 (the V4 re-split, §12) are unassigned: they are taken on the board 
 
 | # | ID | Title | Window | Size | Structural blockers owned by others |
 |---|---|---|---|---|---|
-| 1 | C2 | AppRoot slot signature: authFlow, roleSelection, explorerHome, venueEntry | Day 1 | S | — |
+| 1 | C2 | AppRoot slot signature: authFlow, accountSetup, explorerHome, venueEntry | Day 1 | S | — |
 | 2 | C3 | AuthRepository.currentUserEmail (+ fake + Firebase impl) | Day 1 | S | — |
 | 3 | G2.1 | Show the sign-in flow or the app from the saved session | Day 1–2 | M | — |
 | 4 | G2.2 | Clear the back stack on sign-in and sign-out | Day 2 | S | — |
-| 5 | G2.3 | Route a signed-in user by role | Day 3 | M | D3p (Ece, soft) |
+| 5 | G2.3 | Route a signed-in user by their saved role | Day 3 | M | D3p (Ece, soft) |
 | 6 | G2.4 | Sign out from the Profile tab | Day 3 | S | — |
 | 7 | N2 | Venue home shell: Dashboard / Quests (New quest) / Profile | Day 4–5 | M | N0 (Alisher, hard) |
-| 8 | T2 | E2E explorer journey: seeded quest -> map -> nearby -> venue page | Day 5–6 | M | T0 (Alisher, hard), G3.2 (Ece, hard), E3.4 (Ferit, hard), E4.2 (Yigit, hard), D5 (Jiayi, hard), E4.3 (Ferit, soft) |
+| 8 | T2 | E2E explorer journey: register -> seeded quest -> map -> nearby -> venue page | Day 5–6 | M | T0 (Alisher, hard), G3.2 (Ece, hard), E3.4 (Ferit, hard), E4.2 (Yigit, hard), D5 (Jiayi, hard), E4.3 (Ferit, soft) |
 | | **— stretch gate —** | | | | |
 | 9 | E5.2 | AcceptQuestBar component on the venue page | Day 6 | M | E4.2 (Yigit, hard), C7 (Jiayi, hard), DEC-3 (Team, decision), E5.1 (Jiayi, soft) |
 | 10 | T3 | E2E: accept -> sign in as venue -> dashboard lists it | Day 7 | M | E5.1 (Jiayi, hard), V9.2 (Ece, hard) |
@@ -275,7 +275,7 @@ V4.2–V4.6 (the V4 re-split, §12) are unassigned: they are taken on the board 
 | 3 | N1 | Open the venue page from the map card; Quests tab hosts overview (closes #20 gap) | Day 2 | S | — |
 | 4 | D4 | Security rules v2, tested and deployed to around-67942 | Day 3–4 | M | D1 (Jiayi, hard), DEC-1 (Jiayi, decision) |
 | 5 | T0 | E2E harness: emulator reset, account helpers, page-object base | Day 4–5 | M | — |
-| 6 | T1 | E2E venue journey: sign up -> Venue -> name -> area -> new quest | Day 5–6 | M | G2.3 (Vali, hard), G3.2 (Ece, hard), G3.3 (Ece, hard), V3.1 (Yigit, hard), N2 (Vali, hard), V4.6 (unassigned, hard), Q2 (Ferit, soft), D2p (Yigit, soft), D3p (Ece, soft) |
+| 6 | T1 | E2E venue journey: venue link -> register -> name -> area -> new quest | Day 5–6 | M | G2.3 (Vali, hard), G3.2 (Ece, hard), G3.3 (Ece, hard), V3.1 (Yigit, hard), N2 (Vali, hard), V4.6 (unassigned, hard), Q2 (Ferit, soft), D2p (Yigit, soft), D3p (Ece, soft) |
 | 7 | M1 | M1 deliverables: release APK, wiki links, sprint backlog view | Day 7 | S | T2 (Vali, soft) |
 
 ## 6. Unblock timeline (if every task merges by the end of its window)
@@ -302,19 +302,19 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | HK-1 | process | Close duplicate/finished issues #9 #22 #26 #29, verify and close #50, file Google sign-in backlog issue | G1,V4 | PROC | Jiayi | Alisher | S | Day 1 | must | — | — | — | — | `ready` | #9 #22 #26 #29 #50 |
 | G2 | story | Route users by session and role | G2 | — | Vali | — | — | Day 1–3 | must | — | — | — | — | `open` | #7 · PR #86 (draft) |
-| G3 | story | Choose a role and finish venue onboarding | G3 | — | Ece | — | — | Day 1–4 | must | — | — | — | — | `open` | #79 (absorbed) |
+| G3 | story | Create an account and finish venue onboarding | G3 | — | Ece | — | — | Day 1–4 | must | — | — | — | — | `open` | #79 (absorbed) |
 | V3 | story | Confirm the venue's area (save/load + address) | V3 | — | Yigit | — | — | Day 1–3 | must | — | — | — | — | `open` | #88 #89 |
 | V4 | story | Create a quest | V4 | — | Zaynab | — | — | Day 1–5 | must | — | — | — | — | `open` | #73 |
 | E3 | story | Nearby quests sorted by distance | E3 | — | Ferit | — | — | Day 1–5 | must | — | — | — | — | `open` | #91 |
 | M1 | process | M1 deliverables: release APK, wiki links, sprint backlog view | PROC | PROC | Alisher | Jiayi | S | Day 7 | must | — | Q1, T1, T2 | — | — | `ready-scheduled` | #12 |
-| C2 | contract | AppRoot slot signature: authFlow, roleSelection, explorerHome, venueEntry | G2 | G2 | Vali | Alisher | S | Day 1 | must | — | — | — | G2.1 (h), G3.2 (s), G3.3 (h) | `ready` | — |
+| C2 | contract | AppRoot slot signature: authFlow, accountSetup, explorerHome, venueEntry | G2 | G2 | Vali | Alisher | S | Day 1 | must | — | — | — | G2.1 (h), G3.2 (s), G3.3 (h) | `ready` | — |
 | C3 | contract | AuthRepository.currentUserEmail (+ fake + Firebase impl) | G2 | G2 | Vali | Ece | S | Day 1 | must | — | — | — | G3.1 (s) | `ready` | — |
 | G2.1 | task | Show the sign-in flow or the app from the saved session | G2 | G2 | Vali | Alisher | M | Day 1–2 | must | C2 | — | — | G2.2 (h), G2.3 (h), G2.4 (h), D2p (h), D3p (h), D5 (h) | `blocked` | code in PR #86 |
 | G2.2 | task | Clear the back stack on sign-in and sign-out | G2 | G2 | Vali | Ece | S | Day 2 | must | G2.1 | — | — | G2.4 (s) | `blocked` | code in PR #86 |
-| G2.3 | task | Route a signed-in user by role | G2 | G2 | Vali | Ece | M | Day 3 | must | G2.1 | D3p | — | G3.3 (s), N2 (s), T1 (h), T2 (h) | `blocked` | RoleNavigation in PR #86 |
+| G2.3 | task | Route a signed-in user by their saved role | G2 | G2 | Vali | Ece | M | Day 3 | must | G2.1 | D3p | — | G3.3 (s), N2 (s), T1 (h), T2 (h) | `blocked` | RoleNavigation in PR #86 |
 | G2.4 | task | Sign out from the Profile tab | G2 | G2 | Vali | Alisher | S | Day 3 | must | G2.1 | G2.2 | — | N2 (h) | `blocked` | — |
-| G3.1 | task | Role selection ViewModel | G3 | G3 | Ece | Vali | S | Day 1–2 | must | — | C3 | — | G3.2 (h) | `ready` | — |
-| G3.2 | task | Role selection screen (Figma #27) | G3 | G3 | Ece | Zaynab | M | Day 3 | must | G3.1 | C2 | — | T1 (h), T2 (h) | `blocked` | — |
+| G3.1 | task | Create the user profile with the registration account type | G3 | G3 | Ece | Vali | S | Day 1–2 | must | — | C3 | — | G3.2 (h) | `ready` | — |
+| G3.2 | task | Wire explorer and venue registration flows | G3 | G3 | Ece | Zaynab | M | Day 3 | must | G3.1 | C2 | — | T1 (h), T2 (h) | `blocked` | — |
 | G3.3 | task | Venue entry: resume onboarding or open venue home (rewrite of #79) | G3 | G3 | Ece | Yigit | M | Day 4 | must | C2, V3.1, N0 | G2.3, N2 | — | D7b (h), T1 (h) | `blocked` | #79 |
 | V3.1 = C4 | task | Save and load the venue's marker and radius (= contract C4) | V3 | V3 | Yigit | Ece | S | Day 1 | must | — | — | — | G3.3 (h), V3.2 (h), Q2 (f), D7b (h), T1 (h) | `ready` | #88 · code in PR #92 (opened backwards, closed) |
 | V3.2 | task | Save the picked address with the area | V3 | V3 | Yigit | Ferit | S | Day 2–3 | must | V3.1 | — | — | D2 (h) | `blocked` | — |
@@ -371,8 +371,8 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | T | story | Core loop works end to end | V4,E4 | — | Alisher | — | — | Day 4–6 | must | — | — | — | — | `open` | — |
 | T0 | task | E2E harness: emulator reset, account helpers, page-object base | V4,E4 | T | Alisher | Vali | M | Day 4–5 | must | Q1 | — | — | T1 (h), T2 (h) | `blocked` | — |
-| T1 | task | E2E venue journey: sign up -> Venue -> name -> area -> new quest | V4 | T | Alisher | Ece | M | Day 5–6 | must | T0, G2.3, G3.2, G3.3, V3.1, N2, V4.6 | Q2, D2p, D3p | — | M1 (s) | `blocked` | — |
-| T2 | task | E2E explorer journey: seeded quest -> map -> nearby -> venue page | E4 | T | Vali | Ferit | M | Day 5–6 | must | T0, G2.3, G3.2, E3.4, E4.2, D5 | E4.3 | — | M1 (s), T3 (h) | `blocked` | — |
+| T1 | task | E2E venue journey: venue link -> register -> name -> area -> new quest | V4 | T | Alisher | Ece | M | Day 5–6 | must | T0, G2.3, G3.2, G3.3, V3.1, N2, V4.6 | Q2, D2p, D3p | — | M1 (s) | `blocked` | — |
+| T2 | task | E2E explorer journey: register -> seeded quest -> map -> nearby -> venue page | E4 | T | Vali | Ferit | M | Day 5–6 | must | T0, G2.3, G3.2, E3.4, E4.2, D5 | E4.3 | — | M1 (s), T3 (h) | `blocked` | — |
 
 ### Tier 5: venue page
 
@@ -423,16 +423,16 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | G2.1 | C2 | hard | builds on the slot signature |
 | G2.2 | G2.1 | hard | same file, needs the gate |
 | G2.3 | G2.1 | hard | routing sits inside the signed-in branch |
-| G2.3 | D3p | soft | real roles only once the user provider serves Firestore; fake until then |
+| G2.3 | D3p | soft | real saved roles only once the user provider serves Firestore; fake until then |
 | G2.4 | G2.1 | hard | sign-out must land on the gate |
 | G2.4 | G2.2 | soft | back-stack clearing after sign-out |
 | G3.1 | C3 | soft | needs currentUserEmail; can take an email lambda until C3 merges |
-| G3.2 | G3.1 | hard | screen renders the ViewModel's state |
-| G3.2 | C2 | soft | plugs into the roleSelection slot |
+| G3.2 | G3.1 | hard | calls G3.1 with the flow's account type (Explorer or Venue) |
+| G3.2 | C2 | soft | wires the authFlow registration callbacks and fills the accountSetup slot |
 | G3.3 | C2 | hard | implements the venueEntry slot |
 | G3.3 | V3.1 | hard | registers VenueAreaScreen(venueId, onSaved, onBack) = contract C4 |
 | G3.3 | N0 | hard | navigates to the venue-home route |
-| G3.3 | G2.3 | soft | final registration in the role router |
+| G3.3 | G2.3 | soft | final registration in the saved-role router |
 | G3.3 | N2 | soft | venue home is a stub until N2 |
 | V3.2 | V3.1 | hard | extends the save path and the same ViewModel |
 | V4.3 | V4.2 | hard | extends V4.2's state, ViewModel and screen |
@@ -482,7 +482,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D7b | D2p | hard | venues must persist in Firestore |
 | D7b | D5 | hard | quests must persist in Firestore |
 | D7b | D4 | hard | rules v2 deployed to production |
-| D7b | D3p | soft | without it roles are asked again after restart |
+| D7b | D3p | soft | without it the profile is lost on restart and the user lands in account setup |
 | D8 | D1 | hard | adds a geohash field to quest documents; schema v1 must define it (docs/firestore-schema.md is Jiayi's) |
 | D8 | V4.1 | file | edits model/quest/Quest.kt and QuestRepositoryFirestore.kt after the Reward change (PR #76) |
 | D8 | D7a | file | the seed tool must write geohash on seeded quests; edit tools/seed after it lands |
@@ -491,8 +491,8 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D8 | D4 | soft | the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy |
 | T0 | Q1 | hard | harness runs on the new CI emulator |
 | T1 | T0 | hard | uses the harness |
-| T1 | G2.3 | hard | role routing |
-| T1 | G3.2 | hard | pick Venue |
+| T1 | G2.3 | hard | saved-role routing |
+| T1 | G3.2 | hard | register through the venue link |
 | T1 | G3.3 | hard | onboarding in the app |
 | T1 | V3.1 | hard | save the area |
 | T1 | N2 | hard | venue home |
@@ -501,8 +501,8 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | T1 | D2p | soft | assert in Firestore once venues are real |
 | T1 | D3p | soft | assert role in Firestore once users are real |
 | T2 | T0 | hard | uses the harness |
-| T2 | G2.3 | hard | role routing |
-| T2 | G3.2 | hard | pick Explorer |
+| T2 | G2.3 | hard | saved-role routing |
+| T2 | G3.2 | hard | register through the normal Create account flow |
 | T2 | E3.4 | hard | View from the nearby list |
 | T2 | E4.2 | hard | venue page exists |
 | T2 | D5 | hard | map reads the seeded Firestore quest |
@@ -559,7 +559,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | Story | Title | Prio | Children | GitHub |
 |---|---|---|---|---|
 | G2 | Route users by session and role | must | C2, C3, G2.1, G2.2, G2.3, G2.4 | #7 |
-| G3 | Choose a role and finish venue onboarding | must | G3.1, G3.2, G3.3 | #79 (absorbed) |
+| G3 | Create an account and finish venue onboarding | must | G3.1, G3.2, G3.3 | #79 (absorbed) |
 | V3 | Confirm the venue's area (save/load + address) | must | V3.1, V3.2 | #88 #89 |
 | V4 | Create a quest | must | V4.1, V4.2, V4.3, V4.4, V4.5, V4.6 | #73 |
 | E3 | Nearby quests sorted by distance | must | E3.1, E3.2, E3.3, E3.4 | #91 |
@@ -584,7 +584,7 @@ A screen is *visible in the app* only once it is plugged into its slot or route.
 |---|---|---|---|---|---|
 | AppRoot.authFlow | C2 | AuthScreen (exists) | G2.1 | Vali | G2.1 plugs it |
 | AppRoot.explorerHome | C2 | AroundApp (exists) | G2.3 | Vali | G2.3 plugs it |
-| AppRoot.roleSelection | C2 | RoleSelectionScreen | G3.2 | Vali (MainActivity/AppRoot) | later of G2.3/G3.2 plugs it, Vali reviews |
+| AppRoot.accountSetup | C2 | registration flow in complete-registration mode (no new screen) | G3.2 | Vali (MainActivity/AppRoot) | later of G2.3/G3.2 plugs it, Vali reviews |
 | AppRoot.venueEntry | C2 | venue entry composable | G3.3 | Vali (MainActivity/AppRoot) | later of G2.3/G3.3 plugs it, Vali reviews |
 | venueOnboardingDestinations.locationScreen | existing | VenueAreaScreen(venueId,onSaved,onBack) | V3.1 | Ece | G3.3 plugs it |
 | MapScreen.onOpenVenue | existing | venue/{venueId} route | N0 | Alisher (AroundApp.kt) | N1 plugs it |
@@ -676,7 +676,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "DEC-6", "kind": "decision", "title": "Schema sign-off rule: silence by Day 2 noon = approval", "story": ["V1"], "parent": "PROC", "tier": 0, "prio": "must", "owner": "team", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "initialStatus": "pending-decision", "earliestStructuralStartDay": 1},
     {"id": "HK-1", "kind": "process", "title": "Close duplicate/finished issues #9 #22 #26 #29, verify and close #50, file Google sign-in backlog issue", "story": ["G1", "V4"], "parent": "PROC", "tier": 0, "prio": "must", "owner": "jiayi", "reviewer": "alisher", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "github": "#9 #22 #26 #29 #50", "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "G2", "kind": "story", "title": "Route users by session and role", "story": ["G2"], "tier": 0, "prio": "must", "owner": "vali", "windowStartDay": 1, "windowEndDay": 3, "github": "#7", "existingWork": "PR #86 (draft)", "initialStatus": "open", "children": ["C2", "C3", "G2.1", "G2.2", "G2.3", "G2.4"]},
-    {"id": "G3", "kind": "story", "title": "Choose a role and finish venue onboarding", "story": ["G3"], "tier": 0, "prio": "must", "owner": "ece", "windowStartDay": 1, "windowEndDay": 4, "github": "#79 (absorbed)", "initialStatus": "open", "children": ["G3.1", "G3.2", "G3.3"]},
+    {"id": "G3", "kind": "story", "title": "Create an account and finish venue onboarding", "story": ["G3"], "tier": 0, "prio": "must", "owner": "ece", "windowStartDay": 1, "windowEndDay": 4, "github": "#79 (absorbed)", "initialStatus": "open", "children": ["G3.1", "G3.2", "G3.3"]},
     {"id": "V3", "kind": "story", "title": "Confirm the venue's area (save/load + address)", "story": ["V3"], "tier": 0, "prio": "must", "owner": "yigit", "windowStartDay": 1, "windowEndDay": 3, "github": "#88 #89", "initialStatus": "open", "children": ["V3.1", "V3.2"]},
     {"id": "V4", "kind": "story", "title": "Create a quest", "story": ["V4"], "tier": 0, "prio": "must", "owner": "zaynab", "windowStartDay": 1, "windowEndDay": 5, "github": "#73", "initialStatus": "open", "children": ["V4.1", "V4.2", "V4.3", "V4.4", "V4.5", "V4.6"]},
     {"id": "E3", "kind": "story", "title": "Nearby quests sorted by distance", "story": ["E3"], "tier": 0, "prio": "must", "owner": "ferit", "windowStartDay": 1, "windowEndDay": 5, "github": "#91", "initialStatus": "open", "children": ["E3.1", "E3.2", "E3.3", "E3.4"]},
@@ -690,14 +690,14 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "V10", "kind": "story", "title": "Approve a reservation", "story": ["V10"], "tier": 7, "prio": "stretch", "owner": "jiayi", "windowStartDay": 7, "windowEndDay": 7, "github": "#94", "initialStatus": "open", "children": ["V10.1"]},
     {"id": "E6", "kind": "story", "title": "See my accepted quest (explorer overview)", "story": ["E6"], "tier": 7, "prio": "stretch", "owner": "zaynab", "windowStartDay": 6, "windowEndDay": 7, "initialStatus": "open", "children": ["F3", "A3", "E6.1", "E6.2"]},
     {"id": "M1", "kind": "process", "title": "M1 deliverables: release APK, wiki links, sprint backlog view", "story": ["PROC"], "parent": "PROC", "tier": 0, "prio": "must", "owner": "alisher", "reviewer": "jiayi", "size": "S", "windowStartDay": 7, "windowEndDay": 7, "github": "#12", "initialStatus": "ready-scheduled", "earliestStructuralStartDay": 1},
-    {"id": "C2", "kind": "contract", "title": "AppRoot slot signature: authFlow, roleSelection, explorerHome, venueEntry", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "alisher", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/navigation/AppRoot.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
+    {"id": "C2", "kind": "contract", "title": "AppRoot slot signature: authFlow, accountSetup, explorerHome, venueEntry", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "alisher", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/navigation/AppRoot.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "C3", "kind": "contract", "title": "AuthRepository.currentUserEmail (+ fake + Firebase impl)", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "ece", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["model/auth/AuthRepository*.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "G2.1", "kind": "task", "title": "Show the sign-in flow or the app from the saved session", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "alisher", "size": "M", "windowStartDay": 1, "windowEndDay": 2, "existingWork": "code in PR #86", "files": ["MainActivity.kt", "ui/navigation/AppRoot.kt", "ui/navigation/SessionViewModel.kt", "model/auth/AuthRepositoryProvider.kt", "src/debug/AuthDemoActivity.kt (deleted)"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
     {"id": "G2.2", "kind": "task", "title": "Clear the back stack on sign-in and sign-out", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "ece", "size": "S", "windowStartDay": 2, "windowEndDay": 2, "existingWork": "code in PR #86", "files": ["ui/navigation/AppRoot.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
-    {"id": "G2.3", "kind": "task", "title": "Route a signed-in user by role", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "ece", "size": "M", "windowStartDay": 3, "windowEndDay": 3, "existingWork": "RoleNavigation in PR #86", "files": ["ui/navigation/RoleRouting.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
+    {"id": "G2.3", "kind": "task", "title": "Route a signed-in user by their saved role", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "ece", "size": "M", "windowStartDay": 3, "windowEndDay": 3, "existingWork": "RoleNavigation in PR #86", "files": ["ui/navigation/RoleRouting.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
     {"id": "G2.4", "kind": "task", "title": "Sign out from the Profile tab", "story": ["G2"], "parent": "G2", "tier": 0, "prio": "must", "owner": "vali", "reviewer": "alisher", "size": "S", "windowStartDay": 3, "windowEndDay": 3, "files": ["ui/profile/ProfileScreen.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
-    {"id": "G3.1", "kind": "task", "title": "Role selection ViewModel", "story": ["G3"], "parent": "G3", "tier": 0, "prio": "must", "owner": "ece", "reviewer": "vali", "size": "S", "windowStartDay": 1, "windowEndDay": 2, "files": ["ui/role/RoleSelectionViewModel.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
-    {"id": "G3.2", "kind": "task", "title": "Role selection screen (Figma #27)", "story": ["G3"], "parent": "G3", "tier": 0, "prio": "must", "owner": "ece", "reviewer": "zaynab", "size": "M", "windowStartDay": 3, "windowEndDay": 3, "files": ["ui/role/RoleSelectionScreen.kt", "res/values/role_strings.xml"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
+    {"id": "G3.1", "kind": "task", "title": "Create the user profile with the registration account type", "story": ["G3"], "parent": "G3", "tier": 0, "prio": "must", "owner": "ece", "reviewer": "vali", "size": "S", "windowStartDay": 1, "windowEndDay": 2, "files": ["ui/account/AccountSetupViewModel.kt (create users/{uid} + write-once setRole with the registration type)", "ui/account/PendingAccountType.kt (the chosen flow, kept until the profile is saved)"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
+    {"id": "G3.2", "kind": "task", "title": "Wire explorer and venue registration flows", "story": ["G3"], "parent": "G3", "tier": 0, "prio": "must", "owner": "ece", "reviewer": "zaynab", "size": "M", "windowStartDay": 3, "windowEndDay": 3, "files": ["ui/auth/* registration callbacks: Create account → Explorer, venue hyperlink → venue registration (auth screen owner reviews)", "ui/account/AccountSetupDestination.kt (fills the accountSetup slot; reuses the registration flow, no new screen)"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
     {"id": "G3.3", "kind": "task", "title": "Venue entry: resume onboarding or open venue home (rewrite of #79)", "story": ["G3"], "parent": "G3", "tier": 0, "prio": "must", "owner": "ece", "reviewer": "yigit", "size": "M", "windowStartDay": 4, "windowEndDay": 4, "github": "#79", "files": ["ui/navigation/VenueOnboardingNavigation.kt", "docs/venue-onboarding-navigation.md"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
     {"id": "V3.1", "alias": "C4", "kind": "task", "title": "Save and load the venue's marker and radius (= contract C4)", "story": ["V3"], "parent": "V3", "tier": 0, "prio": "must", "owner": "yigit", "reviewer": "ece", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "github": "#88", "existingWork": "code in PR #92 (opened backwards, closed)", "files": ["ui/venue/VenueAreaViewModel.kt", "ui/venue/VenueAreaScreen.kt", "androidTest/ui/venue/VenueAreaScreenDeviceTest.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "V3.2", "kind": "task", "title": "Save the picked address with the area", "story": ["V3"], "parent": "V3", "tier": 0, "prio": "must", "owner": "yigit", "reviewer": "ferit", "size": "S", "windowStartDay": 2, "windowEndDay": 3, "files": ["model/venue/VenueRepository.kt", "model/venue/FakeVenueRepository.kt", "ui/venue/VenueAreaViewModel.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
@@ -730,8 +730,8 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "D8", "kind": "task", "title": "Geo-bounded quest query: download only quests near the explorer or the map view", "story": ["V1", "E2"], "parent": "V1", "tier": 3, "prio": "stretch", "owner": null, "reviewer": null, "size": "L", "windowStartDay": 6, "windowEndDay": 7, "github": "new (file under #6, V1)", "files": ["model/quest/QuestRepository.kt (+ FakeQuestRepository)", "model/quest/QuestRepositoryFirestore.kt (geohash on write, range queries on read)", "model/quest/Quest.kt (geohash)", "ui/map/MapViewModel.kt (pass explorer location, else map camera centre)", "firestore.indexes.json", "tools/seed/* (write geohash)", "docs/firestore-schema.md (geohash field)", "tools/backfill-geohash (one-off, for quests created before D8)"], "initialStatus": "gated+blocked", "earliestStructuralStartDay": 5},
     {"id": "DS0", "kind": "task", "title": "Design tokens and fonts in the theme (asset-only PR)", "story": ["E2", "E4", "V4"], "parent": "V1", "tier": 3, "prio": "must", "owner": "ferit", "reviewer": "zaynab", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/theme/*", "res/font/*"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
     {"id": "T0", "kind": "task", "title": "E2E harness: emulator reset, account helpers, page-object base", "story": ["V4", "E4"], "parent": "T", "tier": 4, "prio": "must", "owner": "alisher", "reviewer": "vali", "size": "M", "windowStartDay": 4, "windowEndDay": 5, "files": ["androidTest/e2e/E2eRule.kt", "androidTest/e2e/Accounts.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 2},
-    {"id": "T1", "kind": "task", "title": "E2E venue journey: sign up -> Venue -> name -> area -> new quest", "story": ["V4"], "parent": "T", "tier": 4, "prio": "must", "owner": "alisher", "reviewer": "ece", "size": "M", "windowStartDay": 5, "windowEndDay": 6, "files": ["androidTest/e2e/VenueJourneyTest.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
-    {"id": "T2", "kind": "task", "title": "E2E explorer journey: seeded quest -> map -> nearby -> venue page", "story": ["E4"], "parent": "T", "tier": 4, "prio": "must", "owner": "vali", "reviewer": "ferit", "size": "M", "windowStartDay": 5, "windowEndDay": 6, "files": ["androidTest/e2e/ExplorerJourneyTest.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
+    {"id": "T1", "kind": "task", "title": "E2E venue journey: venue link -> register -> name -> area -> new quest", "story": ["V4"], "parent": "T", "tier": 4, "prio": "must", "owner": "alisher", "reviewer": "ece", "size": "M", "windowStartDay": 5, "windowEndDay": 6, "files": ["androidTest/e2e/VenueJourneyTest.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
+    {"id": "T2", "kind": "task", "title": "E2E explorer journey: register -> seeded quest -> map -> nearby -> venue page", "story": ["E4"], "parent": "T", "tier": 4, "prio": "must", "owner": "vali", "reviewer": "ferit", "size": "M", "windowStartDay": 5, "windowEndDay": 6, "files": ["androidTest/e2e/ExplorerJourneyTest.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 5},
     {"id": "F1", "kind": "task", "title": "Figma: venue page (light/dark, incl. accept-bar state)", "story": ["E4"], "parent": "E4", "tier": 5, "prio": "must", "owner": "zaynab", "reviewer": "yigit", "size": "M", "windowStartDay": 2, "windowEndDay": 3, "initialStatus": "ready-scheduled", "earliestStructuralStartDay": 1},
     {"id": "A1", "kind": "task", "title": "Import venue page assets (asset-only PR)", "story": ["E4"], "parent": "E4", "tier": 5, "prio": "must", "owner": "zaynab", "reviewer": "ferit", "size": "S", "windowStartDay": 4, "windowEndDay": 4, "files": ["res/drawable/*", "ui/theme/* (only if new tokens)"], "initialStatus": "blocked", "earliestStructuralStartDay": 3},
     {"id": "C7", "kind": "contract", "title": "VenuePageUiState + VenuePageQuest + ViewModel stub", "story": ["E4"], "parent": "E4.1", "tier": 5, "prio": "must", "owner": "jiayi", "reviewer": "yigit", "size": "S", "windowStartDay": 1, "windowEndDay": 1, "files": ["ui/venuepage/VenuePageUiState.kt"], "initialStatus": "ready", "earliestStructuralStartDay": 1},
@@ -759,16 +759,16 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "C2", "to": "G2.1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "builds on the slot signature"},
     {"from": "G2.1", "to": "G2.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "same file, needs the gate"},
     {"from": "G2.1", "to": "G2.3", "kind": "hard", "family": "structural", "blocks": "start", "reason": "routing sits inside the signed-in branch"},
-    {"from": "D3p", "to": "G2.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "real roles only once the user provider serves Firestore; fake until then"},
+    {"from": "D3p", "to": "G2.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "real saved roles only once the user provider serves Firestore; fake until then"},
     {"from": "G2.1", "to": "G2.4", "kind": "hard", "family": "structural", "blocks": "start", "reason": "sign-out must land on the gate"},
     {"from": "G2.2", "to": "G2.4", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "back-stack clearing after sign-out"},
     {"from": "C3", "to": "G3.1", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "needs currentUserEmail; can take an email lambda until C3 merges"},
-    {"from": "G3.1", "to": "G3.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "screen renders the ViewModel's state"},
-    {"from": "C2", "to": "G3.2", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "plugs into the roleSelection slot"},
+    {"from": "G3.1", "to": "G3.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "calls G3.1 with the flow's account type (Explorer or Venue)"},
+    {"from": "C2", "to": "G3.2", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "wires the authFlow registration callbacks and fills the accountSetup slot"},
     {"from": "C2", "to": "G3.3", "kind": "hard", "family": "structural", "blocks": "start", "reason": "implements the venueEntry slot"},
     {"from": "V3.1", "to": "G3.3", "kind": "hard", "family": "structural", "blocks": "start", "reason": "registers VenueAreaScreen(venueId, onSaved, onBack) = contract C4"},
     {"from": "N0", "to": "G3.3", "kind": "hard", "family": "structural", "blocks": "start", "reason": "navigates to the venue-home route"},
-    {"from": "G2.3", "to": "G3.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "final registration in the role router"},
+    {"from": "G2.3", "to": "G3.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "final registration in the saved-role router"},
     {"from": "N2", "to": "G3.3", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "venue home is a stub until N2"},
     {"from": "V3.1", "to": "V3.2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "extends the save path and the same ViewModel"},
     {"from": "C6", "to": "E3.1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "fills the contract"},
@@ -808,7 +808,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "D2p", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "venues must persist in Firestore"},
     {"from": "D5", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "quests must persist in Firestore"},
     {"from": "D4", "to": "D7b", "kind": "hard", "family": "structural", "blocks": "start", "reason": "rules v2 deployed to production"},
-    {"from": "D3p", "to": "D7b", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "without it roles are asked again after restart"},
+    {"from": "D3p", "to": "D7b", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "without it the profile is lost on restart and the user lands in account setup"},
     {"from": "D1", "to": "D8", "kind": "hard", "family": "structural", "blocks": "start", "reason": "adds a geohash field to quest documents; schema v1 must define it (docs/firestore-schema.md is Jiayi's)"},
     {"from": "V4.1", "to": "D8", "kind": "file", "family": "structural", "blocks": "start", "reason": "edits model/quest/Quest.kt and QuestRepositoryFirestore.kt after the Reward change (PR #76)"},
     {"from": "D7a", "to": "D8", "kind": "file", "family": "structural", "blocks": "start", "reason": "the seed tool must write geohash on seeded quests; edit tools/seed after it lands"},
@@ -817,8 +817,8 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "D4", "to": "D8", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy"},
     {"from": "Q1", "to": "T0", "kind": "hard", "family": "structural", "blocks": "start", "reason": "harness runs on the new CI emulator"},
     {"from": "T0", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "uses the harness"},
-    {"from": "G2.3", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "role routing"},
-    {"from": "G3.2", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "pick Venue"},
+    {"from": "G2.3", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "saved-role routing"},
+    {"from": "G3.2", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "register through the venue link"},
     {"from": "G3.3", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "onboarding in the app"},
     {"from": "V3.1", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "save the area"},
     {"from": "N2", "to": "T1", "kind": "hard", "family": "structural", "blocks": "start", "reason": "venue home"},
@@ -826,8 +826,8 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "D2p", "to": "T1", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "assert in Firestore once venues are real"},
     {"from": "D3p", "to": "T1", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "assert role in Firestore once users are real"},
     {"from": "T0", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "uses the harness"},
-    {"from": "G2.3", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "role routing"},
-    {"from": "G3.2", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "pick Explorer"},
+    {"from": "G2.3", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "saved-role routing"},
+    {"from": "G3.2", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "register through the normal Create account flow"},
     {"from": "E3.4", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "View from the nearby list"},
     {"from": "E4.2", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "venue page exists"},
     {"from": "D5", "to": "T2", "kind": "hard", "family": "structural", "blocks": "start", "reason": "map reads the seeded Firestore quest"},
@@ -1002,7 +1002,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
   "integrationPoints": [
     {"slot": "AppRoot.authFlow", "definedBy": "C2", "filledBy": "AuthScreen (exists)", "fillerTask": "G2.1", "hostOwner": "Vali", "plugIn": "G2.1 plugs it"},
     {"slot": "AppRoot.explorerHome", "definedBy": "C2", "filledBy": "AroundApp (exists)", "fillerTask": "G2.3", "hostOwner": "Vali", "plugIn": "G2.3 plugs it"},
-    {"slot": "AppRoot.roleSelection", "definedBy": "C2", "filledBy": "RoleSelectionScreen", "fillerTask": "G3.2", "hostOwner": "Vali (MainActivity/AppRoot)", "plugIn": "later of G2.3/G3.2 plugs it, Vali reviews"},
+    {"slot": "AppRoot.accountSetup", "definedBy": "C2", "filledBy": "registration flow in complete-registration mode (no new screen)", "fillerTask": "G3.2", "hostOwner": "Vali (MainActivity/AppRoot)", "plugIn": "later of G2.3/G3.2 plugs it, Vali reviews"},
     {"slot": "AppRoot.venueEntry", "definedBy": "C2", "filledBy": "venue entry composable", "fillerTask": "G3.3", "hostOwner": "Vali (MainActivity/AppRoot)", "plugIn": "later of G2.3/G3.3 plugs it, Vali reviews"},
     {"slot": "venueOnboardingDestinations.locationScreen", "definedBy": "existing", "filledBy": "VenueAreaScreen(venueId,onSaved,onBack)", "fillerTask": "V3.1", "hostOwner": "Ece", "plugIn": "G3.3 plugs it"},
     {"slot": "MapScreen.onOpenVenue", "definedBy": "existing", "filledBy": "venue/{venueId} route", "fillerTask": "N0", "hostOwner": "Alisher (AroundApp.kt)", "plugIn": "N1 plugs it"},
@@ -1129,3 +1129,39 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
 - C5 (the Day 1 contract) is retired: V4.2 creates `CreateQuestUiState` itself, and V4.4 creates `RewardFormState`/`RewardType`.
 - V4.2 keeps its ID but now means the text-field form. Board progress is stored by task ID, so a claim on the old V4.2 would carry over to the new one.
 - V4.2–V4.6 are unassigned. The owner-queue and stretch-gate edges that referred to the retired tasks were removed from §11.
+
+### G3 correction: the account type comes from registration, not a role picker
+
+The Figma flow chooses the account type during registration, so the plan's separate role-selection screen (Figma #27) is dropped:
+- Normal **Create account** → Explorer
+- **Venue hyperlink** → venue registration → Venue → venue onboarding
+- **Returning user** → routed by their saved role
+
+| Item | Was | Now |
+|---|---|---|
+| G3 (story) | Choose a role and finish venue onboarding | **Create an account and finish venue onboarding.** No role choice after sign-up |
+| G3.1 | Role selection ViewModel (`ui/role/`) | **Create the user profile with the registration account type.** Saves Explorer or Venue according to the registration flow (`ui/account/`) |
+| G3.2 | Role selection screen (Figma #27) | **Wire explorer and venue registration flows.** Connects the venue hyperlink and the account-creation callbacks. No new screen |
+| G2.3 | Route a signed-in user by role; no role → role selection | **Route by the persisted role.** A missing profile or role goes to registration completion/recovery (the `accountSetup` slot), never a role picker |
+| C2 | Slots `authFlow, roleSelection, explorerHome, venueEntry` | `roleSelection` → **`accountSetup`**. It's needed: recovery must have a destination that is neither Explorer nor Venue |
+| G3.3 | Venue entry: resume onboarding | Unchanged: initialization → area → venue home, with resume |
+| T1 | sign up → pick Venue → … | **Starts through the venue hyperlink** → register → name → area → venue home → new quest |
+| T2 | sign up → pick Explorer → … | **Uses normal registration** (Explorer) → map → nearby → venue page |
+| D3 | Firestore user repo, write-once `setRole` | Unchanged. Still needed: the role is written once at registration and rules keep it write-once |
+
+**G3.1 must survive an interrupted profile save.** The chosen registration flow is recorded *before* sign-up and kept until `users/{uid}` exists with its role (`PendingAccountType`). If the app dies or the network fails between authentication and the profile save, the next start completes the profile with the *recorded* type. If no type was recorded, the user goes to `accountSetup` to finish registration. Recovery never falls back to Explorer: otherwise a venue that authenticated successfully could end up with an Explorer profile, and the write-once role would make that permanent.
+
+**G3.1 done when**
+- [ ] Create account records EXPLORER, and the venue link records VENUE, before calling sign-up. The record survives process death
+- [ ] After auth: create `users/{uid}` if absent (uid, `currentUserEmail`, `createdAt`), then `setRole(recorded type)` once. Clear the record only after both succeed
+- [ ] Interrupted save with VENUE recorded → next start creates a VENUE profile, not an Explorer one (unit test)
+- [ ] No profile and nothing recorded → `accountSetup`, and no profile is created (unit test)
+- [ ] "Already has a role" (another device finished first) counts as success and re-routes
+
+**G3.2 done when**
+- [ ] Create account → Explorer profile → explorer tabs. Venue link → venue registration → Venue profile → venue onboarding (G3.3)
+- [ ] The `accountSetup` slot reuses the registration flow in complete-registration mode. There's no new screen
+- [ ] Page-object steps for both flows, used by T1 and T2. Robolectric tests
+
+T0's `signUp(role)` helper becomes `registerExplorer()` / `registerVenue()`. Edges are unchanged; only their reasons now describe registration. Figma #27 (role selection) is no longer needed.
+
