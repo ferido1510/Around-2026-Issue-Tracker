@@ -123,6 +123,7 @@ function renderBoard() {
     tr.classList.toggle("complete", live && done === row.children.length);
   }
   renderProgress(counts);
+  renderLeaderboard();
   if (tipFor) renderTip();
 }
 
@@ -199,6 +200,49 @@ function renderReplays(fresh = false) {
     }
     el.hidden = !show;
   }
+}
+
+// ---------- leaderboard ----------
+
+// Everyone who has taken a task in this sprint, ranked by tasks done, then by
+// tasks in progress. People with the same counts share a rank (1, 1, 3).
+function renderLeaderboard() {
+  const box = $("leaderboard");
+  box.hidden = !live;
+  if (!live) return;
+
+  const people = new Map();
+  for (const [id, rec] of state) {
+    if (!PLAN.tasks[id] || !rec?.uid) continue;
+    const p = people.get(rec.uid) || { uid: rec.uid, name: rec.name || "Someone", done: [], progress: [] };
+    if (rec.status === "done") p.done.push(id);
+    else if (rec.status === "in-progress") p.progress.push(id);
+    people.set(rec.uid, p);
+  }
+  const ranked = [...people.values()].sort((a, b) =>
+    b.done.length - a.done.length || b.progress.length - a.progress.length || a.name.localeCompare(b.name));
+
+  const list = $("lbList");
+  if (!ranked.length) {
+    list.innerHTML = `<li class="lb-empty">Nobody has taken a task yet. Grab a green box!</li>`;
+    return;
+  }
+  const medals = ["🥇", "🥈", "🥉"];
+  let rank = 0;
+  list.innerHTML = ranked.map((p, i) => {
+    const prev = ranked[i - 1];
+    if (!prev || prev.done.length !== p.done.length || prev.progress.length !== p.progress.length) rank = i + 1;
+    const me = user && p.uid === user.uid;
+    const hue = [...p.uid].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
+    const title = [p.done.length ? `Done: ${p.done.join(", ")}` : "", p.progress.length ? `In progress: ${p.progress.join(", ")}` : ""]
+      .filter(Boolean).join(" · ");
+    return `<li class="lb-item${rank === 1 && p.done.length ? " lb-first" : ""}${me ? " lb-me" : ""}" title="${esc(title)}">
+      <span class="lb-rank">${p.done.length && rank <= 3 ? medals[rank - 1] : rank}</span>
+      <span class="lb-avatar" style="--hue:${hue}">${esc(p.name[0].toUpperCase())}</span>
+      <span class="lb-name">${esc(p.name)}${me ? ` <span class="lb-you">you</span>` : ""}</span>
+      <span class="lb-count"><b>${p.done.length}</b> done${p.progress.length ? `<span class="lb-prog"> · ${p.progress.length} in progress</span>` : ""}</span>
+    </li>`;
+  }).join("");
 }
 
 // ---------- theme ----------

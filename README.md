@@ -26,6 +26,7 @@ Letters after a task ID (also explained in the board's **Boxes** legend):
 - The **progress bar** at the top fills from 0 to 100% as tasks are marked done (the striped yellow part is work in progress).
 - When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, stretch included, it plays the **ultra victory** 👑. Each one plays once per browser. Once unlocked, a **Replay victory** / **Replay ultra victory** button appears in the top bar so you can replay it any time for morale (it stays even if a task is reopened later). If someone reopens a task and it gets finished again, it plays again.
 - The 🌗 button switches between automatic, light and dark themes.
+- The 🏅 **leaderboard** under the progress bar ranks everyone who has taken a task in the selected sprint by tasks done (then in progress), live. Ties share a rank, and hovering a name lists their tasks.
 - The **sprint dropdown** next to the title switches sprints. The page opens on the newest sprint, or on the one in the link (`?sprint=sprint-2`), so you can share a link to a specific sprint. Each sprint has its own progress, celebrations and replay buttons.
 
 Every structural blocking kind counts: `hard`, `file`, `soft`, and `decision` (start and finish). The chronological kinds (`owner-queue`, `not-before`, `stretch-gate`) are ignored, because they depend on the plan's owners and dates. The owners and reviewers from the plan are not used at all: whoever clicks a task gets it.
