@@ -117,7 +117,8 @@
     "E4.1",
     "E4.2",
     "E4.3",
-    "E4.4"
+    "E4.4",
+    "E4.5"
    ]
   },
   {
@@ -1037,6 +1038,26 @@
    "existing": null,
    "files": [
     "ui/venuepage/QuestDetailSheet.kt"
+   ]
+  },
+  "E4.5": {
+   "title": "Read only a venue's active quests on the venue page",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "S",
+   "window": [
+    4,
+    4
+   ],
+   "github": "#180 (part of #128, follow-up from #147)",
+   "existing": null,
+   "files": [
+    "model/quest/QuestRepository.kt (observeActiveQuestsByVenue)",
+    "model/quest/QuestRepositoryFirestore.kt (venueId == x AND status == ACTIVE, equality only, no composite index)",
+    "model/quest/FakeQuestRepository.kt + test fakes implementing QuestRepository",
+    "ui/venuepage/VenuePageViewModel.kt (switch to the new query; keep the on-device expiry filter)",
+    "tests: fake + ViewModel unit tests, QuestRepositoryFirestoreTest (instrumented)"
    ]
   },
   "E5.1": {
@@ -2274,6 +2295,48 @@
    "kind": "hard",
    "blocks": "start",
    "reason": "create quest from the home"
+  },
+  {
+   "from": "E4.1",
+   "to": "E4.5",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "switches E4.1's VenuePageViewModel to the new query (follow-up from #147's review)"
+  },
+  {
+   "from": "V4.1",
+   "to": "E4.5",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "edits model/quest/QuestRepository*.kt after the Reward change (PR #76)"
+  },
+  {
+   "from": "Q3",
+   "to": "E4.5",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the instrumented query test uses the shared Firestore emulator support"
+  },
+  {
+   "from": "D5",
+   "to": "E4.5",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "explorers only read quests from Firestore once the quest provider switches; verify in the app after D5"
+  },
+  {
+   "from": "E4.5",
+   "to": "E5.1",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit ui/venuepage/VenuePageViewModel.kt; E5.1 builds on the active-only quest source"
+  },
+  {
+   "from": "E4.5",
+   "to": "D8",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change QuestRepository and QuestRepositoryFirestore; D8 goes after"
   }
  ]
 }

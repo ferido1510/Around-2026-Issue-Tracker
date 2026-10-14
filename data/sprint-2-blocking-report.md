@@ -61,7 +61,7 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 |---|---|
 | `ready` | 14 |
 | `ready-scheduled` | 4 |
-| `blocked` | 31 |
+| `blocked` | 32 |
 | `gated` | 3 |
 | `gated+blocked` | 11 |
 | `pending-decision` | 6 |
@@ -130,6 +130,7 @@ A tracker should treat `hard`, `file`, `decision(start)` and `stretch-gate` as *
 | E4.1 | VenuePageViewModel logic + tests | Jiayi | C7 (hard) | Day 1 | Day 2–3 |
 | E4.2 | Venue page skeleton: top bar, header, states, questRow/bottomBar slots | Yigit | C7 (hard), N0 (hard) | Day 1 | Day 4–5 |
 | E4.3 | Quest rows on the venue page | Ferit | C7 (hard), V4.1 (file) | Day 1 | Day 4–5 |
+| E4.5 | Read only a venue's active quests on the venue page | — | E4.1 (hard), V4.1 (file) | Day 3 | Day 4 |
 
 ### 3.4 Gated (stretch)
 
@@ -286,8 +287,8 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 |---|---|---|
 | Day 1 | G2.1, G3.3, V3.2, E3.1, E3.2, Q2, N1, E4.1, E4.2, E4.3, V9.1 | HK-1, C2, C3, G2.1, G3.1, V3.1, V4.1, V4.2, C6, E3.1, Q1, Q3, N0, D1, DS0, C7 |
 | Day 2 | G2.2, G2.3, G2.4, G3.2, D4, D5, D7a, T0, V4.3, V4.4 | G2.2, V3.2, E3.2, Q2, N1, F1, E4.1 |
-| Day 3 | E3.3, N2, D2, A1, E5.1, V4.5 | G2.3, G2.4, G3.2, E3.3, D2, D4, D5 |, V4.3, V4.4
-| Day 4 | — | G3.3, V4.5, N2, D3, D7a, T0, A1, E4.2, E4.3 |
+| Day 3 | E3.3, N2, D2, A1, E5.1, V4.5, E4.5 | G2.3, G2.4, G3.2, E3.3, D2, D4, D5, V4.3, V4.4 |
+| Day 4 | — | G3.3, V4.5, N2, D3, D7a, T0, A1, E4.2, E4.3, E4.5 |
 | Day 5 | V4.6, E3.4, D2p, D7b, T1, T2, E4.4, E5.2, D8 | V4.6, E3.4, D2p, T1, T2 |
 | Day 6 | D3p, A2, A3, E6.2 | D3p, D7b, E5.1, E5.2, F2, A2, F3, A3, E6.1, E6.2, D8 |
 | Day 7 | T3, V9.2, V10.1 | M1, E4.4, T3, V9.1, V9.2, V10.1 |
@@ -318,7 +319,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | G3.3 | task | Venue entry: resume onboarding or open venue home (rewrite of #79) | G3 | G3 | Ece | Yigit | M | Day 4 | must | C2, V3.1, N0 | G2.3, N2 | — | D7b (h), T1 (h) | `blocked` | #79 |
 | V3.1 = C4 | task | Save and load the venue's marker and radius (= contract C4) | V3 | V3 | Yigit | Ece | S | Day 1 | must | — | — | — | G3.3 (h), V3.2 (h), Q2 (f), D7b (h), T1 (h) | `ready` | #88 · code in PR #92 (opened backwards, closed) |
 | V3.2 | task | Save the picked address with the area | V3 | V3 | Yigit | Ferit | S | Day 2–3 | must | V3.1 | — | — | D2 (h) | `blocked` | — |
-| V4.1 | task | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | V4 | V4 | Zaynab | Ferit | S | Day 1 | must | — | — | — | V4.4 (h), D1 (s), D5 (f), E4.3 (f), D8 (f) | `ready` | #74 · PR #76 (draft, complete) |
+| V4.1 | task | Reward model and Firestore mapping (merge PR #76; doc checkbox moved to D1) | V4 | V4 | Zaynab | Ferit | S | Day 1 | must | — | — | — | V4.4 (h), D1 (s), D5 (f), E4.3 (f), D8 (f), E4.5 (f) | `ready` | #74 · PR #76 (draft, complete) |
 | V4.2 | task | Quest form: text fields (title, description, requirements) | V4 | V4 | — | — | M | Day 1–2 | must | — | — | — | V4.3 (h), V4.4 (h), V4.6 (h) | `ready` | #75 #32 |
 | V4.3 | task | Activity settings (proof type, radius, party size) | V4 | V4 | — | — | S | Day 3 | must | V4.2 | — | — | V4.6 (h) | `blocked` | #32 |
 | V4.4 | task | Reward picker + Discount fields | V4 | V4 | — | — | M | Day 3 | must | V4.2, V4.1 | — | — | V4.5 (h) | `blocked` | #32 |
@@ -337,7 +338,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | Q | story | Make CI trustworthy (map + Firestore tests) | E2,V3,V4,V9 | — | Alisher | — | — | Day 1–3 | must | — | — | — | — | `open` | #95 |
 | Q1 | task | CI emulator = API 37 / Pixel 10a + repo hygiene | E2,V3 | Q | Alisher | Yigit | M | Day 1–2 | must | — | — | — | M1 (s), Q2 (s), T0 (h) | `ready` | #95 |
 | Q2 | task | One tap-the-map-until-it-counts helper for device tests | E2,V3 | Q | Ferit | Yigit | M | Day 2–3 | must | V3.1 (f) | Q1 | — | T1 (s) | `ready-scheduled` | — |
-| Q3 | task | Shared Firestore emulator test support | V1,V4,V9 | Q | Jiayi | Zaynab | S | Day 1 | must | — | — | — | D2 (s), D3 (s) | `ready` | — |
+| Q3 | task | Shared Firestore emulator test support | V1,V4,V9 | Q | Jiayi | Zaynab | S | Day 1 | must | — | — | — | D2 (s), D3 (s), E4.5 (s) | `ready` | — |
 
 ### Tier 2: connect screens
 
@@ -359,10 +360,10 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D3 | task | UserRepositoryFirestore + emulator tests | V1,G3 | V1 | Ece | Vali | L | Day 4–6 | must | — | Q3, D1 | — | D3p (h) | `ready-scheduled` | — |
 | D3p | task | Add and switch the user provider to Firestore | V1,G3 | V1 | Ece | Vali | S | Day 6 | must | D3, G2.1 | — | — | G2.3 (s), D7b (s), T1 (s) | `blocked` | — |
 | D4 | task | Security rules v2, tested and deployed to around-67942 | V1,E5 | V1 | Alisher | Jiayi | M | Day 3–4 | must | D1 | — | DEC-1 (start) | D5 (s), D7b (h), E5.1 (s), D8 (s) | `blocked` | — |
-| D5 | task | Quests + reservations from Firestore; MapDemoData out of src/main | E2 | V1 | Jiayi | Ferit | S | Day 3 | must | G2.1, V4.1 (f) | D4 | — | D7a (s), D7b (h), T2 (h), E5.1 (s), V9.1 (s), E6.1 (s), D8 (s) | `blocked` | — |
+| D5 | task | Quests + reservations from Firestore; MapDemoData out of src/main | E2 | V1 | Jiayi | Ferit | S | Day 3 | must | G2.1, V4.1 (f) | D4 | — | D7a (s), D7b (h), T2 (h), E5.1 (s), V9.1 (s), E6.1 (s), D8 (s), E4.5 (s) | `blocked` | — |
 | D7a | task | Seed tool for the emulator (tools/seed) | V1,E2 | V1 | Jiayi | Alisher | L | Day 4–5 | must | D1 | D5 | — | D8 (f) | `blocked` | — |
 | D7b | task | Data day: everyone creates a real venue + quests through the app | V1,E2 | V1 | Team | Jiayi | S | Day 6 | must | G3.3, V3.1, V4.6, D2p, D5, D4 | D3p | DEC-4 (start) | — | `blocked` | — |
-| D8 | task | Geo-bounded quest query: download only quests near the explorer or the map view | V1,E2 | V1 | — | — | L | Day 6–7 | stretch | D1, V4.1 (f), D7a (f), E3.4 (f) | D5, D4 | — | — | `gated+blocked` | new (file under #6) |
+| D8 | task | Geo-bounded quest query: download only quests near the explorer or the map view | V1,E2 | V1 | — | — | L | Day 6–7 | stretch | D1, V4.1 (f), D7a (f), E3.4 (f), E4.5 (f) | D5, D4 | — | — | `gated+blocked` | new (file under #6) |
 | DS0 | task | Design tokens and fonts in the theme (asset-only PR) | E2,E4,V4 | V1 | Ferit | Zaynab | S | Day 1 | must | — | — | — | A1 (f), A2 (f), A3 (f) | `ready` | — |
 
 ### Tier 4: end-to-end
@@ -382,17 +383,18 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | F1 | task | Figma: venue page (light/dark, incl. accept-bar state) | E4 | E4 | Zaynab | Yigit | M | Day 2–3 | must | — | — | — | A1 (h), E4.3 (s) | `ready-scheduled` | — |
 | A1 | task | Import venue page assets (asset-only PR) | E4 | E4 | Zaynab | Ferit | S | Day 4 | must | F1, DS0 (f) | — | — | E4.2 (s), E4.3 (s) | `blocked` | — |
 | C7 | contract | VenuePageUiState + VenuePageQuest + ViewModel stub | E4 | E4.1 | Jiayi | Yigit | S | Day 1 | must | — | — | — | E4.1 (h), E4.2 (h), E4.3 (h), E5.2 (h) | `ready` | — |
-| E4.1 | task | VenuePageViewModel logic + tests | E4 | E4 | Jiayi | Yigit | M | Day 2–3 | must | C7 | — | — | E4.2 (s), E5.1 (h) | `blocked` | — |
+| E4.1 | task | VenuePageViewModel logic + tests | E4 | E4 | Jiayi | Yigit | M | Day 2–3 | must | C7 | — | — | E4.2 (s), E5.1 (h), E4.5 (h) | `blocked` | — |
 | E4.2 | task | Venue page skeleton: top bar, header, states, questRow/bottomBar slots | E4 | E4 | Yigit | Jiayi | M | Day 4–5 | must | C7, N0 | E4.1, A1 | — | T2 (h), E4.3 (s), E5.2 (h) | `blocked` | — |
 | E4.3 | task | Quest rows on the venue page | E4 | E4 | Ferit | Zaynab | M | Day 4–5 | must | C7, V4.1 (f) | E4.2, F1, A1 | — | T2 (s), E4.4 (h) | `blocked` | — |
 | E4.4 | task | Quest detail sheet (only if rows are too dense) | E4 | E4 | Zaynab | Ferit | S | Day 7 | stretch | E4.3 | — | — | — | `gated+blocked` | — |
+| E4.5 | task | Read only a venue's active quests on the venue page | E4 | E4 | — | — | S | Day 4 | must | E4.1, V4.1 (f) | Q3, D5 | — | E5.1 (f), D8 (f) | `blocked` | #180 |
 
 ### Tier 6: accept a quest (stretch)
 
 | ID | Kind | Title | Story | Parent | Owner | Rev. | Size | Window | Prio | Hard / file (start) | Soft (finish) | Decisions | Blocks | Initial | GitHub / existing |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | E5 | story | Accept a quest and form a party | E5 | — | Jiayi | — | — | Day 6–7 | stretch | — | — | — | — | `open` | — |
-| E5.1 | task | Accept a quest in VenuePageViewModel | E5 | E5 | Jiayi | Vali | M | Day 6 | stretch | E4.1 | D5, D4 | DEC-1 (start), DEC-2 (start), DEC-3 (start) | E5.2 (s), T3 (h), E6.2 (s) | `gated+blocked` | — |
+| E5.1 | task | Accept a quest in VenuePageViewModel | E5 | E5 | Jiayi | Vali | M | Day 6 | stretch | E4.1, E4.5 (f) | D5, D4 | DEC-1 (start), DEC-2 (start), DEC-3 (start) | E5.2 (s), T3 (h), E6.2 (s) | `gated+blocked` | — |
 | E5.2 | task | AcceptQuestBar component on the venue page | E5 | E5 | Vali | Yigit | M | Day 6 | stretch | E4.2, C7 | E5.1 | DEC-3 (start) | T3 (h) | `gated+blocked` | — |
 | T3 | task | E2E: accept -> sign in as venue -> dashboard lists it | E5,V9 | T | Vali | Jiayi | M | Day 7 | stretch | T2, E5.1, E5.2, V9.2 | — | — | — | `gated+blocked` | — |
 
@@ -489,6 +491,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | D8 | E3.4 | file | changes the observeActiveQuests call in ui/map/MapViewModel.kt; goes after Ferit's last MapViewModel task |
 | D8 | D5 | soft | the bounded query only reaches the map once the quest provider serves Firestore; verify in the app after D5 |
 | D8 | D4 | soft | the composite index (status + geohash) ships in firestore.indexes.json with D4's firebase.json and deploy |
+| D8 | E4.5 | file | both change QuestRepository and QuestRepositoryFirestore; D8 goes after |
 | T0 | Q1 | hard | harness runs on the new CI emulator |
 | T1 | T0 | hard | uses the harness |
 | T1 | G2.3 | hard | saved-role routing |
@@ -520,10 +523,15 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | E4.3 | A1 | soft | uses its assets |
 | E4.3 | V4.1 | file | reuses the reward chip changed in QuestCard.kt |
 | E4.4 | E4.3 | hard | extends the rows |
+| E4.5 | E4.1 | hard | switches E4.1's VenuePageViewModel to the new query (follow-up from #147's review) |
+| E4.5 | V4.1 | file | edits model/quest/QuestRepository*.kt after the Reward change (PR #76) |
+| E4.5 | Q3 | soft | the instrumented query test uses the shared Firestore emulator support |
+| E4.5 | D5 | soft | explorers only read quests from Firestore once the quest provider switches; verify in the app after D5 |
 | E5.1 | E4.1 | hard | same ViewModel |
 | E5.1 | DEC-1 | decision | start: reservation fields |
 | E5.1 | DEC-2 | decision | start: slotStart |
 | E5.1 | DEC-3 | decision | start: party > 1 behaviour |
+| E5.1 | E4.5 | file | both edit ui/venuepage/VenuePageViewModel.kt; E5.1 builds on the active-only quest source |
 | E5.1 | D5 | soft | reservation provider on Firestore |
 | E5.1 | D4 | soft | rules v2 allow the create |
 | E5.2 | E4.2 | hard | plugs into the bottomBar slot |
@@ -567,7 +575,7 @@ A task becomes structurally unblocked on the day its last `hard`/`file`/`decisio
 | N | No dead ends between screens | must | N0, N1, N2 | new |
 | V1 | Venue and user data persists (mocks -> Firestore, real data) | must | D1, D2, D2p, D3, D3p, D4, D5, D7a, D7b, D8, DS0 | #6 #23 |
 | T | Core loop works end to end | must | T0, T1, T2, T3 | new |
-| E4 | See a venue's page and its quests | must | F1, A1, E4.1, E4.2, E4.3, E4.4 | new |
+| E4 | See a venue's page and its quests | must | F1, A1, E4.1, E4.2, E4.3, E4.4, E4.5 | new |
 | E5 | Accept a quest and form a party | stretch | E5.1, E5.2 | new |
 | V9 | Receive reservation requests on the venue dashboard | stretch | F2, A2, V9.1, V9.2 | #93 |
 | V10 | Approve a reservation | stretch | V10.1 | #94 |
@@ -612,7 +620,8 @@ Files touched by more than one task, and how the order is enforced. Cross-owner 
 | `model/quest/*` | V4.1, D5 | D5 after V4.1 (file edge) | model/quest is Zaynab's; D5 edits only the provider |
 | `ui/map/marker/QuestCard.kt` | V4.1, E4.3 | E4.3 after V4.1 (file edge) | V4.1 changes the reward chip that E4.3 reuses |
 | `ui/map/MapViewModel.kt` | C6, E3.1, E3.4, D8 | Ferit's queue, then D8 (file edge from E3.4) | D8 only changes the `observeActiveQuests` call |
-| `model/quest/QuestRepositoryFirestore.kt` | V4.1, D8 | D8 after V4.1 (file edge) | model/quest is Zaynab's |
+| `model/quest/QuestRepositoryFirestore.kt` | V4.1, E4.5, D8 | V4.1, then E4.5, then D8 (file edges) | model/quest is Zaynab's; E4.5 adds `observeActiveQuestsByVenue` |
+| `ui/venuepage/VenuePageViewModel.kt` | E4.1, E4.5, E5.1 | E4.1, then E4.5 (hard), then E5.1 (file edge) | Jiayi's file; E4.5 only swaps the quest source |
 | `tools/seed/*` | D7a, D8 | D8 after D7a (file edge) | D8 adds geohash to seeded quests |
 | `ui/map/MapScreen.kt` | E3.3, E3.4 | same owner, queue order | Ferit only |
 | `ui/venue/VenueAreaViewModel.kt` | V3.1, V3.2 | same owner, hard edge | Yigit only; #90 vs #92 collision is not repeated |
@@ -641,6 +650,7 @@ Files touched by more than one task, and how the order is enforced. Cross-owner 
 | #26 | HK-1 | close (superseded by #27, #28) |
 | #29 | HK-1 | close after confirming the empty My-quests frame |
 | #32 | V4.2–V4.6 | split (V4 re-split, §12) |
+| #180 | E4.5 | new (follow-up from #147's review, part of #128) |
 | #50 | HK-1 | verify and close; Google sign-in to backlog |
 | #73 | V4 | keep, update the task list |
 | #74 | V4.1 | doc checkbox moved to D1 |
@@ -684,7 +694,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "N", "kind": "story", "title": "No dead ends between screens", "story": ["G2", "E4", "V4"], "tier": 2, "prio": "must", "owner": "alisher", "windowStartDay": 1, "windowEndDay": 5, "initialStatus": "open", "children": ["N0", "N1", "N2"]},
     {"id": "V1", "kind": "story", "title": "Venue and user data persists (mocks -> Firestore, real data)", "story": ["V1", "E2"], "tier": 3, "prio": "must", "owner": "jiayi", "windowStartDay": 1, "windowEndDay": 6, "github": "#6 #23", "initialStatus": "open", "children": ["D1", "D2", "D2p", "D3", "D3p", "D4", "D5", "D7a", "D7b", "D8", "DS0"]},
     {"id": "T", "kind": "story", "title": "Core loop works end to end", "story": ["V4", "E4"], "tier": 4, "prio": "must", "owner": "alisher", "windowStartDay": 4, "windowEndDay": 6, "initialStatus": "open", "children": ["T0", "T1", "T2", "T3"]},
-    {"id": "E4", "kind": "story", "title": "See a venue's page and its quests", "story": ["E4"], "tier": 5, "prio": "must", "owner": "yigit", "windowStartDay": 1, "windowEndDay": 5, "initialStatus": "open", "children": ["F1", "A1", "E4.1", "E4.2", "E4.3", "E4.4"]},
+    {"id": "E4", "kind": "story", "title": "See a venue's page and its quests", "story": ["E4"], "tier": 5, "prio": "must", "owner": "yigit", "windowStartDay": 1, "windowEndDay": 5, "initialStatus": "open", "children": ["F1", "A1", "E4.1", "E4.2", "E4.3", "E4.4", "E4.5"]},
     {"id": "E5", "kind": "story", "title": "Accept a quest and form a party", "story": ["E5"], "tier": 6, "prio": "stretch", "owner": "jiayi", "windowStartDay": 6, "windowEndDay": 7, "initialStatus": "open", "children": ["E5.1", "E5.2"]},
     {"id": "V9", "kind": "story", "title": "Receive reservation requests on the venue dashboard", "story": ["V9"], "tier": 7, "prio": "stretch", "owner": "jiayi", "windowStartDay": 6, "windowEndDay": 7, "github": "#93", "initialStatus": "open", "children": ["F2", "A2", "V9.1", "V9.2"]},
     {"id": "V10", "kind": "story", "title": "Approve a reservation", "story": ["V10"], "tier": 7, "prio": "stretch", "owner": "jiayi", "windowStartDay": 7, "windowEndDay": 7, "github": "#94", "initialStatus": "open", "children": ["V10.1"]},
@@ -739,6 +749,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"id": "E4.2", "kind": "task", "title": "Venue page skeleton: top bar, header, states, questRow/bottomBar slots", "story": ["E4"], "parent": "E4", "tier": 5, "prio": "must", "owner": "yigit", "reviewer": "jiayi", "size": "M", "windowStartDay": 4, "windowEndDay": 5, "files": ["ui/venuepage/VenuePageScreen.kt", "ui/venuepage/VenuePageDestination.kt", "res/values/venue_page_strings.xml"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
     {"id": "E4.3", "kind": "task", "title": "Quest rows on the venue page", "story": ["E4"], "parent": "E4", "tier": 5, "prio": "must", "owner": "ferit", "reviewer": "zaynab", "size": "M", "windowStartDay": 4, "windowEndDay": 5, "files": ["ui/venuepage/VenueQuestRow.kt"], "initialStatus": "blocked", "earliestStructuralStartDay": 1},
     {"id": "E4.4", "kind": "task", "title": "Quest detail sheet (only if rows are too dense)", "story": ["E4"], "parent": "E4", "tier": 5, "prio": "stretch", "owner": "zaynab", "reviewer": "ferit", "size": "S", "windowStartDay": 7, "windowEndDay": 7, "files": ["ui/venuepage/QuestDetailSheet.kt"], "initialStatus": "gated+blocked", "earliestStructuralStartDay": 5},
+    {"id": "E4.5", "kind": "task", "title": "Read only a venue's active quests on the venue page", "story": ["E4"], "parent": "E4", "tier": 5, "prio": "must", "owner": null, "reviewer": null, "size": "S", "windowStartDay": 4, "windowEndDay": 4, "github": "#180 (part of #128, follow-up from #147)", "files": ["model/quest/QuestRepository.kt (observeActiveQuestsByVenue)", "model/quest/QuestRepositoryFirestore.kt (venueId == x AND status == ACTIVE, equality only, no composite index)", "model/quest/FakeQuestRepository.kt + test fakes implementing QuestRepository", "ui/venuepage/VenuePageViewModel.kt (switch to the new query; keep the on-device expiry filter)", "tests: fake + ViewModel unit tests, QuestRepositoryFirestoreTest (instrumented)"], "initialStatus": "blocked", "earliestStructuralStartDay": 3},
     {"id": "E5.1", "kind": "task", "title": "Accept a quest in VenuePageViewModel", "story": ["E5"], "parent": "E5", "tier": 6, "prio": "stretch", "owner": "jiayi", "reviewer": "vali", "size": "M", "windowStartDay": 6, "windowEndDay": 6, "files": ["ui/venuepage/VenuePageViewModel.kt"], "initialStatus": "gated+blocked", "earliestStructuralStartDay": 3},
     {"id": "E5.2", "kind": "task", "title": "AcceptQuestBar component on the venue page", "story": ["E5"], "parent": "E5", "tier": 6, "prio": "stretch", "owner": "vali", "reviewer": "yigit", "size": "M", "windowStartDay": 6, "windowEndDay": 6, "files": ["ui/venuepage/AcceptQuestBar.kt"], "initialStatus": "gated+blocked", "earliestStructuralStartDay": 5},
     {"id": "T3", "kind": "task", "title": "E2E: accept -> sign in as venue -> dashboard lists it", "story": ["E5", "V9"], "parent": "T", "tier": 6, "prio": "stretch", "owner": "vali", "reviewer": "jiayi", "size": "M", "windowStartDay": 7, "windowEndDay": 7, "files": ["androidTest/e2e/AcceptJourneyTest.kt"], "initialStatus": "gated+blocked", "earliestStructuralStartDay": 7},
@@ -997,7 +1008,14 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"from": "day:3", "to": "V4.3", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
     {"from": "day:3", "to": "V4.4", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 3"},
     {"from": "day:4", "to": "V4.5", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"},
-    {"from": "day:5", "to": "V4.6", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 5"}
+    {"from": "day:5", "to": "V4.6", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 5"},
+    {"from": "E4.1", "to": "E4.5", "kind": "hard", "family": "structural", "blocks": "start", "reason": "switches E4.1's VenuePageViewModel to the new query (follow-up from #147's review)"},
+    {"from": "V4.1", "to": "E4.5", "kind": "file", "family": "structural", "blocks": "start", "reason": "edits model/quest/QuestRepository*.kt after the Reward change (PR #76)"},
+    {"from": "Q3", "to": "E4.5", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "the instrumented query test uses the shared Firestore emulator support"},
+    {"from": "D5", "to": "E4.5", "kind": "soft", "family": "structural", "blocks": "finish", "reason": "explorers only read quests from Firestore once the quest provider switches; verify in the app after D5"},
+    {"from": "E4.5", "to": "E5.1", "kind": "file", "family": "structural", "blocks": "start", "reason": "both edit ui/venuepage/VenuePageViewModel.kt; E5.1 builds on the active-only quest source"},
+    {"from": "E4.5", "to": "D8", "kind": "file", "family": "structural", "blocks": "start", "reason": "both change QuestRepository and QuestRepositoryFirestore; D8 goes after"},
+    {"from": "day:4", "to": "E4.5", "kind": "not-before", "family": "chronological", "blocks": "start", "advisory": true, "reason": "planned window starts on Day 4"}
   ],
   "integrationPoints": [
     {"slot": "AppRoot.authFlow", "definedBy": "C2", "filledBy": "AuthScreen (exists)", "fillerTask": "G2.1", "hostOwner": "Vali", "plugIn": "G2.1 plugs it"},
@@ -1025,7 +1043,7 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"file": "model/quest/*", "tasks": ["V4.1", "D5"], "ordering": "D5 after V4.1 (file edge)", "note": "model/quest is Zaynab's; D5 edits only the provider"},
     {"file": "ui/map/marker/QuestCard.kt", "tasks": ["V4.1", "E4.3"], "ordering": "E4.3 after V4.1 (file edge)", "note": "V4.1 changes the reward chip that E4.3 reuses"},
     {"file": "ui/map/MapViewModel.kt", "tasks": ["C6", "E3.1", "E3.4", "D8"], "ordering": "Ferit's queue, then D8 (file edge from E3.4)", "note": "D8 only changes the observeActiveQuests call"},
-    {"file": "model/quest/QuestRepositoryFirestore.kt", "tasks": ["V4.1", "D8"], "ordering": "D8 after V4.1 (file edge)", "note": "model/quest is Zaynab's"},
+    {"file": "model/quest/QuestRepositoryFirestore.kt", "tasks": ["V4.1", "E4.5", "D8"], "ordering": "V4.1, then E4.5, then D8 (file edges)", "note": "model/quest is Zaynab's; E4.5 adds observeActiveQuestsByVenue"},
     {"file": "tools/seed/*", "tasks": ["D7a", "D8"], "ordering": "D8 after D7a (file edge)", "note": "D8 adds geohash to seeded quests"},
     {"file": "ui/map/MapScreen.kt", "tasks": ["E3.3", "E3.4"], "ordering": "same owner, queue order", "note": "Ferit only"},
     {"file": "ui/venue/VenueAreaViewModel.kt", "tasks": ["V3.1", "V3.2"], "ordering": "same owner, hard edge", "note": "Yigit only; #90 vs #92 collision is not repeated"},
@@ -1038,7 +1056,8 @@ Edge direction: `from` blocks `to`. `stretch-gate` edges have `from` = the owner
     {"file": "firestore.rules", "tasks": ["D4"], "ordering": "single editor (Alisher)", "note": "E5 rule needs are folded into D4"},
     {"file": "README.md", "tasks": ["D4", "D5", "D7a"], "ordering": "different sections; trivial conflicts", "note": "deploy command / demo section / seed section"},
     {"file": "docs/firestore-schema.md", "tasks": ["D1", "V4.1"], "ordering": "V4.1's doc checkbox moved into D1", "note": "only Jiayi edits"},
-    {"file": "resources/C.kt", "tasks": ["many"], "ordering": "append-only, one block per feature", "note": "conflicts are trivial"}
+    {"file": "resources/C.kt", "tasks": ["many"], "ordering": "append-only, one block per feature", "note": "conflicts are trivial"},
+    {"file": "ui/venuepage/VenuePageViewModel.kt", "tasks": ["E4.1", "E4.5", "E5.1"], "ordering": "E4.1, then E4.5 (hard), then E5.1 (file edge)", "note": "Jiayi's file; E4.5 only swaps the quest source"}
   ]
 }
 ```
@@ -1164,4 +1183,33 @@ The Figma flow chooses the account type during registration, so the plan's separ
 - [ ] Page-object steps for both flows, used by T1 and T2. Robolectric tests
 
 T0's `signUp(role)` helper becomes `registerExplorer()` / `registerVenue()`. Edges are unchanged; only their reasons now describe registration. Figma #27 (role selection) is no longer needed.
+
+### E4.5: Read only a venue's active quests on the venue page (#180)
+
+Follow-up from #147's review, part of #128 (E4).
+
+**Problem.** `VenuePageViewModel` reads a venue's quests through `QuestRepository.observeQuestsByVenue(venueId)`, which queries `whereEqualTo(VENUE_ID, venueId)` with no status filter. Drafts and archived quests are filtered out on the device, so every explorer who opens a venue's page pays a Firestore read for every quest the venue has ever made and receives its drafts and archived quests. `firestore.rules` allows this today, but the venue page is the first explorer screen that does it.
+
+**Proposal.** Add `observeActiveQuestsByVenue(venueId): Flow<List<Quest>>` to `QuestRepository`. In `QuestRepositoryFirestore`, query `whereEqualTo(VENUE_ID, venueId).whereEqualTo(STATUS, ACTIVE)`. Equality filters only, so no composite index should be needed. Implement it in `FakeQuestRepository` and the test fakes. Switch `VenuePageViewModel` to it, and keep the on-device expiry filter, since a reward can still expire while the page is open. Keep `observeQuestsByVenue` for the venue's own quest list, which needs drafts.
+
+**Acceptance criteria**
+- [ ] Explorers' venue page only receives the venue's active quests from Firestore
+- [ ] The page still drops a quest when its reward expires
+- [ ] Unit tests for the new fake method and the ViewModel switch
+- [ ] Instrumented test in the Firestore repository test: returns only the venue's active quests, not drafts, archived quests or other venues' quests
+
+**Out of scope.** Tightening `firestore.rules` so explorers can't read drafts at all (worth its own issue).
+
+**Placement.** E4 (Tier 5), **must**, size S, Day 4.
+
+| Edge | Kind | Why |
+|---|---|---|
+| E4.1 → E4.5 | hard | switches E4.1's VenuePageViewModel to the new query (follow-up from #147's review) |
+| V4.1 → E4.5 | file | edits model/quest/QuestRepository*.kt after the Reward change (PR #76) |
+| Q3 → E4.5 | soft | the instrumented query test uses the shared Firestore emulator support |
+| D5 → E4.5 | soft | explorers only read quests from Firestore once the quest provider switches; verify in the app after D5 |
+| E4.5 → E5.1 | file | both edit ui/venuepage/VenuePageViewModel.kt; E5.1 builds on the active-only quest source |
+| E4.5 → D8 | file | both change QuestRepository and QuestRepositoryFirestore; D8 goes after |
+
+The file edges follow §2.2 (one owner per file). `ui/venuepage/VenuePageViewModel.kt` is Jiayi's and `model/quest/*` is Zaynab's, so whoever takes E4.5 needs both of them as reviewers. E4.5 is small and lands before E5.1 (Day 6) and D8 (Day 6–7), so neither should actually wait on it.
 
