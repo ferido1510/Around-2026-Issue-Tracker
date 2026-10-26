@@ -24,7 +24,7 @@ Letters after a task ID (also explained in the board's **Boxes** legend):
 - **Click a grey box** to reopen it (if it was marked done by mistake).
 - On a phone, tap a box to see its details and the action buttons.
 - The **progress bar** at the top fills from 0 to 100% as tasks are marked done (the striped yellow part is work in progress).
-- When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, stretch included, it plays the **ultra victory** 👑. Each one plays once per browser. Once unlocked, a **Replay victory** / **Replay ultra victory** button appears in the top bar so you can replay it any time for morale (it stays even if a task is reopened later). If someone reopens a task and it gets finished again, it plays again.
+- When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, should-haves and stretch included, it plays the **ultra victory** 👑. Each one plays once per browser. Once unlocked, a **Replay victory** / **Replay ultra victory** button appears in the top bar so you can replay it any time for morale (it stays even if a task is reopened later). If someone reopens a task and it gets finished again, it plays again.
 - The 🌗 button switches between automatic, light and dark themes.
 - The 🏅 **leaderboard** under the progress bar ranks everyone who has taken a task in the selected sprint by tasks done (then in progress), live. Ties share a rank, and hovering a name lists their tasks.
 - The **sprint dropdown** next to the title switches sprints. The page opens on the newest sprint, or on the one in the link (`?sprint=sprint-2`), so you can share a link to a specific sprint. Each sprint has its own progress, celebrations and replay buttons.
@@ -107,20 +107,21 @@ Open the site, click **Sign in with Google**, and take a free task. In the Fireb
 
 Each sprint is one file in [`sprints/`](sprints/), listed in [`sprints/index.json`](sprints/index.json). Nothing about a sprint is hardcoded in the page.
 
-1. Get the sprint's blocking report in the same format as [`data/sprint-2-blocking-report.md`](data/sprint-2-blocking-report.md): a Markdown file with a ```` ```json ```` block that has `tasks` and `edges` (section 11 of that report), or that JSON on its own. Save it in `data/`, e.g. `data/sprint-3-blocking-report.md`.
+1. Get the sprint's blocking report in the same format as [`data/sprint-2-blocking-report.md`](data/sprint-2-blocking-report.md) or [`data/sprint-3-blocking-report.md`](data/sprint-3-blocking-report.md): a Markdown file with a ```` ```json ```` block that has `tasks` and `edges` (section 11 of those reports), or that JSON on its own. Save it in `data/`, e.g. `data/sprint-4-blocking-report.md`.
 2. Run:
 
    ```sh
-   python3 tools/add_sprint.py data/sprint-3-blocking-report.md --id sprint-3 --name "Sprint 3"
+   python3 tools/add_sprint.py data/sprint-4-blocking-report.md --id sprint-4 --name "Sprint 4"
    ```
 
-   This writes `sprints/sprint-3.json` and adds Sprint 3 to the dropdown. The `--id` goes in links and in Firestore, so use lowercase letters, digits and dashes.
+   This writes `sprints/sprint-4.json` and adds Sprint 4 to the dropdown. The `--id` goes in links and in Firestore, so use lowercase letters, digits and dashes.
 3. Commit and push. Once GitHub Pages updates, the board opens on the newest sprint, the last one in `sprints/index.json`.
 
 How the board is laid out from the JSON:
 - Each task with `"kind": "story"` becomes a row, in the order they appear. Its `children` are the columns.
 - A task that isn't any story's child goes before its `parent` task (as the contracts do), or into a row named after its parent (e.g. `PROC` → "Process (no user story)"), or into "Other tasks" if it has no parent.
 - Tasks with `"prio": "stretch"` are striped and only count for the 👑 ultra victory.
+- Tasks with `"prio": "should"` look like normal boxes (the hover box says *should-have*) and, like stretch, only count for the 👑 ultra victory. Anything else counts as a must-have.
 - Only `hard`, `file`, `soft` and `decision` edges are used. The script warns about edge kinds it doesn't know.
 
 **To change a sprint's plan**, edit its report and run the same command again with the same `--id`. Progress is stored by sprint ID and task ID, so it is kept as long as the task IDs don't change.

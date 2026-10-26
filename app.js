@@ -29,7 +29,8 @@ function setPlan(plan) {
   for (const e of PLAN.edges) { incoming.get(e.to).push(e); outgoing.get(e.from).push(e); }
   for (const row of PLAN.rows) for (const id of row.children) storyOf.set(id, row);
   ALL_IDS = Object.keys(PLAN.tasks);
-  MUST_IDS = ALL_IDS.filter((id) => PLAN.tasks[id].prio !== "stretch");
+  // Victory needs the must-haves only; should-haves and stretch count for ultra.
+  MUST_IDS = ALL_IDS.filter((id) => (PLAN.tasks[id].prio || "must") === "must");
 }
 
 // Small localStorage helpers, scoped to the current sprint where it matters.
@@ -160,7 +161,7 @@ function renderProgress(counts) {
   $("goalMust").classList.toggle("won", level >= 1);
   $("goalAll").classList.toggle("won", level >= 2);
   $("goalMust").title = level >= 1 ? "Play the victory again" : "Finish every must-have task";
-  $("goalAll").title = level >= 2 ? "Play the ultra victory again" : "Finish every task, stretch included";
+  $("goalAll").title = level >= 2 ? "Play the ultra victory again" : "Finish every task, should-haves and stretch included";
 
   for (const [k, n] of Object.entries({ Blocked: counts.blocked, Free: counts.free, Progress: counts.progress, Done: counts.done })) {
     $(`n${k}`).textContent = live ? n : "–";
@@ -318,7 +319,7 @@ function renderTip() {
     t.alias ? `= ${t.alias}` : "",
     t.size ? `size ${t.size}` : "",
     t.window[0] ? `planned Day ${t.window[0]}${t.window[1] !== t.window[0] ? "–" + t.window[1] : ""}` : "",
-    t.prio === "stretch" ? "stretch" : "",
+    t.prio === "stretch" ? "stretch" : t.prio === "should" ? "should-have" : "",
     t.github ? `GitHub ${t.github}` : "",
   ].filter(Boolean).map(esc).join(" · ");
 

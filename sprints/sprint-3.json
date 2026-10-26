@@ -1,0 +1,1132 @@
+{
+ "rows": [
+  {
+   "id": "E5",
+   "title": "Accept a quest (epic #248)",
+   "prio": "must",
+   "children": [
+    "#249",
+    "R4",
+    "#250"
+   ]
+  },
+  {
+   "id": "E6",
+   "title": "Explorer reservation overview (epic #254)",
+   "prio": "must",
+   "children": [
+    "#255",
+    "#256",
+    "#257",
+    "R7"
+   ]
+  },
+  {
+   "id": "DASH",
+   "title": "Venue dashboard: approve and reject (#246)",
+   "prio": "must",
+   "children": [
+    "#247",
+    "R2",
+    "#246a",
+    "#246b",
+    "#246c"
+   ]
+  },
+  {
+   "id": "E2E",
+   "title": "End-to-end tests",
+   "prio": "must",
+   "children": [
+    "#241",
+    "#152"
+   ]
+  },
+  {
+   "id": "V1",
+   "title": "Venue account (epic #6)",
+   "prio": "must",
+   "children": [
+    "#242",
+    "#245"
+   ]
+  },
+  {
+   "id": "FIGMA",
+   "title": "Match the Figma screens",
+   "prio": "must",
+   "children": [
+    "F1",
+    "#26"
+   ]
+  },
+  {
+   "id": "SCHEMA",
+   "title": "Schema clean-up",
+   "prio": "should",
+   "children": [
+    "F3",
+    "F4a",
+    "F4b",
+    "F5"
+   ]
+  },
+  {
+   "id": "RULES",
+   "title": "Firestore rules and offline",
+   "prio": "must",
+   "children": [
+    "S1",
+    "S2",
+    "S3"
+   ]
+  },
+  {
+   "id": "CI",
+   "title": "CI and the v2 Compose test rules",
+   "prio": "should",
+   "children": [
+    "#125",
+    "#172a",
+    "#172b",
+    "#172c"
+   ]
+  },
+  {
+   "id": "HEALTH",
+   "title": "Code health",
+   "prio": "should",
+   "children": [
+    "#251",
+    "#228",
+    "#252a",
+    "#252b",
+    "#252c",
+    "#252d"
+   ]
+  },
+  {
+   "id": "FAKES",
+   "title": "Fakes out of the release app",
+   "prio": "stretch",
+   "children": [
+    "S4a",
+    "S4b"
+   ]
+  },
+  {
+   "id": "V4",
+   "title": "Create a quest (epic #73)",
+   "prio": "should",
+   "children": [
+    "#215",
+    "#224",
+    "#244"
+   ]
+  },
+  {
+   "id": "E4",
+   "title": "Venue page and quest details (#128)",
+   "prio": "should",
+   "children": [
+    "#243"
+   ]
+  },
+  {
+   "id": "RESEARCH",
+   "title": "User research",
+   "prio": "should",
+   "children": [
+    "#253"
+   ]
+  },
+  {
+   "id": "PARTY",
+   "title": "Parties",
+   "prio": "stretch",
+   "children": [
+    "P1",
+    "P2a",
+    "P2b",
+    "P2c",
+    "P3a",
+    "P3b"
+   ]
+  }
+ ],
+ "tasks": {
+  "#249": {
+   "title": "Reservation provider and accept()",
+   "kind": "task",
+   "alias": "E5.1",
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#249 (part of #248)",
+   "existing": null,
+   "files": []
+  },
+  "R4": {
+   "title": "Report a rejected reservation write",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "~250 lines, 4 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "ReservationRepositoryFirestore.createReservation (wait for the server, with a timeout)",
+    "ReservationRepository KDoc",
+    "ReservationRepositoryFirestoreTest"
+   ]
+  },
+  "#250": {
+   "title": "Accept-quest bar",
+   "kind": "task",
+   "alias": "E5.2",
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#250 (part of #248)",
+   "existing": null,
+   "files": []
+  },
+  "#255": {
+   "title": "Overview icons",
+   "kind": "task",
+   "alias": "A3",
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#255 (part of #254)",
+   "existing": null,
+   "files": []
+  },
+  "#256": {
+   "title": "Overview ViewModel",
+   "kind": "task",
+   "alias": "E6.1",
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#256 (part of #254)",
+   "existing": null,
+   "files": []
+  },
+  "#257": {
+   "title": "Overview screen",
+   "kind": "task",
+   "alias": "E6.2",
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#257 (part of #254)",
+   "existing": null,
+   "files": []
+  },
+  "R7": {
+   "title": "Explorer cancels a reservation",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "~250 lines, 5 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "overview ViewModel and screen (from #256, #257)",
+    "updateStatus(CANCELLED)",
+    "ViewModel and Compose tests"
+   ]
+  },
+  "#247": {
+   "title": "Dashboard icons",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#247",
+   "existing": null,
+   "files": []
+  },
+  "R2": {
+   "title": "Let the venue see who reserved",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "~200 lines, ~8 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "Reservation (explorer display name, copied at creation)",
+    "FakeReservationRepository",
+    "ReservationRepositoryFirestore",
+    "firestore.rules",
+    "FirestoreRulesTest",
+    "reservation repository test",
+    "schema doc"
+   ]
+  },
+  "#246a": {
+   "title": "Venue dashboard ViewModel",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#246 (part 1 of 3, split)",
+   "existing": null,
+   "files": []
+  },
+  "#246b": {
+   "title": "Venue dashboard screen and rows",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#246 (part 2 of 3, split)",
+   "existing": null,
+   "files": []
+  },
+  "#246c": {
+   "title": "Approve and reject actions",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#246 (part 3 of 3, split)",
+   "existing": null,
+   "files": []
+  },
+  "#241": {
+   "title": "E2E sign-up times out on a cold emulator",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#241",
+   "existing": null,
+   "files": []
+  },
+  "#152": {
+   "title": "End-to-end accept journey",
+   "kind": "task",
+   "alias": "T3",
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#152",
+   "existing": null,
+   "files": []
+  },
+  "#242": {
+   "title": "Auth and venue setup backgrounds match Figma",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#242 (part of #6)",
+   "existing": null,
+   "files": []
+  },
+  "#245": {
+   "title": "Venue link submits the explorer form (login screen fix)",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#245 (part of #6)",
+   "existing": null,
+   "files": []
+  },
+  "F1": {
+   "title": "Audit login and registration against Figma",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "no code",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "AuthScreen and RegistrationFlow (read only, compared with the Figma frames)"
+   ]
+  },
+  "#26": {
+   "title": "Figma role selection: every box is ticked, close it",
+   "kind": "task",
+   "alias": "G3",
+   "prio": "must",
+   "size": "no code",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#26",
+   "existing": null,
+   "files": []
+  },
+  "F3": {
+   "title": "Decide the remaining schema changes",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "docs only, 1 file",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "schema doc"
+   ]
+  },
+  "F4a": {
+   "title": "Map and nearby quests read the venue instead of the copy",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "~450 lines, 8 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "VenueRepository.observeVenues(ids)",
+    "map pins",
+    "NearbyQuests",
+    "map overlay",
+    "ViewModel tests"
+   ]
+  },
+  "F4b": {
+   "title": "Stop storing the venue name and location on quests",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "~350 lines, 8 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "Quest model",
+    "FakeQuestRepository",
+    "QuestRepositoryFirestore",
+    "firestore.rules",
+    "FirestoreRulesTest",
+    "schema doc"
+   ]
+  },
+  "F5": {
+   "title": "Completion model: separate proof fields, drop copied ids",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "~200 lines, 3 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "Completion model and its validation",
+    "Completion tests",
+    "schema doc"
+   ]
+  },
+  "S1": {
+   "title": "Verify rules v2 are live, and redeploy after each rules change",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "no code",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "Firebase console of around-67942 (needs Owner or Editor)"
+   ]
+  },
+  "S2": {
+   "title": "Tighten reservation rules",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "~200 lines, 3 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "firestore.rules (explorerUids 1 to N unique strings, slotStart not in the past)",
+    "FirestoreRulesTest",
+    "schema doc"
+   ]
+  },
+  "S3": {
+   "title": "Check what works offline",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "docs only, 1 file",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "offline findings doc"
+   ]
+  },
+  "#125": {
+   "title": "Measure CI emulator cost",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#125 (optional)",
+   "existing": null,
+   "files": []
+  },
+  "#172a": {
+   "title": "v2 Compose rules: Robolectric tests, first half",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "~7 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#172 (part 1 of 3, split)",
+   "existing": null,
+   "files": []
+  },
+  "#172b": {
+   "title": "v2 Compose rules: Robolectric tests, second half",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "~7 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#172 (part 2 of 3, split)",
+   "existing": null,
+   "files": []
+  },
+  "#172c": {
+   "title": "v2 Compose rules: device tests",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "~8 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#172 (part 3 of 3, split)",
+   "existing": null,
+   "files": []
+  },
+  "#251": {
+   "title": "Replace deprecated APIs (not the test rules, that's #172)",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#251 (narrowed)",
+   "existing": null,
+   "files": []
+  },
+  "#228": {
+   "title": "Venue entry review follow-up",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#228",
+   "existing": null,
+   "files": []
+  },
+  "#252a": {
+   "title": "Theme colours: venue setup",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#252 (split by area)",
+   "existing": null,
+   "files": []
+  },
+  "#252b": {
+   "title": "Theme colours: address bar",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#252 (split by area)",
+   "existing": null,
+   "files": []
+  },
+  "#252c": {
+   "title": "Theme colours: map shadows",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#252 (split by area)",
+   "existing": null,
+   "files": []
+  },
+  "#252d": {
+   "title": "Theme colours: text fields",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#252 (split by area)",
+   "existing": null,
+   "files": []
+  },
+  "S4a": {
+   "title": "Shared fakes source set, with the auth and user fakes",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~150 lines, ~8 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "new shared fakes source set (Gradle)",
+    "FakeAuthRepository",
+    "FakeUserRepository"
+   ]
+  },
+  "S4b": {
+   "title": "Move the quest, venue and reservation fakes",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~150 lines, ~6 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "FakeQuestRepository",
+    "FakeVenueRepository",
+    "FakeReservationRepository",
+    "CreateQuestScreen preview"
+   ]
+  },
+  "#215": {
+   "title": "Explain a venue that can't load",
+   "kind": "task",
+   "alias": "V4.5.3",
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#215 (part of #73)",
+   "existing": null,
+   "files": []
+  },
+  "#224": {
+   "title": "Keep the form open while saving",
+   "kind": "task",
+   "alias": "V4.5.4",
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#224 (part of #73)",
+   "existing": null,
+   "files": []
+  },
+  "#244": {
+   "title": "List the venue's quests",
+   "kind": "task",
+   "alias": "V4.7",
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#244 (part of #73)",
+   "existing": null,
+   "files": []
+  },
+  "#243": {
+   "title": "More quest details",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#243 (part of #128)",
+   "existing": null,
+   "files": []
+  },
+  "#253": {
+   "title": "Contact venues and explorers",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "no PR",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#253",
+   "existing": null,
+   "files": []
+  },
+  "P1": {
+   "title": "Decide the party model",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "docs only, 1 file",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "schema doc"
+   ]
+  },
+  "P2a": {
+   "title": "Party model and fake repository",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~300 lines, 5 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "party model",
+    "party repository interface",
+    "fake party repository",
+    "unit tests"
+   ]
+  },
+  "P2b": {
+   "title": "Party Firestore repository",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~350 lines, 4 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "party Firestore repository",
+    "emulator test"
+   ]
+  },
+  "P2c": {
+   "title": "Party rules and schema doc",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~300 lines, 3 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "firestore.rules",
+    "FirestoreRulesTest",
+    "schema doc"
+   ]
+  },
+  "P3a": {
+   "title": "Add party members to a reservation",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~300 lines, 4 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "reservation party members (minPartySize, exactPartySize, no duplicates)",
+    "unit tests"
+   ]
+  },
+  "P3b": {
+   "title": "Companion selection UI",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "~400 lines, 7 files",
+   "window": [
+    null,
+    null
+   ],
+   "github": "new issue, not created yet",
+   "existing": null,
+   "files": [
+    "#250's accept bar",
+    "companion picker",
+    "Compose tests"
+   ]
+  }
+ },
+ "edges": [
+  {
+   "from": "#249",
+   "to": "#250",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the bar calls #249's provider and accept()"
+  },
+  {
+   "from": "R4",
+   "to": "#250",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "a rejected reservation write must be reported before the bar ships"
+  },
+  {
+   "from": "#249",
+   "to": "#256",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "shares the reservation flow and the explorer uid"
+  },
+  {
+   "from": "#256",
+   "to": "#257",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the screen renders the overview ViewModel"
+  },
+  {
+   "from": "#255",
+   "to": "#257",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "overview icons; the screen can use placeholders until they land"
+  },
+  {
+   "from": "#257",
+   "to": "R7",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "cancel goes on the overview's pending and approved rows"
+  },
+  {
+   "from": "#249",
+   "to": "R2",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "accept() fills the reserver's name"
+  },
+  {
+   "from": "R4",
+   "to": "R2",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change ReservationRepositoryFirestore and its test"
+  },
+  {
+   "from": "S2",
+   "to": "R2",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit firestore.rules and FirestoreRulesTest; merge one at a time"
+  },
+  {
+   "from": "#249",
+   "to": "#246a",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "uses the reservation provider #249 adds (only one of them adds it)"
+  },
+  {
+   "from": "R2",
+   "to": "#246a",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the dashboard shows who reserved"
+  },
+  {
+   "from": "#246a",
+   "to": "#246b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the screen and rows render the dashboard ViewModel"
+  },
+  {
+   "from": "#247",
+   "to": "#246b",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "dashboard icons"
+  },
+  {
+   "from": "#246b",
+   "to": "#246c",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "approve and reject go on the dashboard rows"
+  },
+  {
+   "from": "#249",
+   "to": "#152",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the journey starts with accept()"
+  },
+  {
+   "from": "#250",
+   "to": "#152",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the explorer accepts through the bar"
+  },
+  {
+   "from": "#246c",
+   "to": "#152",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the journey ends with the venue approving"
+  },
+  {
+   "from": "F3",
+   "to": "F4a",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "only if F3 adopts reading the venue instead of the copy"
+  },
+  {
+   "from": "F4a",
+   "to": "F4b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "nothing may read the copies once they stop being written"
+  },
+  {
+   "from": "R2",
+   "to": "F4b",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit firestore.rules and FirestoreRulesTest; merge one at a time"
+  },
+  {
+   "from": "F3",
+   "to": "F5",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "only if F3 adopts the completion changes"
+  },
+  {
+   "from": "S4a",
+   "to": "S4b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "needs the shared fakes source set"
+  },
+  {
+   "from": "P1",
+   "to": "P2a",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "the model follows P1's decision"
+  },
+  {
+   "from": "P2a",
+   "to": "P2b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "implements P2a's interface"
+  },
+  {
+   "from": "P2a",
+   "to": "P2c",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "rules for P2a's documents"
+  },
+  {
+   "from": "R2",
+   "to": "P2c",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit firestore.rules and FirestoreRulesTest; merge one at a time"
+  },
+  {
+   "from": "#249",
+   "to": "P3a",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "adds members to #249's reservation"
+  },
+  {
+   "from": "P2b",
+   "to": "P3a",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "stores the party"
+  },
+  {
+   "from": "P2c",
+   "to": "P3a",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the party writes must be allowed"
+  },
+  {
+   "from": "P3a",
+   "to": "P3b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the picker calls P3a"
+  },
+  {
+   "from": "P1",
+   "to": "P3b",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "how companions are picked (the app has no friends feature)"
+  },
+  {
+   "from": "#250",
+   "to": "P3b",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the picker goes on #250's accept bar"
+  }
+ ]
+}
