@@ -1,0 +1,692 @@
+{
+ "rows": [
+  {
+   "id": "COMP",
+   "title": "Completion data and photo storage (epic #322)",
+   "prio": "must",
+   "children": [
+    "#325",
+    "#326",
+    "#335",
+    "#328"
+   ]
+  },
+  {
+   "id": "E7",
+   "title": "Complete a quest and see the result (story #323)",
+   "prio": "must",
+   "children": [
+    "#327",
+    "#330",
+    "#329",
+    "#331",
+    "#332",
+    "#333"
+   ]
+  },
+  {
+   "id": "V12",
+   "title": "Review quest completions (story #324)",
+   "prio": "must",
+   "children": [
+    "#334"
+   ]
+  },
+  {
+   "id": "FIGMA",
+   "title": "Design the completion screens",
+   "prio": "must",
+   "children": [
+    "#336"
+   ]
+  },
+  {
+   "id": "DASH",
+   "title": "Venue dashboard: approve and decline (#304)",
+   "prio": "must",
+   "children": [
+    "#303"
+   ]
+  },
+  {
+   "id": "E4",
+   "title": "Venue page and quest details (#128)",
+   "prio": "must",
+   "children": [
+    "#243"
+   ]
+  },
+  {
+   "id": "AUTH",
+   "title": "Google sign-up (G3, V1)",
+   "prio": "must",
+   "children": [
+    "#305"
+   ]
+  },
+  {
+   "id": "E2E",
+   "title": "End-to-end tests",
+   "prio": "stretch",
+   "children": [
+    "#152"
+   ]
+  },
+  {
+   "id": "HEALTH",
+   "title": "Code health",
+   "prio": "should",
+   "children": [
+    "#252",
+    "#338",
+    "#341",
+    "#342",
+    "#314",
+    "#284",
+    "#345"
+   ]
+  },
+  {
+   "id": "DOCS",
+   "title": "Docs and process",
+   "prio": "must",
+   "children": [
+    "#343",
+    "#346"
+   ]
+  },
+  {
+   "id": "CI",
+   "title": "CI",
+   "prio": "stretch",
+   "children": [
+    "#125"
+   ]
+  }
+ ],
+ "tasks": {
+  "#325": {
+   "title": "CompletionRepository interface and fake",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#325 (part of #322)",
+   "existing": null,
+   "files": [
+    "CompletionRepository",
+    "FakeCompletionRepository",
+    "their unit tests"
+   ]
+  },
+  "#326": {
+   "title": "CompletionRepositoryFirestore and completions rules",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#326 (part of #322)",
+   "existing": null,
+   "files": [
+    "CompletionRepositoryFirestore and its test",
+    "firestore.rules",
+    "FirestoreRulesTest",
+    "docs/firestore-schema.md"
+   ]
+  },
+  "#335": {
+   "title": "Storage emulator and storage.rules",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#335 (part of #322, PR #348)",
+   "existing": null,
+   "files": [
+    "storage.rules",
+    "StorageRulesTest",
+    "firebase.json",
+    "CI workflow"
+   ]
+  },
+  "#328": {
+   "title": "ProofPhotoRepository: interface, fake, Storage implementation",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#328 (part of #327)",
+   "existing": null,
+   "files": [
+    "ProofPhotoRepository",
+    "FakeProofPhotoRepository",
+    "ProofPhotoRepositoryStorage and its test"
+   ]
+  },
+  "#327": {
+   "title": "Quest completion ViewModel",
+   "kind": "task",
+   "alias": "E7.1",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#327 (part of #323)",
+   "existing": null,
+   "files": [
+    "QuestCompletionViewModel and its tests"
+   ]
+  },
+  "#330": {
+   "title": "Proof photo picker (camera or gallery)",
+   "kind": "task",
+   "alias": "E7.2",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#330 (part of #323)",
+   "existing": null,
+   "files": [
+    "photo picker composable",
+    "camera permission",
+    "Compose tests"
+   ]
+  },
+  "#329": {
+   "title": "Quest completion screen",
+   "kind": "task",
+   "alias": "E7.3",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#329 (part of #323)",
+   "existing": null,
+   "files": [
+    "QuestCompletionScreen and its Compose tests",
+    "navigation"
+   ]
+  },
+  "#331": {
+   "title": "\"Complete quest\" button on approved cards",
+   "kind": "task",
+   "alias": "E7.4",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#331 (part of #323)",
+   "existing": null,
+   "files": [
+    "OverviewQuestRow",
+    "OverviewScreen",
+    "Compose tests"
+   ]
+  },
+  "#332": {
+   "title": "Completion status and reject reason on the overview",
+   "kind": "task",
+   "alias": "E7.5",
+   "prio": "must",
+   "size": "est. 3.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#332 (part of #323)",
+   "existing": null,
+   "files": [
+    "OverviewViewModel",
+    "OverviewQuestRow",
+    "ViewModel and Compose tests"
+   ]
+  },
+  "#333": {
+   "title": "Allow completion only inside the unlock radius",
+   "kind": "task",
+   "alias": "E20/V13",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#333 (part of #323)",
+   "existing": null,
+   "files": [
+    "QuestCompletionViewModel (location check)",
+    "unit tests with a fake location"
+   ]
+  },
+  "#334": {
+   "title": "Review completions on the dashboard",
+   "kind": "task",
+   "alias": "V12",
+   "prio": "must",
+   "size": "est. 4 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#334 (part of #324)",
+   "existing": null,
+   "files": [
+    "VenueDashboardViewModel",
+    "VenueDashboardScreen",
+    "review screen",
+    "reject reason sheet",
+    "tests"
+   ]
+  },
+  "#336": {
+   "title": "Figma: completion and completion review",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "no code",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#336 (part of #322)",
+   "existing": null,
+   "files": [
+    "Figma section \"Sprint 4 · Quest completion and review (#336)\""
+   ]
+  },
+  "#303": {
+   "title": "Approve and decline reservations on the dashboard",
+   "kind": "task",
+   "alias": "V9-V10",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#303 (part of #304)",
+   "existing": null,
+   "files": [
+    "VenueDashboardViewModel",
+    "DashboardReservationRow"
+   ]
+  },
+  "#243": {
+   "title": "Show more quest details to the explorer",
+   "kind": "task",
+   "alias": "E4",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#243 (part of #128)",
+   "existing": null,
+   "files": []
+  },
+  "#305": {
+   "title": "Stop Google sign-up from opening an existing account",
+   "kind": "task",
+   "alias": "G3/V1",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#305 (PR #316)",
+   "existing": null,
+   "files": []
+  },
+  "#152": {
+   "title": "End-to-end: the venue's dashboard lists an accepted quest",
+   "kind": "task",
+   "alias": "T3",
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#152 (PR #347)",
+   "existing": null,
+   "files": []
+  },
+  "#252": {
+   "title": "Move hard-coded screen colours to the theme",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#252 (PR #340)",
+   "existing": null,
+   "files": []
+  },
+  "#338": {
+   "title": "Centralize screen shadows and venue setup colours",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#338 (part of #252)",
+   "existing": null,
+   "files": []
+  },
+  "#341": {
+   "title": "Take dark mode and map colours from the theme",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#341 (part of #252)",
+   "existing": null,
+   "files": []
+  },
+  "#342": {
+   "title": "Centralize screen shapes and typography",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#342",
+   "existing": null,
+   "files": []
+  },
+  "#314": {
+   "title": "Share one required() Firestore helper",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 0.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#314",
+   "existing": null,
+   "files": []
+  },
+  "#284": {
+   "title": "Map: error state when venues fail to load",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#284 (part of #259)",
+   "existing": null,
+   "files": []
+  },
+  "#345": {
+   "title": "Fix missing and oversized KDoc",
+   "kind": "task",
+   "alias": null,
+   "prio": "should",
+   "size": "est. 6 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#345",
+   "existing": null,
+   "files": []
+  },
+  "#343": {
+   "title": "PR conventions: 90% coverage bar, relaxed large-PR rule",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "docs only",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#343 (PR #344)",
+   "existing": null,
+   "files": []
+  },
+  "#346": {
+   "title": "Check the architecture diagram matches Sprint 4",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "no code",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#346",
+   "existing": null,
+   "files": []
+  },
+  "#125": {
+   "title": "Measure CI emulator cost",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#125",
+   "existing": null,
+   "files": []
+  }
+ },
+ "edges": [
+  {
+   "from": "#325",
+   "to": "#326",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the Firestore repository implements #325's interface"
+  },
+  {
+   "from": "#325",
+   "to": "#327",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the ViewModel submits through CompletionRepository"
+  },
+  {
+   "from": "#325",
+   "to": "#334",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the dashboard reads completions through CompletionRepository"
+  },
+  {
+   "from": "#325",
+   "to": "#332",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the overview reads each reservation's completion"
+  },
+  {
+   "from": "#327",
+   "to": "#329",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the screen renders the completion ViewModel"
+  },
+  {
+   "from": "#330",
+   "to": "#329",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the screen uses the photo picker"
+  },
+  {
+   "from": "#329",
+   "to": "#331",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the button opens the completion screen"
+  },
+  {
+   "from": "#327",
+   "to": "#333",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the radius check runs in the completion ViewModel"
+  },
+  {
+   "from": "#328",
+   "to": "#327",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the ViewModel uploads through ProofPhotoRepository; its fake is enough to start"
+  },
+  {
+   "from": "#335",
+   "to": "#328",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the Storage implementation is tested on #335's emulator"
+  },
+  {
+   "from": "#334",
+   "to": "#332",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "#334 gives the real approve and reject answers"
+  },
+  {
+   "from": "#314",
+   "to": "#326",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the new Firestore mapping can use the shared required() helper"
+  },
+  {
+   "from": "#326",
+   "to": "#346",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the diagram is checked once completions exist"
+  },
+  {
+   "from": "#328",
+   "to": "#346",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the diagram is checked once proof photos exist"
+  },
+  {
+   "from": "#336",
+   "to": "#329",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "follows the Figma frames for the completion screen"
+  },
+  {
+   "from": "#336",
+   "to": "#330",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "follows the Figma frames for the photo picker"
+  },
+  {
+   "from": "#336",
+   "to": "#331",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "follows the Figma frames for the Quests tab card"
+  },
+  {
+   "from": "#336",
+   "to": "#332",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "follows the Figma frames for the completion statuses"
+  },
+  {
+   "from": "#336",
+   "to": "#334",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "follows the Figma frames for the venue review"
+  },
+  {
+   "from": "#331",
+   "to": "#332",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit OverviewQuestRow and its tests; merge one at a time"
+  },
+  {
+   "from": "#303",
+   "to": "#334",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change VenueDashboardViewModel and the screen; merge one at a time"
+  },
+  {
+   "from": "#252",
+   "to": "#338",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both move colours into ui/theme; merge one at a time"
+  },
+  {
+   "from": "#338",
+   "to": "#341",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit ui/theme colours; merge one at a time"
+  },
+  {
+   "from": "#341",
+   "to": "#342",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both edit ui/theme; merge one at a time"
+  }
+ ]
+}
