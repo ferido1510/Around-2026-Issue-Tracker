@@ -439,7 +439,6 @@ function onBoxClick(btn) {
   const id = btn.dataset.id;
   const { status, rec } = info(id);
   if (lastPointer !== "touch" && live && status === "free") return run("claim", id);
-  if (lastPointer !== "touch" && status === "progress" && rec.uid !== user?.uid) return showTip(btn, false);
   showTip(btn, true);
 }
 
