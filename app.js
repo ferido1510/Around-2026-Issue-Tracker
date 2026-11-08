@@ -360,7 +360,7 @@ function actionsHtml(id, status, rec) {
   let out = "";
   if (!live) out = b("signin", "Sign in with Google", "primary");
   else if (status === "free") out = b("claim", "Start working on it", "primary");
-  else if (status === "progress" && rec.uid === user?.uid) out = b("finish", "Mark done", "primary") + b("release", "Release");
+  else if (status === "progress") out = b("finish", "Mark done", "primary") + (rec.uid === user?.uid ? b("release", "Release") : "");
   else if (status === "done") out = b("reopen", "Reopen");
   return `<div class="tip-actions">${out}${b("close", "Close", "ghost")}</div>`;
 }

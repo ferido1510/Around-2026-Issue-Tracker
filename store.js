@@ -67,12 +67,12 @@ export async function createFirebaseStore(config) {
       });
     },
 
-    finish(sprint, id, user) {
+    finish(sprint, id) {
       return F.runTransaction(db, async (tx) => {
         const snap = await tx.get(ref(sprint, id));
         const d = snap.data();
-        if (!d || d.status !== "in-progress" || d.uid !== user.uid) {
-          throw new Error(`${id} is not in progress for you any more`);
+        if (!d || d.status !== "in-progress") {
+          throw new Error(`${id} is not in progress any more`);
         }
         tx.update(ref(sprint, id), { status: "done", doneAt: F.serverTimestamp() });
       });

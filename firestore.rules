@@ -34,10 +34,10 @@ service cloud.firestore {
         && request.resource.data.name.size() <= 60
         && request.resource.data.startedAt == request.time;
 
-      // Mark your own in-progress task done. Nothing else may change.
+      // Mark any in-progress task done (the claimer may have handed it off
+      // without releasing it). Nothing else may change.
       allow update: if isTeam()
         && resource.data.status == 'in-progress'
-        && resource.data.uid == request.auth.uid
         && request.resource.data.status == 'done'
         && request.resource.data.doneAt == request.time
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'doneAt']);
