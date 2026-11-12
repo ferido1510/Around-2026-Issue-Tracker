@@ -5,16 +5,16 @@
    "title": "Use the app offline (story #406)",
    "prio": "must",
    "children": [
-    "T1",
-    "T2",
-    "T3",
-    "T4",
-    "T5",
-    "T6",
-    "T7",
-    "T8",
-    "T9",
-    "T12"
+    "#527",
+    "#408",
+    "#409",
+    "#410",
+    "#528",
+    "#529",
+    "#530",
+    "#531",
+    "#532",
+    "#534"
    ]
   },
   {
@@ -22,8 +22,8 @@
    "title": "Know which answers need a connection (story #415)",
    "prio": "must",
    "children": [
-    "T10",
-    "T11"
+    "#416",
+    "#533"
    ]
   },
   {
@@ -31,8 +31,8 @@
    "title": "Quest with my friends (story #402)",
    "prio": "must",
    "children": [
-    "T13",
-    "T14"
+    "#535",
+    "#536"
    ]
   },
   {
@@ -40,8 +40,8 @@
    "title": "Other tasks (no story)",
    "prio": "must",
    "children": [
-    "T15",
-    "T16"
+    "#393",
+    "#513"
    ]
   },
   {
@@ -49,15 +49,15 @@
    "title": "Use the app offline: stretch",
    "prio": "stretch",
    "children": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
+    "#412",
+    "#413",
+    "#537",
+    "#414"
    ]
   }
  ],
  "tasks": {
-  "T1": {
+  "#527": {
    "title": "Offline banner composable",
    "kind": "task",
    "alias": "E9.2a",
@@ -67,7 +67,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#527 (part of #406)",
    "existing": null,
    "files": [
     "ui/navigation/OfflineBanner.kt (new)",
@@ -85,7 +85,7 @@
     }
    ]
   },
-  "T2": {
+  "#408": {
    "title": "Show the offline banner in both shells",
    "kind": "task",
    "alias": "E9.2b",
@@ -115,7 +115,7 @@
     }
    ]
   },
-  "T3": {
+  "#409": {
    "title": "Keep the cached venues on the map offline",
    "kind": "task",
    "alias": "E9.3",
@@ -144,8 +144,8 @@
     }
    ]
   },
-  "T4": {
-   "title": "\"Needs a connection\" hint, and cancel's offline state",
+  "#410": {
+   "title": "Needs-a-connection hint and cancel's offline state",
    "kind": "task",
    "alias": "E9.4a",
    "prio": "must",
@@ -175,8 +175,8 @@
     }
    ]
   },
-  "T5": {
-   "title": "Cancel disabled offline on the quest details",
+  "#528": {
+   "title": "Disable cancelling offline on the quest details",
    "kind": "task",
    "alias": "E9.4b",
    "prio": "must",
@@ -185,7 +185,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#528 (part of #406)",
    "existing": null,
    "files": [
     "ui/venuepage/VenuePageViewModel.kt",
@@ -196,8 +196,8 @@
    "assignee": "Zaynab",
    "reviewer": "Ferit"
   },
-  "T6": {
-   "title": "Cancel disabled offline on the Quests tab",
+  "#529": {
+   "title": "Disable cancelling offline on the Quests tab",
    "kind": "task",
    "alias": "E9.4c",
    "prio": "must",
@@ -206,7 +206,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#529 (part of #406)",
    "existing": null,
    "files": [
     "ui/overview/OverviewViewModel.kt",
@@ -217,8 +217,8 @@
    "assignee": "Ece",
    "reviewer": "Jiayi"
   },
-  "T7": {
-   "title": "Photo proof disabled offline",
+  "#530": {
+   "title": "Disable sending a photo proof offline",
    "kind": "task",
    "alias": "E9.4d",
    "prio": "must",
@@ -227,7 +227,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#530 (part of #406)",
    "existing": null,
    "files": [
     "ui/completion/CompletionViewModel.kt",
@@ -239,8 +239,8 @@
    "reviewer": "Ece",
    "notes": "A written proof stays enabled, since Firestore queues it."
   },
-  "T8": {
-   "title": "Accept disabled offline on the venue page",
+  "#531": {
+   "title": "Disable accepting a quest offline",
    "kind": "task",
    "alias": "E9.4e",
    "prio": "must",
@@ -249,7 +249,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#531 (part of #406)",
    "existing": null,
    "files": [
     "ui/venuepage/VenuePageViewModel.kt",
@@ -259,8 +259,8 @@
    "assignee": "Zaynab",
    "reviewer": "Vali"
   },
-  "T9": {
-   "title": "Profile picture change disabled offline",
+  "#532": {
+   "title": "Disable changing the profile picture offline",
    "kind": "task",
    "alias": "E9.4f",
    "prio": "must",
@@ -269,7 +269,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#532 (part of #406)",
    "existing": null,
    "files": [
     "ui/profile/ProfileViewModel.kt",
@@ -279,8 +279,8 @@
    "assignee": "Vali",
    "reviewer": "Yiğit"
   },
-  "T12": {
-   "title": "README's offline section matches the app",
+  "#534": {
+   "title": "Make the README's offline section match the app",
    "kind": "task",
    "alias": "E9.5",
    "prio": "must",
@@ -289,7 +289,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#534 (part of #406)",
    "existing": null,
    "files": [
     "README.md"
@@ -298,8 +298,8 @@
    "reviewer": "Zaynab",
    "notes": "The README still describes leaderboards and offline completions syncing, which the app doesn't do."
   },
-  "T10": {
-   "title": "Approve and decline a reservation disabled offline",
+  "#416": {
+   "title": "Disable approve and decline offline",
    "kind": "task",
    "alias": "V14.1",
    "prio": "must",
@@ -327,8 +327,8 @@
     }
    ]
   },
-  "T11": {
-   "title": "Approve and reject a proof disabled offline",
+  "#533": {
+   "title": "Disable approving and rejecting a proof offline",
    "kind": "task",
    "alias": "V14.2",
    "prio": "must",
@@ -337,7 +337,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#533 (part of #415)",
    "existing": null,
    "files": [
     "ui/review/ReviewProofViewModel.kt",
@@ -348,8 +348,8 @@
    "assignee": "Yiğit",
    "reviewer": "Ferit"
   },
-  "T13": {
-   "title": "Quests tab: a member leaves instead of cancelling",
+  "#535": {
+   "title": "Let a member leave from the Quests tab",
    "kind": "task",
    "alias": "E8.9",
    "prio": "must",
@@ -358,7 +358,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#535 (part of #402)",
    "existing": null,
    "files": [
     "ui/overview/OverviewViewModel.kt",
@@ -378,8 +378,8 @@
     }
    ]
   },
-  "T14": {
-   "title": "Rules: only the creator cancels a reservation",
+  "#536": {
+   "title": "Let only the creator cancel a reservation",
    "kind": "task",
    "alias": "E8.10",
    "prio": "must",
@@ -388,7 +388,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#536 (part of #402)",
    "existing": null,
    "files": [
     "firestore.rules (match /reservations update)",
@@ -398,8 +398,8 @@
    "assignee": "Jiayi",
    "reviewer": "Ece"
   },
-  "T15": {
-   "title": "Flaky tests: the map tab after Play services, and early Firestore timeouts on CI",
+  "#393": {
+   "title": "Flaky tests (map tab, early Firestore timeouts)",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -419,8 +419,8 @@
    "assignee": "Alisher",
    "reviewer": "Yiğit"
   },
-  "T16": {
-   "title": "Share one text button that stays readable in dark mode",
+  "#513": {
+   "title": "Share one text button readable in dark mode",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -438,7 +438,7 @@
    "assignee": "Zaynab",
    "reviewer": "Ferit"
   },
-  "S1": {
+  "#412": {
    "title": "Keep the proof photo in app storage",
    "kind": "task",
    "alias": "E9.6",
@@ -458,8 +458,8 @@
    "assignee": "Alisher",
    "reviewer": "Ferit"
   },
-  "S2": {
-   "title": "WorkManager and the upload worker",
+  "#413": {
+   "title": "Add WorkManager and the photo upload worker",
    "kind": "task",
    "alias": "E9.7a",
    "prio": "stretch",
@@ -479,7 +479,7 @@
    "assignee": "Alisher",
    "reviewer": "Ferit"
   },
-  "S3": {
+  "#537": {
    "title": "Queue a photo proof when offline",
    "kind": "task",
    "alias": "E9.7b",
@@ -489,7 +489,7 @@
     null,
     null
    ],
-   "github": null,
+   "github": "#537 (part of #406)",
    "existing": null,
    "files": [
     "ui/completion/CompletionViewModel.kt",
@@ -498,7 +498,7 @@
    "assignee": "Ferit",
    "reviewer": "Alisher"
   },
-  "S4": {
+  "#414": {
    "title": "Show \"Waiting to upload\" for a queued proof",
    "kind": "task",
    "alias": "E9.8",
@@ -529,193 +529,193 @@
  },
  "edges": [
   {
-   "from": "T1",
-   "to": "T2",
+   "from": "#527",
+   "to": "#408",
    "kind": "soft",
    "blocks": "finish",
-   "reason": "T2 places OfflineBanner(modifier) and starts with an empty one"
+   "reason": "#408 places OfflineBanner(modifier) and starts with an empty one"
   },
   {
-   "from": "T2",
-   "to": "T12",
+   "from": "#408",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes the banner"
   },
   {
-   "from": "T3",
-   "to": "T12",
+   "from": "#409",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes the map offline"
   },
   {
-   "from": "T4",
-   "to": "T5",
+   "from": "#410",
+   "to": "#528",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T6",
+   "from": "#410",
+   "to": "#529",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T7",
+   "from": "#410",
+   "to": "#530",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T8",
+   "from": "#410",
+   "to": "#531",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T9",
+   "from": "#410",
+   "to": "#532",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T10",
+   "from": "#410",
+   "to": "#416",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T11",
+   "from": "#410",
+   "to": "#533",
    "kind": "soft",
    "blocks": "finish",
    "reason": "uses OfflineHint(modifier); starts with an empty one"
   },
   {
-   "from": "T4",
-   "to": "T5",
+   "from": "#410",
+   "to": "#528",
    "kind": "file",
    "blocks": "start",
-   "reason": "CancelReservationAction gets a required offline: Boolean; T4 passes false at QuestDetailsScreen; merge one at a time"
+   "reason": "CancelReservationAction gets a required offline: Boolean; #410 passes false at QuestDetailsScreen; merge one at a time"
   },
   {
-   "from": "T4",
-   "to": "T6",
+   "from": "#410",
+   "to": "#529",
    "kind": "file",
    "blocks": "start",
-   "reason": "CancelReservationAction gets a required offline: Boolean; T4 passes false at OverviewQuestRow; merge one at a time"
+   "reason": "CancelReservationAction gets a required offline: Boolean; #410 passes false at OverviewQuestRow; merge one at a time"
   },
   {
-   "from": "T5",
-   "to": "T8",
+   "from": "#528",
+   "to": "#531",
    "kind": "file",
    "blocks": "start",
    "reason": "both change VenuePageViewModel; merge one at a time"
   },
   {
-   "from": "T5",
-   "to": "T12",
+   "from": "#528",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T6",
-   "to": "T13",
+   "from": "#529",
+   "to": "#535",
    "kind": "file",
    "blocks": "start",
    "reason": "both change OverviewViewModel and OverviewQuestRow; merge one at a time"
   },
   {
-   "from": "T6",
-   "to": "T12",
+   "from": "#529",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T7",
-   "to": "S3",
+   "from": "#530",
+   "to": "#537",
    "kind": "file",
    "blocks": "start",
    "reason": "both change CompletionViewModel; merge one at a time"
   },
   {
-   "from": "T7",
-   "to": "T12",
+   "from": "#530",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T8",
-   "to": "T12",
+   "from": "#531",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T9",
-   "to": "T12",
+   "from": "#532",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T10",
-   "to": "T12",
+   "from": "#416",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T11",
-   "to": "T12",
+   "from": "#533",
+   "to": "#534",
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "T13",
-   "to": "T14",
+   "from": "#535",
+   "to": "#536",
    "kind": "hard",
    "blocks": "start",
    "reason": "the app stops members cancelling before the rules forbid it"
   },
   {
-   "from": "S1",
-   "to": "S2",
+   "from": "#412",
+   "to": "#413",
    "kind": "hard",
    "blocks": "start",
    "reason": "the worker uploads the saved photo"
   },
   {
-   "from": "S1",
-   "to": "S3",
+   "from": "#412",
+   "to": "#537",
    "kind": "hard",
    "blocks": "start",
    "reason": "the queued proof points at the saved photo"
   },
   {
-   "from": "S2",
-   "to": "S3",
+   "from": "#413",
+   "to": "#537",
    "kind": "hard",
    "blocks": "start",
-   "reason": "S3 enqueues this worker"
+   "reason": "#537 enqueues this worker"
   },
   {
-   "from": "S3",
-   "to": "S4",
+   "from": "#537",
+   "to": "#414",
    "kind": "hard",
    "blocks": "start",
-   "reason": "S4 shows the queued proof's state"
+   "reason": "#414 shows the queued proof's state"
   }
  ]
 }

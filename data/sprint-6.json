@@ -8,194 +8,194 @@
   ],
   "tasks": [
     {
-      "key": "T1", "title": "Offline banner composable", "type": "Must have", "story": "E9", "subId": "E9.2a",
-      "estimateHours": 1.5, "github": null, "assignee": "Alisher", "reviewer": "Vali",
+      "key": "#527", "title": "Offline banner composable", "type": "Must have", "story": "E9", "subId": "E9.2a",
+      "estimateHours": 1.5, "github": 527, "assignee": "Alisher", "reviewer": "Vali",
       "blockedBy": [{ "ref": "#401", "type": "decision · start", "reason": "the banner's frame in the M2 Figma section" }],
-      "blocks": [{ "ref": "T2", "type": "soft", "reason": "T2 places OfflineBanner(modifier) and starts with an empty one" }],
+      "blocks": [{ "ref": "#408", "type": "soft", "reason": "#408 places OfflineBanner(modifier) and starts with an empty one" }],
       "touchedFiles": ["ui/navigation/OfflineBanner.kt (new)", "its Compose test", "strings"]
     },
     {
-      "key": "T2", "title": "Show the offline banner in both shells", "type": "Must have", "story": "E9", "subId": "E9.2b",
+      "key": "#408", "title": "Show the offline banner in both shells", "type": "Must have", "story": "E9", "subId": "E9.2b",
       "estimateHours": 2, "github": 408, "assignee": "Vali", "reviewer": "Alisher",
       "blockedBy": [
-        { "ref": "T1", "type": "soft", "reason": "it uses OfflineBanner(modifier)" },
+        { "ref": "#527", "type": "soft", "reason": "it uses OfflineBanner(modifier)" },
         { "ref": "#401", "type": "decision · start", "reason": "where the banner sits under the header" }
       ],
-      "blocks": [{ "ref": "T12", "type": "hard", "reason": "the README describes the banner" }],
+      "blocks": [{ "ref": "#534", "type": "hard", "reason": "the README describes the banner" }],
       "touchedFiles": ["ui/navigation/BottomTabs.kt (BottomTabScaffold)", "ui/navigation/VenueHome.kt", "ui/navigation/AroundApp.kt", "a new shell ViewModel reading ConnectivityRepositoryProvider", "their tests"]
     },
     {
-      "key": "T3", "title": "Keep the cached venues on the map offline", "type": "Must have", "story": "E9", "subId": "E9.3",
+      "key": "#409", "title": "Keep the cached venues on the map offline", "type": "Must have", "story": "E9", "subId": "E9.3",
       "estimateHours": 2.5, "github": 409, "assignee": "Yiğit", "reviewer": "Zaynab",
       "blockedBy": [{ "ref": "#401", "type": "decision · start", "reason": "the map's offline message" }],
-      "blocks": [{ "ref": "T12", "type": "hard", "reason": "the README describes the map offline" }],
+      "blocks": [{ "ref": "#534", "type": "hard", "reason": "the README describes the map offline" }],
       "touchedFiles": ["ui/map/MapViewModel.kt", "ui/map/MapScreen.kt", "ui/map/VenuesErrorBanner.kt", "their tests"]
     },
     {
-      "key": "T4", "title": "\"Needs a connection\" hint, and cancel's offline state", "type": "Must have", "story": "E9", "subId": "E9.4a",
+      "key": "#410", "title": "Needs-a-connection hint and cancel's offline state", "type": "Must have", "story": "E9", "subId": "E9.4a",
       "estimateHours": 1, "github": 410, "assignee": "Ferit", "reviewer": "Zaynab",
       "blockedBy": [{ "ref": "#401", "type": "decision · start", "reason": "the hint's design" }],
       "blocks": [
-        { "ref": "T5", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T6", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T7", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T8", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T9", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T10", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T11", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
-        { "ref": "T5", "type": "file", "reason": "CancelReservationAction gets a required offline: Boolean; T4 passes false at QuestDetailsScreen; merge one at a time" },
-        { "ref": "T6", "type": "file", "reason": "CancelReservationAction gets a required offline: Boolean; T4 passes false at OverviewQuestRow; merge one at a time" }
+        { "ref": "#528", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#529", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#530", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#531", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#532", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#416", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#533", "type": "soft", "reason": "uses OfflineHint(modifier); starts with an empty one" },
+        { "ref": "#528", "type": "file", "reason": "CancelReservationAction gets a required offline: Boolean; #410 passes false at QuestDetailsScreen; merge one at a time" },
+        { "ref": "#529", "type": "file", "reason": "CancelReservationAction gets a required offline: Boolean; #410 passes false at OverviewQuestRow; merge one at a time" }
       ],
       "touchedFiles": ["ui/quest/CancelReservationAction.kt", "a new OfflineHint composable", "ui/venuepage/QuestDetailsScreen.kt (call site only)", "ui/overview/OverviewQuestRow.kt (call site only)", "tests", "strings"]
     },
     {
-      "key": "T5", "title": "Cancel disabled offline on the quest details", "type": "Must have", "story": "E9", "subId": "E9.4b",
-      "estimateHours": 2, "github": null, "assignee": "Zaynab", "reviewer": "Ferit",
-      "blockedBy": [{ "ref": "T4", "type": "soft", "reason": "uses OfflineHint and CancelReservationAction's offline parameter" }],
+      "key": "#528", "title": "Disable cancelling offline on the quest details", "type": "Must have", "story": "E9", "subId": "E9.4b",
+      "estimateHours": 2, "github": 528, "assignee": "Zaynab", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#410", "type": "soft", "reason": "uses OfflineHint and CancelReservationAction's offline parameter" }],
       "blocks": [
-        { "ref": "T8", "type": "file", "reason": "both change VenuePageViewModel; merge one at a time" },
-        { "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }
+        { "ref": "#531", "type": "file", "reason": "both change VenuePageViewModel; merge one at a time" },
+        { "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }
       ],
       "touchedFiles": ["ui/venuepage/VenuePageViewModel.kt", "ui/venuepage/VenuePageUiState.kt", "ui/venuepage/QuestDetailsScreen.kt", "tests"]
     },
     {
-      "key": "T6", "title": "Cancel disabled offline on the Quests tab", "type": "Must have", "story": "E9", "subId": "E9.4c",
-      "estimateHours": 1.5, "github": null, "assignee": "Ece", "reviewer": "Jiayi",
-      "blockedBy": [{ "ref": "T4", "type": "soft", "reason": "uses OfflineHint and CancelReservationAction's offline parameter" }],
+      "key": "#529", "title": "Disable cancelling offline on the Quests tab", "type": "Must have", "story": "E9", "subId": "E9.4c",
+      "estimateHours": 1.5, "github": 529, "assignee": "Ece", "reviewer": "Jiayi",
+      "blockedBy": [{ "ref": "#410", "type": "soft", "reason": "uses OfflineHint and CancelReservationAction's offline parameter" }],
       "blocks": [
-        { "ref": "T13", "type": "file", "reason": "both change OverviewViewModel and OverviewQuestRow; merge one at a time" },
-        { "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }
+        { "ref": "#535", "type": "file", "reason": "both change OverviewViewModel and OverviewQuestRow; merge one at a time" },
+        { "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }
       ],
       "touchedFiles": ["ui/overview/OverviewViewModel.kt", "ui/overview/OverviewUiState.kt", "ui/overview/OverviewQuestRow.kt", "tests"]
     },
     {
-      "key": "T7", "title": "Photo proof disabled offline", "type": "Must have", "story": "E9", "subId": "E9.4d",
-      "estimateHours": 2, "github": null, "assignee": "Ferit", "reviewer": "Ece",
+      "key": "#530", "title": "Disable sending a photo proof offline", "type": "Must have", "story": "E9", "subId": "E9.4d",
+      "estimateHours": 2, "github": 530, "assignee": "Ferit", "reviewer": "Ece",
       "notes": "A written proof stays enabled, since Firestore queues it.",
-      "blockedBy": [{ "ref": "T4", "type": "soft", "reason": "uses OfflineHint" }],
+      "blockedBy": [{ "ref": "#410", "type": "soft", "reason": "uses OfflineHint" }],
       "blocks": [
-        { "ref": "S3", "type": "file", "reason": "both change CompletionViewModel; merge one at a time" },
-        { "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }
+        { "ref": "#537", "type": "file", "reason": "both change CompletionViewModel; merge one at a time" },
+        { "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }
       ],
       "touchedFiles": ["ui/completion/CompletionViewModel.kt", "ui/completion/CompletionUiState.kt", "ui/completion/CompletionScreen.kt", "tests"]
     },
     {
-      "key": "T8", "title": "Accept disabled offline on the venue page", "type": "Must have", "story": "E9", "subId": "E9.4e",
-      "estimateHours": 2, "github": null, "assignee": "Zaynab", "reviewer": "Vali",
+      "key": "#531", "title": "Disable accepting a quest offline", "type": "Must have", "story": "E9", "subId": "E9.4e",
+      "estimateHours": 2, "github": 531, "assignee": "Zaynab", "reviewer": "Vali",
       "blockedBy": [
-        { "ref": "T4", "type": "soft", "reason": "uses OfflineHint" },
-        { "ref": "T5", "type": "file", "reason": "both change VenuePageViewModel; merge one at a time" }
+        { "ref": "#410", "type": "soft", "reason": "uses OfflineHint" },
+        { "ref": "#528", "type": "file", "reason": "both change VenuePageViewModel; merge one at a time" }
       ],
-      "blocks": [{ "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }],
+      "blocks": [{ "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }],
       "touchedFiles": ["ui/venuepage/VenuePageViewModel.kt", "ui/venuepage/AcceptQuestBar.kt", "tests"]
     },
     {
-      "key": "T9", "title": "Profile picture change disabled offline", "type": "Must have", "story": "E9", "subId": "E9.4f",
-      "estimateHours": 1.5, "github": null, "assignee": "Vali", "reviewer": "Yiğit",
-      "blockedBy": [{ "ref": "T4", "type": "soft", "reason": "uses OfflineHint" }],
-      "blocks": [{ "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }],
+      "key": "#532", "title": "Disable changing the profile picture offline", "type": "Must have", "story": "E9", "subId": "E9.4f",
+      "estimateHours": 1.5, "github": 532, "assignee": "Vali", "reviewer": "Yiğit",
+      "blockedBy": [{ "ref": "#410", "type": "soft", "reason": "uses OfflineHint" }],
+      "blocks": [{ "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }],
       "touchedFiles": ["ui/profile/ProfileViewModel.kt", "ui/profile/ProfileScreen.kt", "tests"]
     },
     {
-      "key": "T10", "title": "Approve and decline a reservation disabled offline", "type": "Must have", "story": "V14", "subId": "V14.1",
+      "key": "#416", "title": "Disable approve and decline offline", "type": "Must have", "story": "V14", "subId": "V14.1",
       "estimateHours": 2.5, "github": 416, "assignee": "Jiayi", "reviewer": "Alisher",
       "blockedBy": [
-        { "ref": "T4", "type": "soft", "reason": "uses OfflineHint" },
+        { "ref": "#410", "type": "soft", "reason": "uses OfflineHint" },
         { "ref": "#401", "type": "decision · start", "reason": "the dashboard's offline state" }
       ],
-      "blocks": [{ "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }],
+      "blocks": [{ "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }],
       "touchedFiles": ["ui/dashboard/VenueDashboardViewModel.kt", "ui/dashboard/VenueDashboardUiState.kt", "ui/dashboard/DashboardReservationRow.kt", "tests"]
     },
     {
-      "key": "T11", "title": "Approve and reject a proof disabled offline", "type": "Must have", "story": "V14", "subId": "V14.2",
-      "estimateHours": 2, "github": null, "assignee": "Yiğit", "reviewer": "Ferit",
-      "blockedBy": [{ "ref": "T4", "type": "soft", "reason": "uses OfflineHint" }],
-      "blocks": [{ "ref": "T12", "type": "hard", "reason": "the README describes what is disabled offline" }],
+      "key": "#533", "title": "Disable approving and rejecting a proof offline", "type": "Must have", "story": "V14", "subId": "V14.2",
+      "estimateHours": 2, "github": 533, "assignee": "Yiğit", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#410", "type": "soft", "reason": "uses OfflineHint" }],
+      "blocks": [{ "ref": "#534", "type": "hard", "reason": "the README describes what is disabled offline" }],
       "touchedFiles": ["ui/review/ReviewProofViewModel.kt", "ui/review/ReviewProofUiState.kt", "ui/review/ReviewButtons.kt", "tests"]
     },
     {
-      "key": "T12", "title": "README's offline section matches the app", "type": "Must have", "story": "E9", "subId": "E9.5",
-      "estimateHours": 1, "github": null, "assignee": "Vali", "reviewer": "Zaynab",
+      "key": "#534", "title": "Make the README's offline section match the app", "type": "Must have", "story": "E9", "subId": "E9.5",
+      "estimateHours": 1, "github": 534, "assignee": "Vali", "reviewer": "Zaynab",
       "notes": "The README still describes leaderboards and offline completions syncing, which the app doesn't do.",
       "blockedBy": [
-        { "ref": "T2", "type": "hard", "reason": "it describes what T2 built" },
-        { "ref": "T3", "type": "hard", "reason": "it describes what T3 built" },
-        { "ref": "T5", "type": "hard", "reason": "it describes what T5 built" },
-        { "ref": "T6", "type": "hard", "reason": "it describes what T6 built" },
-        { "ref": "T7", "type": "hard", "reason": "it describes what T7 built" },
-        { "ref": "T8", "type": "hard", "reason": "it describes what T8 built" },
-        { "ref": "T9", "type": "hard", "reason": "it describes what T9 built" },
-        { "ref": "T10", "type": "hard", "reason": "it describes what T10 built" },
-        { "ref": "T11", "type": "hard", "reason": "it describes what T11 built" }
+        { "ref": "#408", "type": "hard", "reason": "it describes what #408 built" },
+        { "ref": "#409", "type": "hard", "reason": "it describes what #409 built" },
+        { "ref": "#528", "type": "hard", "reason": "it describes what #528 built" },
+        { "ref": "#529", "type": "hard", "reason": "it describes what #529 built" },
+        { "ref": "#530", "type": "hard", "reason": "it describes what #530 built" },
+        { "ref": "#531", "type": "hard", "reason": "it describes what #531 built" },
+        { "ref": "#532", "type": "hard", "reason": "it describes what #532 built" },
+        { "ref": "#416", "type": "hard", "reason": "it describes what #416 built" },
+        { "ref": "#533", "type": "hard", "reason": "it describes what #533 built" }
       ],
       "blocks": [],
       "touchedFiles": ["README.md"]
     },
     {
-      "key": "T13", "title": "Quests tab: a member leaves instead of cancelling", "type": "Must have", "story": "E8", "subId": "E8.9",
-      "estimateHours": 2.5, "github": null, "assignee": "Ece", "reviewer": "Jiayi",
+      "key": "#535", "title": "Let a member leave from the Quests tab", "type": "Must have", "story": "E8", "subId": "E8.9",
+      "estimateHours": 2.5, "github": 535, "assignee": "Ece", "reviewer": "Jiayi",
       "notes": "Found while reviewing #524: on the Quests tab card, a member can still cancel the whole party's reservation.",
       "blockedBy": [
         { "ref": "#524", "type": "hard", "reason": "it reuses the leave flag and the withdraw path" },
-        { "ref": "T6", "type": "file", "reason": "both change OverviewViewModel and OverviewQuestRow; merge one at a time" }
+        { "ref": "#529", "type": "file", "reason": "both change OverviewViewModel and OverviewQuestRow; merge one at a time" }
       ],
-      "blocks": [{ "ref": "T14", "type": "hard", "reason": "the app stops members cancelling before the rules forbid it" }],
+      "blocks": [{ "ref": "#536", "type": "hard", "reason": "the app stops members cancelling before the rules forbid it" }],
       "touchedFiles": ["ui/overview/OverviewViewModel.kt", "ui/overview/OverviewUiState.kt", "ui/overview/OverviewQuestRow.kt", "tests"]
     },
     {
-      "key": "T14", "title": "Rules: only the creator cancels a reservation", "type": "Must have", "story": "E8", "subId": "E8.10",
-      "estimateHours": 1.5, "github": null, "assignee": "Jiayi", "reviewer": "Ece",
-      "blockedBy": [{ "ref": "T13", "type": "hard", "reason": "the app stops members cancelling before the rules forbid it" }],
+      "key": "#536", "title": "Let only the creator cancel a reservation", "type": "Must have", "story": "E8", "subId": "E8.10",
+      "estimateHours": 1.5, "github": 536, "assignee": "Jiayi", "reviewer": "Ece",
+      "blockedBy": [{ "ref": "#535", "type": "hard", "reason": "the app stops members cancelling before the rules forbid it" }],
       "blocks": [],
       "touchedFiles": ["firestore.rules (match /reservations update)", "FirestoreRulesTest", "ReservationRepository KDoc"]
     },
     {
-      "key": "T15", "title": "Flaky tests: the map tab after Play services, and early Firestore timeouts on CI", "type": "Must have",
+      "key": "#393", "title": "Flaky tests (map tab, early Firestore timeouts)", "type": "Must have",
       "story": null, "storyNote": "No story: test infrastructure, carried over from S5", "subId": null,
       "estimateHours": 3, "github": 393, "assignee": "Alisher", "reviewer": "Yiğit",
       "blockedBy": [], "blocks": [],
       "touchedFiles": ["AroundAppTest", "FirestoreRulesTest setup", "CI workflow", "possibly LocationRepositoryProvider"]
     },
     {
-      "key": "T16", "title": "Share one text button that stays readable in dark mode", "type": "Must have",
+      "key": "#513", "title": "Share one text button readable in dark mode", "type": "Must have",
       "story": null, "storyNote": "No story: UI housekeeping", "subId": null,
       "estimateHours": 0.5, "github": 513, "assignee": "Zaynab", "reviewer": "Ferit",
       "blockedBy": [], "blocks": [],
       "touchedFiles": ["ui/theme", "the screens that use the button"]
     },
     {
-      "key": "S1", "title": "Keep the proof photo in app storage", "type": "Stretch", "story": "E9", "subId": "E9.6",
+      "key": "#412", "title": "Keep the proof photo in app storage", "type": "Stretch", "story": "E9", "subId": "E9.6",
       "estimateHours": 2, "github": 412, "assignee": "Alisher", "reviewer": "Ferit",
       "blockedBy": [],
       "blocks": [
-        { "ref": "S2", "type": "hard", "reason": "the worker uploads the saved photo" },
-        { "ref": "S3", "type": "hard", "reason": "the queued proof points at the saved photo" }
+        { "ref": "#413", "type": "hard", "reason": "the worker uploads the saved photo" },
+        { "ref": "#537", "type": "hard", "reason": "the queued proof points at the saved photo" }
       ],
       "touchedFiles": ["ui/completion/ProofPhotos.kt", "ui/completion/ProofPhotoPicker.kt", "tests"]
     },
     {
-      "key": "S2", "title": "WorkManager and the upload worker", "type": "Stretch", "story": "E9", "subId": "E9.7a",
+      "key": "#413", "title": "Add WorkManager and the photo upload worker", "type": "Stretch", "story": "E9", "subId": "E9.7a",
       "estimateHours": 3, "github": 413, "assignee": "Alisher", "reviewer": "Ferit",
-      "blockedBy": [{ "ref": "S1", "type": "hard", "reason": "the worker uploads the saved photo" }],
-      "blocks": [{ "ref": "S3", "type": "hard", "reason": "S3 enqueues this worker" }],
+      "blockedBy": [{ "ref": "#412", "type": "hard", "reason": "the worker uploads the saved photo" }],
+      "blocks": [{ "ref": "#537", "type": "hard", "reason": "#537 enqueues this worker" }],
       "touchedFiles": ["gradle/libs.versions.toml", "*.lockfile", "a new upload worker", "tests with WorkManagerTestInitHelper"]
     },
     {
-      "key": "S3", "title": "Queue a photo proof when offline", "type": "Stretch", "story": "E9", "subId": "E9.7b",
-      "estimateHours": 2, "github": null, "assignee": "Ferit", "reviewer": "Alisher",
+      "key": "#537", "title": "Queue a photo proof when offline", "type": "Stretch", "story": "E9", "subId": "E9.7b",
+      "estimateHours": 2, "github": 537, "assignee": "Ferit", "reviewer": "Alisher",
       "blockedBy": [
-        { "ref": "S1", "type": "hard", "reason": "the queued proof points at the saved photo" },
-        { "ref": "S2", "type": "hard", "reason": "it enqueues the upload worker" },
-        { "ref": "T7", "type": "file", "reason": "both change CompletionViewModel; merge one at a time" }
+        { "ref": "#412", "type": "hard", "reason": "the queued proof points at the saved photo" },
+        { "ref": "#413", "type": "hard", "reason": "it enqueues the upload worker" },
+        { "ref": "#530", "type": "file", "reason": "both change CompletionViewModel; merge one at a time" }
       ],
-      "blocks": [{ "ref": "S4", "type": "hard", "reason": "S4 shows the queued proof's state" }],
+      "blocks": [{ "ref": "#414", "type": "hard", "reason": "#414 shows the queued proof's state" }],
       "touchedFiles": ["ui/completion/CompletionViewModel.kt", "tests"]
     },
     {
-      "key": "S4", "title": "Show \"Waiting to upload\" for a queued proof", "type": "Stretch", "story": "E9", "subId": "E9.8",
+      "key": "#414", "title": "Show \"Waiting to upload\" for a queued proof", "type": "Stretch", "story": "E9", "subId": "E9.8",
       "estimateHours": 2, "github": 414, "assignee": "Ferit", "reviewer": "Alisher",
       "blockedBy": [
-        { "ref": "S3", "type": "hard", "reason": "it shows the queued proof's state" },
+        { "ref": "#537", "type": "hard", "reason": "it shows the queued proof's state" },
         { "ref": "#401", "type": "decision · start", "reason": "the \"Waiting to upload\" design" }
       ],
       "blocks": [],
