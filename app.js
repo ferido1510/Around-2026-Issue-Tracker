@@ -19,6 +19,9 @@ let outgoing = new Map();
 let storyOf = new Map();
 let ALL_IDS = [];
 let MUST_IDS = [];
+let PEOPLE = new Set();     // normalised names of every assignee and reviewer in the sprint
+let HAS_ASSIGNED = false;   // the sprint uses the assignee / reviewer flow
+let GRID = null;            // when every task has both: the names on both axes, sorted; else null
 
 function setPlan(plan) {
   PLAN = plan;
@@ -31,7 +34,20 @@ function setPlan(plan) {
   ALL_IDS = Object.keys(PLAN.tasks);
   // Victory needs the must-haves only; should-haves and stretch count for ultra.
   MUST_IDS = ALL_IDS.filter((id) => (PLAN.tasks[id].prio || "must") === "must");
+  HAS_ASSIGNED = ALL_IDS.some((id) => PLAN.tasks[id].assignee);
+  PEOPLE = new Set(ALL_IDS.flatMap((id) => [PLAN.tasks[id].assignee, PLAN.tasks[id].reviewer]).filter(Boolean).map(norm));
+  // With an assignee and a reviewer on every task, the board is a grid: assignees
+  // down the side, reviewers along the top, each task in the cell of its pair.
+  // The same people are on both axes, so the diagonal is "reviewing yourself".
+  GRID = ALL_IDS.length && ALL_IDS.every((id) => PLAN.tasks[id].assignee && PLAN.tasks[id].reviewer)
+    ? [...new Map(ALL_IDS.flatMap((id) => [PLAN.tasks[id].assignee, PLAN.tasks[id].reviewer]).map((n) => [norm(n), n])).values()]
+        .sort((a, b) => a.localeCompare(b))
+    : null;
 }
+
+// The tasks a person has (role "assignee") or reviews (role "reviewer"); `person` is a normalised name.
+const tasksOf = (role, person) => ALL_IDS.filter((id) => norm(PLAN.tasks[id][role]) === person);
+const isPerson = (person) => !isDemo() && !!user && norm(user.name) === person;
 
 // Small localStorage helpers, scoped to the current sprint where it matters.
 const lsGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -54,12 +70,37 @@ const LEVELS = ["none", "victory", "ultra"];
 
 const isDone = (id) => state.get(id)?.status === "done";
 
+// ---------- who is who ----------
+//
+// A task with an `assignee` and a `reviewer` in its sprint file goes through
+// three steps: the assignee starts it and marks it complete (blue), then the
+// reviewer approves it (grey). Only approved tasks are done, so only they
+// unblock other tasks. A task without an assignee works the old way: anyone
+// takes it, anyone marks it done.
+//
+// The board knows people by the first name on their Google account ("Yiğit
+// Kaya" is "Yiğit"), compared without case or accents ("Yigit" matches).
+
+const norm = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i").toLowerCase().trim();
+const sameName = (a, b) => !!a && !!b && norm(a) === norm(b);
+// Demo mode has one fake user, who plays every role so the whole flow can be tried.
+const isDemo = () => store?.mode === "demo";
+const isAssignee = (t) => !!t.assignee && (isDemo() || (!!user && sameName(user.name, t.assignee)));
+const isReviewer = (t) => !!t.reviewer && (isDemo() || (!!user && sameName(user.name, t.reviewer)));
+// "Mine": the assignee's task, or for a task with no assignee, whoever took it.
+const isMine = (t, rec) => (t.assignee ? isAssignee(t) : !!rec && !!user && rec.uid === user.uid);
+// The reviewer approves, but never what they completed themselves.
+const canApprove = (t, rec) => isReviewer(t) && (isDemo() || rec?.uid !== user?.uid);
+// Signed in under a name that isn't in this sprint's plan at all.
+const isStranger = () => !!user && !isDemo() && PEOPLE.size > 0 && !PEOPLE.has(norm(user.name));
+
 function info(id) {
   const s = state.get(id);
   const unmet = incoming.get(id).filter((e) => !isDone(e.from));
   const waiting = outgoing.get(id).filter((e) => !isDone(e.to));
   let status;
   if (s?.status === "done") status = "done";
+  else if (s?.status === "review") status = "review";
   else if (s?.status === "in-progress") status = "progress";
   else if (unmet.length) status = "blocked";
   else status = "free";
@@ -67,11 +108,39 @@ function info(id) {
   return { status, rec: s, unmet, waiting, blocking: status === "free" && waiting.length > 0 };
 }
 
-const STATUS_LABEL = { blocked: "Blocked", free: "Free", progress: "In progress", done: "Done" };
+const STATUS_LABEL = { blocked: "Blocked", free: "Free", progress: "In progress", review: "In review", done: "Done" };
 
 // ---------- board ----------
 
+function buildGrid() {
+  const boxCount = { n: 0 };
+  let html = `<thead><tr><th class="corner" scope="col"><span>Assignee ↓</span><span>Reviewer →</span></th>`;
+  for (const name of GRID) {
+    html += `<th scope="col" class="colhead person" data-person="${esc(norm(name))}"><b class="pname">${esc(name)}</b><i class="pcount"></i></th>`;
+  }
+  html += `</tr></thead><tbody>`;
+  for (const a of GRID) {
+    html += `<tr data-person="${esc(norm(a))}"><th scope="row" class="rowhead person">
+      <span class="rtop"><span class="rid">${esc(a)}</span></span>
+      <span class="rprog"><span class="rbar"><i></i></span><span class="rcount"></span></span></th>`;
+    for (const r of GRID) {
+      const ids = ALL_IDS.filter((id) => sameName(PLAN.tasks[id].assignee, a) && sameName(PLAN.tasks[id].reviewer, r));
+      const boxes = ids.map((id) =>
+        `<button type="button" class="box" data-id="${esc(id)}" style="--i:${boxCount.n++}" aria-describedby="tip"></button>`).join("");
+      html += `<td class="${sameName(a, r) ? "self" : "cell"}${ids.length ? "" : " empty"}"${sameName(a, r) && !ids.length ? ` aria-hidden="true"` : ""}>` +
+        (ids.length ? `<div class="cellbox">${boxes}</div>` : "") + `</td>`;
+    }
+    html += `</tr>`;
+  }
+  $("board").innerHTML = html + `</tbody>`;
+}
+
 function buildBoard() {
+  $("board").classList.toggle("grid", !!GRID);
+  $("board").setAttribute("aria-label", GRID
+    ? "Tasks by assignee (rows) and reviewer (columns)"
+    : "Tasks by issue (rows) and sub-issue (columns)");
+  if (GRID) return buildGrid();
   const cols = Math.max(...PLAN.rows.map((r) => r.children.length));
   let html = `<thead><tr><th class="corner" scope="col"><span>Issue</span><span>Sub-issue →</span></th>`;
   for (let i = 1; i <= cols; i++) html += `<th scope="col" class="colhead"><span>${i}</span></th>`;
@@ -93,16 +162,18 @@ function buildBoard() {
 }
 
 function renderBoard() {
-  const counts = { blocked: 0, free: 0, progress: 0, done: 0 };
+  const counts = { blocked: 0, free: 0, progress: 0, review: 0, done: 0 };
   for (const btn of document.querySelectorAll(".board .box")) {
     const id = btn.dataset.id;
     const t = PLAN.tasks[id];
     const { status, rec, unmet, blocking } = info(id);
     counts[status]++;
-    const mine = rec && user && rec.uid === user.uid;
+    const mine = status === "progress" && isMine(t, rec);
+    const needsMe = status === "review" && canApprove(t, rec);
     btn.className = `box s-${status}` +
       (blocking ? " blocking" : "") +
-      (mine && status === "progress" ? " mine" : "") +
+      (mine ? " mine" : "") +
+      (needsMe ? " needs-me" : "") +
       (status === "progress" && unmet.length ? " stale" : "") +
       (t.prio === "stretch" ? " stretch" : "");
     if (live && prevStatus.has(id) && prevStatus.get(id) !== status) {
@@ -110,22 +181,45 @@ function renderBoard() {
       btn.addEventListener("animationend", () => btn.classList.remove("pop"), { once: true });
     }
     if (live) prevStatus.set(id, status);
+    const who = boxWho(t, status, rec, mine);
     btn.innerHTML = `<span class="bid">${esc(id)}</span>` +
-      (status === "progress" ? `<span class="who">${esc(mine ? "you" : rec.name)}</span>` : "") +
+      (who ? `<span class="who">${esc(who)}</span>` : "") +
       (blocking ? `<span class="warn" aria-hidden="true"></span>` : "");
     btn.setAttribute("aria-label", `${id}: ${t.title}. ${STATUS_LABEL[status]}` +
-      (status === "progress" ? `, ${rec.name}` : "") + (blocking ? ", other tasks wait on it" : ""));
+      (t.assignee ? `, assigned to ${t.assignee}, reviewed by ${t.reviewer}` : status === "progress" ? `, ${rec.name}` : "") +
+      (needsMe ? ", waiting for your review" : "") + (blocking ? ", other tasks wait on it" : ""));
   }
   for (const tr of document.querySelectorAll(".board tbody tr")) {
-    const row = PLAN.rows.find((r) => r.id === tr.dataset.row);
-    const done = row.children.filter(isDone).length;
-    tr.querySelector(".rbar i").style.width = `${(100 * done) / row.children.length}%`;
-    tr.querySelector(".rcount").textContent = `${done}/${row.children.length}`;
-    tr.classList.toggle("complete", live && done === row.children.length);
+    // A row is an issue, or in the grid an assignee: its progress is done / all of its tasks.
+    const ids = GRID ? tasksOf("assignee", tr.dataset.person) : PLAN.rows.find((r) => r.id === tr.dataset.row).children;
+    const done = ids.filter(isDone).length;
+    tr.querySelector(".rbar i").style.width = ids.length ? `${(100 * done) / ids.length}%` : "0%";
+    tr.querySelector(".rcount").textContent = ids.length ? `${done}/${ids.length}` : "–";
+    tr.classList.toggle("complete", live && ids.length > 0 && done === ids.length);
+    if (GRID) tr.classList.toggle("me", isPerson(tr.dataset.person));
+  }
+  // A column is a reviewer: tasks approved / tasks they review, and how many wait for them.
+  for (const th of document.querySelectorAll(".board .colhead.person")) {
+    const ids = tasksOf("reviewer", th.dataset.person);
+    const done = ids.filter(isDone).length;
+    const waiting = ids.filter((id) => state.get(id)?.status === "review").length;
+    th.querySelector(".pcount").textContent = ids.length ? `${done}/${ids.length}${waiting ? ` · ${waiting} ⧗` : ""}` : "–";
+    th.title = `${th.querySelector(".pname").textContent} reviews ${ids.length} task${ids.length === 1 ? "" : "s"}: ${done} approved` +
+      (waiting ? `, ${waiting} waiting for review` : "");
+    th.classList.toggle("me", isPerson(th.dataset.person));
   }
   renderProgress(counts);
   renderLeaderboard();
   if (tipFor) renderTip();
+}
+
+// The small label under a box's ID: who has it.
+function boxWho(t, status, rec, mine) {
+  if (GRID) return "";      // the grid already says who: the row is the assignee, the column the reviewer
+  if (!t.assignee) return status === "progress" ? (mine ? "you" : rec.name) : "";
+  if (status === "done") return "";
+  if (status === "review") return `→ ${isReviewer(t) && !isDemo() ? "you" : t.reviewer}`;
+  return isAssignee(t) && !isDemo() ? "you" : t.assignee;
 }
 
 // ---------- progress and celebrations ----------
@@ -139,7 +233,7 @@ function renderProgress(counts) {
   // gradient is scaled to the whole track so a short bar shows its start, not
   // the full gradient squeezed in.
   const done = live ? counts.done : 0;
-  const filled = done + (live ? counts.progress : 0);
+  const filled = done + (live ? counts.progress + counts.review : 0);
   // A bar with anything in it is at least as wide as it is tall, so a single
   // task shows as a round stub rather than an oval.
   $("barValue").style.width = filled ? `max(var(--bar-h), ${(100 * filled) / total}%)` : "0%";
@@ -149,7 +243,7 @@ function renderProgress(counts) {
   $("bar").setAttribute("aria-valuenow", String(pct));
   $("bar").classList.toggle("full", live && counts.done === total);
   $("progressMeta").textContent = live
-    ? `${counts.done} of ${total} tasks done${counts.progress ? ` · ${counts.progress} in progress` : ""}`
+    ? `${counts.done} of ${total} tasks done${counts.progress ? ` · ${counts.progress} in progress` : ""}${counts.review ? ` · ${counts.review} in review` : ""}`
     : "Sign in to see progress";
 
   const mustDone = MUST_IDS.filter(isDone).length;
@@ -163,7 +257,7 @@ function renderProgress(counts) {
   $("goalMust").title = level >= 1 ? "Play the victory again" : "Finish every must-have task";
   $("goalAll").title = level >= 2 ? "Play the ultra victory again" : "Finish every task, should-haves and stretch included";
 
-  for (const [k, n] of Object.entries({ Blocked: counts.blocked, Free: counts.free, Progress: counts.progress, Done: counts.done })) {
+  for (const [k, n] of Object.entries({ Blocked: counts.blocked, Free: counts.free, Progress: counts.progress, Review: counts.review, Done: counts.done })) {
     $(`n${k}`).textContent = live ? n : "–";
   }
 
@@ -206,7 +300,8 @@ function renderReplays(fresh = false) {
 // ---------- leaderboard ----------
 
 // Everyone who has taken a task in this sprint, ranked by tasks done, then by
-// tasks in progress. People with the same counts share a rank (1, 1, 3).
+// tasks still in the works (in progress or in review). People with the same
+// counts share a rank (1, 1, 3).
 function renderLeaderboard() {
   const box = $("leaderboard");
   box.hidden = !live;
@@ -215,13 +310,14 @@ function renderLeaderboard() {
   const people = new Map();
   for (const [id, rec] of state) {
     if (!PLAN.tasks[id] || !rec?.uid) continue;
-    const p = people.get(rec.uid) || { uid: rec.uid, name: rec.name || "Someone", done: [], progress: [] };
+    const p = people.get(rec.uid) || { uid: rec.uid, name: rec.name || "Someone", done: [], progress: [], review: [] };
     if (rec.status === "done") p.done.push(id);
+    else if (rec.status === "review") p.review.push(id);
     else if (rec.status === "in-progress") p.progress.push(id);
     people.set(rec.uid, p);
   }
   const ranked = [...people.values()].sort((a, b) =>
-    b.done.length - a.done.length || b.progress.length - a.progress.length || a.name.localeCompare(b.name));
+    b.done.length - a.done.length || (b.progress.length + b.review.length) - (a.progress.length + a.review.length) || a.name.localeCompare(b.name));
 
   const list = $("lbList");
   if (!ranked.length) {
@@ -232,16 +328,17 @@ function renderLeaderboard() {
   let rank = 0;
   list.innerHTML = ranked.map((p, i) => {
     const prev = ranked[i - 1];
-    if (!prev || prev.done.length !== p.done.length || prev.progress.length !== p.progress.length) rank = i + 1;
+    if (!prev || prev.done.length !== p.done.length || prev.progress.length + prev.review.length !== p.progress.length + p.review.length) rank = i + 1;
     const me = user && p.uid === user.uid;
     const hue = [...p.uid].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
-    const title = [p.done.length ? `Done: ${p.done.join(", ")}` : "", p.progress.length ? `In progress: ${p.progress.join(", ")}` : ""]
+    const title = [p.done.length ? `Done: ${p.done.join(", ")}` : "", p.review.length ? `In review: ${p.review.join(", ")}` : "",
+      p.progress.length ? `In progress: ${p.progress.join(", ")}` : ""]
       .filter(Boolean).join(" · ");
     return `<li class="lb-item${rank === 1 && p.done.length ? " lb-first" : ""}${me ? " lb-me" : ""}" title="${esc(title)}">
       <span class="lb-rank">${p.done.length && rank <= 3 ? medals[rank - 1] : rank}</span>
       <span class="lb-avatar" style="--hue:${hue}">${esc(p.name[0].toUpperCase())}</span>
       <span class="lb-name">${esc(p.name)}${me ? ` <span class="lb-you">you</span>` : ""}</span>
-      <span class="lb-count"><b>${p.done.length}</b> done${p.progress.length ? `<span class="lb-prog"> · ${p.progress.length} in progress</span>` : ""}</span>
+      <span class="lb-count"><b>${p.done.length}</b> done${p.review.length ? `<span class="lb-prog"> · ${p.review.length} in review</span>` : ""}${p.progress.length ? `<span class="lb-prog"> · ${p.progress.length} in progress</span>` : ""}</span>
     </li>`;
   }).join("");
 }
@@ -300,8 +397,10 @@ function kindChip(e) {
 
 function edgeLine(e, otherId, met) {
   const other = PLAN.tasks[otherId];
-  return `<li class="${met ? "met" : ""}">
-    <span class="mark">${met ? "✓" : "✗"}</span>
+  // Completed but not approved yet: not met, but on its way.
+  const waiting = !met && state.get(otherId)?.status === "review";
+  return `<li class="${met ? "met" : waiting ? "review" : ""}"${waiting ? ` title="Completed, waiting for its review"` : ""}>
+    <span class="mark">${met ? "✓" : waiting ? "⧗" : "✗"}</span>
     <span class="eid">${esc(otherId)}</span>${kindChip(e)}
     <span class="etitle">${esc(other.title)}</span>
     <span class="reason">${esc(e.reason)}</span></li>`;
@@ -328,6 +427,12 @@ function renderTip() {
     <div class="tip-title">${esc(t.title)}</div>
     <div class="tip-meta">${meta}</div>`;
   if (t.existing) html += `<div class="tip-meta">Existing work: ${esc(t.existing)}</div>`;
+  if (t.assignee) {
+    const who = (name, mine) => `<b${mine ? ` class="me"` : ""}>${esc(name)}${mine && !isDemo() ? " (you)" : ""}</b>`;
+    html += `<div class="tip-people"><span>Assignee ${who(t.assignee, isAssignee(t))}</span>
+      <span>Reviewer ${who(t.reviewer, isReviewer(t))}</span></div>`;
+  }
+  if (t.notes) html += `<div class="tip-note">${esc(t.notes)}</div>`;
 
   html += `<div class="tip-sec">Blocked by</div>` + (ins.length
     ? `<ul class="edges">${ins.map((e) => edgeLine(e, e.from, isDone(e.from))).join("")}</ul>`
@@ -336,16 +441,25 @@ function renderTip() {
     ? `<ul class="edges">${outs.map((e) => edgeLine(e, e.to, isDone(e.to))).join("")}</ul>`
     : `<p class="none">Nothing</p>`);
 
+  if (t.external?.length) {
+    html += `<div class="tip-sec">Outside this sprint (doesn't block the box)</div><ul class="edges">${t.external.map((x) =>
+      `<li><span class="mark">↗</span><span class="eid">${esc(x.ref)}</span>${kindChip(x)}<span class="reason">${esc(x.reason)}</span></li>`).join("")}</ul>`;
+  }
+
   if (t.files.length) {
     html += `<div class="tip-sec">Touched files</div>
       <ul class="files">${t.files.map((f) => `<li>${esc(f).replaceAll("/", "/<wbr>")}</li>`).join("")}</ul>`;
   }
 
   if (status === "progress") {
-    html += `<div class="tip-who">${esc(rec.name)} took it ${esc(fmtTime(rec.startedAt))}</div>`;
+    html += `<div class="tip-who">${esc(rec.name)} ${t.assignee ? "started" : "took"} it ${esc(fmtTime(rec.startedAt))}</div>`;
     if (unmet.length) html += `<div class="tip-who stale">A blocker was reopened after this was taken.</div>`;
+  } else if (status === "review") {
+    html += `<div class="tip-who">${esc(rec.name)} completed it ${esc(fmtTime(rec.reviewAt))}. Waiting for ${esc(t.reviewer)} to review it.</div>`;
   } else if (status === "done") {
-    html += `<div class="tip-who">Done by ${esc(rec.name)} ${esc(fmtTime(rec.doneAt))}</div>`;
+    html += `<div class="tip-who">${t.assignee
+      ? `Completed by ${esc(rec.name)}${rec.reviewerName ? `, approved by ${esc(rec.reviewerName)}` : ""}`
+      : `Done by ${esc(rec.name)}`} ${esc(fmtTime(rec.doneAt))}</div>`;
   }
 
   if (tipPinned) html += actionsHtml(id, status, rec);
@@ -356,13 +470,30 @@ function renderTip() {
 }
 
 function actionsHtml(id, status, rec) {
+  const t = PLAN.tasks[id];
   const b = (act, label, cls = "") => `<button type="button" class="btn ${cls}" data-act="${act}" data-id="${esc(id)}">${label}</button>`;
-  let out = "";
+  let out = "", hint = "";
   if (!live) out = b("signin", "Sign in with Google", "primary");
-  else if (status === "free") out = b("claim", "Start working on it", "primary");
-  else if (status === "progress") out = b("finish", "Mark done", "primary") + (rec.uid === user?.uid ? b("release", "Release") : "");
-  else if (status === "done") out = b("reopen", "Reopen");
-  return `<div class="tip-actions">${out}${b("close", "Close", "ghost")}</div>`;
+  else if (!t.assignee) {
+    // No assignee: anyone takes it, anyone marks it done. Only the one who took it releases it.
+    if (status === "free") out = b("claim", "Start working on it", "primary");
+    else if (status === "progress") out = b("finish", "Mark done", "primary") + (rec.uid === user?.uid ? b("release", "Release") : "");
+    else if (status === "done") out = b("reopen", "Reopen");
+  } else {
+    // Assignee completes, reviewer approves.
+    const assignee = isAssignee(t);
+    if (status === "free") { if (assignee) out = b("claim", "Start working on it", "primary"); }
+    else if (status === "progress") { if (assignee) out = b("submit", "Mark complete", "primary") + b("release", "Release"); }
+    else if (status === "review") {
+      if (canApprove(t, rec)) out = b("approve", "Approve", "primary") + b("changes", "Request changes");
+      else if (isReviewer(t)) hint = "You completed this one yourself, so someone else has to approve it.";
+      if (assignee) out += b("changes", "Take back");
+    } else if (status === "done") { if (assignee || isReviewer(t)) out = b("reopen", "Reopen"); }
+    if (!out && !hint && isStranger()) {
+      hint = `You're signed in as “${user.name}”, who isn't an assignee or reviewer in this sprint. Names are matched on the first name of your Google account.`;
+    }
+  }
+  return `${hint ? `<p class="tip-hint">${esc(hint)}</p>` : ""}<div class="tip-actions">${out}${b("close", "Close", "ghost")}</div>`;
 }
 
 function placeTip(anchor) {
@@ -409,6 +540,13 @@ function toast(msg, bad = false) {
   toastTimer = setTimeout(() => { el.hidden = true; }, 3500);
 }
 
+function burstAt(id) {
+  const box = document.querySelector(`.box[data-id="${CSS.escape(id)}"]`);
+  if (!box) return;
+  const r = box.getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + r.height / 2);
+}
+
 async function run(act, id) {
   try {
     if (act === "signin") return await signIn();
@@ -417,17 +555,27 @@ async function run(act, id) {
     if (act === "claim") { await store.claim(sprintId, id, user); toast(`${id} is yours`); }
     if (act === "finish") {
       await store.finish(sprintId, id, user);
-      const box = document.querySelector(`.box[data-id="${CSS.escape(id)}"]`);
-      if (box) {
-        const r = box.getBoundingClientRect();
-        burst(r.left + r.width / 2, r.top + r.height / 2);
-      }
+      burstAt(id);
       toast(`${id} done 🎉`);
+    }
+    if (act === "submit") {
+      await store.submit(sprintId, id);
+      toast(`${id} sent to ${PLAN.tasks[id].reviewer} for review`);
+    }
+    if (act === "approve") {
+      await store.approve(sprintId, id, user);
+      burstAt(id);
+      toast(`${id} approved 🎉`);
+    }
+    if (act === "changes") {
+      await store.requestChanges(sprintId, id);
+      toast(`${id} is back in progress`);
     }
     if (act === "release") { await store.release(sprintId, id, user); toast(`${id} released`); }
     if (act === "reopen") {
       if (!confirm(`Reopen ${id}? Tasks that depend on it turn red again.`)) return;
-      await store.reopen(sprintId, id); toast(`${id} reopened`);
+      await (PLAN.tasks[id].assignee ? store.reopenAssigned(sprintId, id) : store.reopen(sprintId, id));
+      toast(`${id} reopened`);
     }
     hideTip();
   } catch (err) {
@@ -437,8 +585,10 @@ async function run(act, id) {
 
 function onBoxClick(btn) {
   const id = btn.dataset.id;
-  const { status, rec } = info(id);
-  if (lastPointer !== "touch" && live && status === "free") return run("claim", id);
+  const t = PLAN.tasks[id];
+  const { status } = info(id);
+  // A click takes a free task on the spot, but only for its assignee if it has one.
+  if (lastPointer !== "touch" && live && status === "free" && (!t.assignee || isAssignee(t))) return run("claim", id);
   showTip(btn, true);
 }
 
@@ -605,6 +755,8 @@ async function showSprint(id) {
   url.searchParams.set("sprint", sp.id);
   history.replaceState(null, "", url);
   buildBoard();
+  $("stats").classList.toggle("has-review", HAS_ASSIGNED);
+  $("statReview").hidden = !HAS_ASSIGNED;
   renderIdLegend();
   renderReplays();
   if (store) subscribe();

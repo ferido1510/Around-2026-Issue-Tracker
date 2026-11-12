@@ -1,6 +1,6 @@
 # Around · sprint tracker
 
-A one-page board for the team's sprint plans. Pick a sprint from the dropdown next to the title. Each row is an issue (user story) and each column is one of its sub-issues. The boxes show what is blocked, what is free, who is working on what, and what is done. It updates live for everyone through Firestore.
+A one-page board for the team's sprint plans. Pick a sprint from the dropdown next to the title. Each row is an issue (user story) and each column is one of its sub-issues (for sprints with assignees and reviewers, rows are assignees and columns are reviewers, see below). The boxes show what is blocked, what is free, who is working on what, and what is done. It updates live for everyone through Firestore.
 
 | Box | Meaning |
 |---|---|
@@ -8,7 +8,8 @@ A one-page board for the team's sprint plans. Pick a sprint from the dropdown ne
 | Green | Free: nothing blocks it, and no open task waits on it |
 | Green + red ⚠ | Free, and other open tasks wait on it. Do these first |
 | Dark yellow | In progress. Shows who took it |
-| Grey ✓ | Done |
+| Blue | In review: the assignee completed it, and the reviewer has to approve it (sprints with assignees and reviewers) |
+| Grey ✓ | Done (approved) |
 | Striped | Stretch task |
 
 Letters after a task ID (also explained in the board's **Boxes** legend):
@@ -20,16 +21,16 @@ Letters after a task ID (also explained in the board's **Boxes** legend):
 
 - **Hover** a box to see its title, what blocks it, what it blocks, and the kind of each block (hard / soft / file / decision).
 - **Click** a free box to take it. It turns yellow with your name on it.
-- **Click your own yellow box** to *Mark done* or *Release* it. Marking done turns grey and unblocks whatever was waiting on it.
+- **Click a yellow box** to *Mark done* (anyone can, in case the person who took it passed it on without releasing it) or, if it's yours, to *Release* it. Marking done turns grey and unblocks whatever was waiting on it. In sprints with assignees and reviewers it works differently, see [Assignees and reviewers](#assignees-and-reviewers).
 - **Click a grey box** to reopen it (if it was marked done by mistake).
 - On a phone, tap a box to see its details and the action buttons.
 - The **progress bar** at the top fills from 0 to 100% as tasks are marked done (the striped yellow part is work in progress).
 - When every must-have task is done, the board plays a **victory** animation 🏆. When every task is done, should-haves and stretch included, it plays the **ultra victory** 👑. Each one plays once per browser. Once unlocked, a **Replay victory** / **Replay ultra victory** button appears in the top bar so you can replay it any time for morale (it stays even if a task is reopened later). If someone reopens a task and it gets finished again, it plays again.
 - The 🌗 button switches between automatic, light and dark themes.
-- The 🏅 **leaderboard** under the progress bar ranks everyone who has taken a task in the selected sprint by tasks done (then in progress), live. Ties share a rank, and hovering a name lists their tasks.
+- The 🏅 **leaderboard** under the progress bar ranks everyone who has taken a task in the selected sprint by tasks done (then in progress or in review), live. Ties share a rank, and hovering a name lists their tasks.
 - The **sprint dropdown** next to the title switches sprints. The page opens on the newest sprint, or on the one in the link (`?sprint=sprint-2`), so you can share a link to a specific sprint. Each sprint has its own progress, celebrations and replay buttons.
 
-Every structural blocking kind counts: `hard`, `file`, `soft`, and `decision` (start and finish). The chronological kinds (`owner-queue`, `not-before`, `stretch-gate`) are ignored, because they depend on the plan's owners and dates. The owners and reviewers from the plan are not used at all: whoever clicks a task gets it.
+Every structural blocking kind counts: `hard`, `file`, `soft`, and `decision` (start and finish). The chronological kinds (`owner-queue`, `not-before`, `stretch-gate`) are ignored, because they depend on the plan's owners and dates. In the older sprints (2 to 5) the owners and reviewers from the plan are not used: whoever clicks a task gets it. From Sprint 6 on, every task has an **assignee** and a **reviewer**, see [Assignees and reviewers](#assignees-and-reviewers).
 
 ---
 
@@ -103,9 +104,38 @@ Open the site, click **Sign in with Google**, and take a free task. In the Fireb
 - **Fix one task by hand:** delete its document to make it unassigned, or edit `status` / `name` directly.
 - **Someone left a task in progress:** they can release it, or you can delete its document in the console.
 
+## Assignees and reviewers
+
+Sprint 6 and later plans give every task an `assignee` and a `reviewer`. For these sprints the board is a grid: **rows are assignees, columns are reviewers**, and a task sits in the cell where its two names cross (so Ferit's tasks that Zaynab reviews are in the Ferit row, Zaynab column). The diagonal is hatched, since nobody reviews their own work. Each row shows its assignee's progress, each column header shows how many of that reviewer's tasks are approved and how many are waiting for them (`⧗`), and your own row and column are marked "you". The issue (user story) a task belongs to is in its hover box. A task is only **done** once it has been completed *and* approved:
+
+1. **Free** (green): the assignee clicks it, or *Start working on it*, and it turns yellow.
+2. **In progress** (yellow): the assignee clicks it and chooses *Mark complete*. *Release* puts it back to free.
+3. **In review** (blue): the box now shows `→ reviewer`. The reviewer clicks it and chooses *Approve*, which turns it grey and unblocks what waited on it, or *Request changes*, which sends it back to yellow. The assignee can also *Take back* a task that nobody has reviewed yet.
+4. **Done** (grey ✓): the tooltip says who completed it and who approved it. The assignee or the reviewer can *Reopen* it, which puts it back to yellow.
+
+Details:
+- A blue box does **not** unblock anything: only approved tasks do. A task that waits on a blue one shows a ⧗ next to it in the tooltip.
+- A ringed box is yours to act on: a task you are working on (yellow ring) or one waiting for your review (blue ring). The *in review* count in the top right is the number of blue boxes.
+- Nobody approves what they completed themselves; Firestore enforces that.
+- Only the assignee of a task sees *Start*, *Mark complete* and *Release*, and only its reviewer sees *Approve* and *Request changes*. This part is enforced by the page, not by Firestore: the assignee and reviewer live in the sprint file, which the rules can't see. It is a team board, not a security boundary.
+- The board knows people by the **first name on their Google account**, compared without case or accents (`Yigit` matches `Yiğit`). If someone signs in under a name that isn't in the plan, their tooltip says so and offers no buttons. Fix the name in the plan, or change the Google account's first name.
+- To reassign a task, change `assignee` or `reviewer` in the plan and run the sprint script again (below). Progress is kept.
+- A task with no `assignee` keeps the old behaviour (anyone takes it, anyone marks it done), so the earlier sprints still work.
+- Links to things outside the sprint (a Figma frame, another PR) go in `blockedBy` too. If the `ref` is not one of the sprint's tasks (e.g. `#401`), it is shown under *Outside this sprint* in the tooltip and doesn't block the box.
+
+**After pulling this change, publish the updated `firestore.rules` again** (step 5 of the set-up). The new *in review* step needs the new rules, or the board shows "Not allowed" when someone marks a task complete.
+
 ## Adding a new sprint
 
 Each sprint is one file in [`sprints/`](sprints/), listed in [`sprints/index.json`](sprints/index.json). Nothing about a sprint is hardcoded in the page.
+
+There are two formats. A plan with assignees and reviewers (Sprint 6 on) is a `.json` file with `stories` and `tasks` (each task has `key`, `type`, `story`, `assignee`, `reviewer`, `blockedBy`, `blocks`, …). Save it in `data/` and run the script on it, e.g.
+
+```sh
+python3 tools/add_sprint.py data/sprint-6.json --id sprint-6 --name "Sprint 6"
+```
+
+The script prints how many tasks each person has to do and to review, and notes any edge that is only listed on one side. Each story becomes a row, its stretch tasks go in a `<story>+` row, and tasks without a story go in "Other tasks". See the docstring in [`tools/add_sprint.py`](tools/add_sprint.py) for the exact shape. The rest of this section describes the older blocking-report format:
 
 1. Get the sprint's blocking report in the same format as [`data/sprint-2-blocking-report.md`](data/sprint-2-blocking-report.md) or [`data/sprint-3-blocking-report.md`](data/sprint-3-blocking-report.md): a Markdown file with a ```` ```json ```` block that has `tasks` and `edges` (section 11 of those reports), or that JSON on its own. Save it in `data/`, e.g. `data/sprint-4-blocking-report.md`.
 2. Run:
@@ -137,7 +167,7 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
-- **Demo mode:** while `firebase-config.js` still has the `PASTE_YOUR_API_KEY` placeholder, the page runs without Firebase. You are a fake user called "You", and the state is kept in your browser only. It's useful for trying the board out.
+- **Demo mode:** while `firebase-config.js` still has the `PASTE_YOUR_API_KEY` placeholder, the page runs without Firebase. You are a fake user called "You", who plays every role (assignee and reviewer of every task, so you can try the whole review flow), and the state is kept in your browser only. It's useful for trying the board out.
 - **Emulator mode:** with the [Firebase CLI](https://firebase.google.com/docs/cli) installed, run `firebase emulators:start --project demo-tracker` and open `http://localhost:8000/?emulator`. Sign-in then asks for an email and creates a fake Google account on the emulator, so you can test the rules with several "people" in different browser windows. Emails must be on the allowlist in `firestore.rules`.
 
 ## Files
@@ -153,6 +183,6 @@ python3 -m http.server 8000
 | `firestore.rules` | Security rules with the seven-email allowlist |
 | `sprints/index.json` | The project title and the list of sprints in the dropdown |
 | `sprints/<id>.json` | One sprint's tasks and blocking edges, generated by `tools/add_sprint.py` |
-| `tools/add_sprint.py` | Adds or updates a sprint from its blocking report |
-| `data/` | The source blocking reports |
+| `tools/add_sprint.py` | Adds or updates a sprint from its blocking report or its assigned plan |
+| `data/` | The source blocking reports and plans |
 | `firebase.json` | Only for the CLI and emulators (optional) |

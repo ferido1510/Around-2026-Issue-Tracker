@@ -1,0 +1,721 @@
+{
+ "rows": [
+  {
+   "id": "E9",
+   "title": "Use the app offline (story #406)",
+   "prio": "must",
+   "children": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9",
+    "T12"
+   ]
+  },
+  {
+   "id": "V14",
+   "title": "Know which answers need a connection (story #415)",
+   "prio": "must",
+   "children": [
+    "T10",
+    "T11"
+   ]
+  },
+  {
+   "id": "E8",
+   "title": "Quest with my friends (story #402)",
+   "prio": "must",
+   "children": [
+    "T13",
+    "T14"
+   ]
+  },
+  {
+   "id": "OTHER",
+   "title": "Other tasks (no story)",
+   "prio": "must",
+   "children": [
+    "T15",
+    "T16"
+   ]
+  },
+  {
+   "id": "E9+",
+   "title": "Use the app offline: stretch",
+   "prio": "stretch",
+   "children": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  }
+ ],
+ "tasks": {
+  "T1": {
+   "title": "Offline banner composable",
+   "kind": "task",
+   "alias": "E9.2a",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/navigation/OfflineBanner.kt (new)",
+    "its Compose test",
+    "strings"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Vali",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the banner's frame in the M2 Figma section"
+    }
+   ]
+  },
+  "T2": {
+   "title": "Show the offline banner in both shells",
+   "kind": "task",
+   "alias": "E9.2b",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#408 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/navigation/BottomTabs.kt (BottomTabScaffold)",
+    "ui/navigation/VenueHome.kt",
+    "ui/navigation/AroundApp.kt",
+    "a new shell ViewModel reading ConnectivityRepositoryProvider",
+    "their tests"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Alisher",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "where the banner sits under the header"
+    }
+   ]
+  },
+  "T3": {
+   "title": "Keep the cached venues on the map offline",
+   "kind": "task",
+   "alias": "E9.3",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#409 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/map/MapViewModel.kt",
+    "ui/map/MapScreen.kt",
+    "ui/map/VenuesErrorBanner.kt",
+    "their tests"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Zaynab",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the map's offline message"
+    }
+   ]
+  },
+  "T4": {
+   "title": "\"Needs a connection\" hint, and cancel's offline state",
+   "kind": "task",
+   "alias": "E9.4a",
+   "prio": "must",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#410 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/quest/CancelReservationAction.kt",
+    "a new OfflineHint composable",
+    "ui/venuepage/QuestDetailsScreen.kt (call site only)",
+    "ui/overview/OverviewQuestRow.kt (call site only)",
+    "tests",
+    "strings"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Zaynab",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the hint's design"
+    }
+   ]
+  },
+  "T5": {
+   "title": "Cancel disabled offline on the quest details",
+   "kind": "task",
+   "alias": "E9.4b",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageViewModel.kt",
+    "ui/venuepage/VenuePageUiState.kt",
+    "ui/venuepage/QuestDetailsScreen.kt",
+    "tests"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Ferit"
+  },
+  "T6": {
+   "title": "Cancel disabled offline on the Quests tab",
+   "kind": "task",
+   "alias": "E9.4c",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/overview/OverviewViewModel.kt",
+    "ui/overview/OverviewUiState.kt",
+    "ui/overview/OverviewQuestRow.kt",
+    "tests"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Jiayi"
+  },
+  "T7": {
+   "title": "Photo proof disabled offline",
+   "kind": "task",
+   "alias": "E9.4d",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/completion/CompletionViewModel.kt",
+    "ui/completion/CompletionUiState.kt",
+    "ui/completion/CompletionScreen.kt",
+    "tests"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Ece",
+   "notes": "A written proof stays enabled, since Firestore queues it."
+  },
+  "T8": {
+   "title": "Accept disabled offline on the venue page",
+   "kind": "task",
+   "alias": "E9.4e",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageViewModel.kt",
+    "ui/venuepage/AcceptQuestBar.kt",
+    "tests"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Vali"
+  },
+  "T9": {
+   "title": "Profile picture change disabled offline",
+   "kind": "task",
+   "alias": "E9.4f",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/profile/ProfileViewModel.kt",
+    "ui/profile/ProfileScreen.kt",
+    "tests"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Yiğit"
+  },
+  "T12": {
+   "title": "README's offline section matches the app",
+   "kind": "task",
+   "alias": "E9.5",
+   "prio": "must",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "README.md"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Zaynab",
+   "notes": "The README still describes leaderboards and offline completions syncing, which the app doesn't do."
+  },
+  "T10": {
+   "title": "Approve and decline a reservation disabled offline",
+   "kind": "task",
+   "alias": "V14.1",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#416 (part of #415)",
+   "existing": null,
+   "files": [
+    "ui/dashboard/VenueDashboardViewModel.kt",
+    "ui/dashboard/VenueDashboardUiState.kt",
+    "ui/dashboard/DashboardReservationRow.kt",
+    "tests"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Alisher",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the dashboard's offline state"
+    }
+   ]
+  },
+  "T11": {
+   "title": "Approve and reject a proof disabled offline",
+   "kind": "task",
+   "alias": "V14.2",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/review/ReviewProofViewModel.kt",
+    "ui/review/ReviewProofUiState.kt",
+    "ui/review/ReviewButtons.kt",
+    "tests"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Ferit"
+  },
+  "T13": {
+   "title": "Quests tab: a member leaves instead of cancelling",
+   "kind": "task",
+   "alias": "E8.9",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/overview/OverviewViewModel.kt",
+    "ui/overview/OverviewUiState.kt",
+    "ui/overview/OverviewQuestRow.kt",
+    "tests"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Jiayi",
+   "notes": "Found while reviewing #524: on the Quests tab card, a member can still cancel the whole party's reservation.",
+   "external": [
+    {
+     "ref": "#524",
+     "kind": "hard",
+     "blocks": "start",
+     "reason": "it reuses the leave flag and the withdraw path"
+    }
+   ]
+  },
+  "T14": {
+   "title": "Rules: only the creator cancels a reservation",
+   "kind": "task",
+   "alias": "E8.10",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "firestore.rules (match /reservations update)",
+    "FirestoreRulesTest",
+    "ReservationRepository KDoc"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Ece"
+  },
+  "T15": {
+   "title": "Flaky tests: the map tab after Play services, and early Firestore timeouts on CI",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#393",
+   "existing": null,
+   "files": [
+    "AroundAppTest",
+    "FirestoreRulesTest setup",
+    "CI workflow",
+    "possibly LocationRepositoryProvider"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Yiğit"
+  },
+  "T16": {
+   "title": "Share one text button that stays readable in dark mode",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 0.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#513",
+   "existing": null,
+   "files": [
+    "ui/theme",
+    "the screens that use the button"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Ferit"
+  },
+  "S1": {
+   "title": "Keep the proof photo in app storage",
+   "kind": "task",
+   "alias": "E9.6",
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#412 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/completion/ProofPhotos.kt",
+    "ui/completion/ProofPhotoPicker.kt",
+    "tests"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Ferit"
+  },
+  "S2": {
+   "title": "WorkManager and the upload worker",
+   "kind": "task",
+   "alias": "E9.7a",
+   "prio": "stretch",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#413 (part of #406)",
+   "existing": null,
+   "files": [
+    "gradle/libs.versions.toml",
+    "*.lockfile",
+    "a new upload worker",
+    "tests with WorkManagerTestInitHelper"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Ferit"
+  },
+  "S3": {
+   "title": "Queue a photo proof when offline",
+   "kind": "task",
+   "alias": "E9.7b",
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": null,
+   "existing": null,
+   "files": [
+    "ui/completion/CompletionViewModel.kt",
+    "tests"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Alisher"
+  },
+  "S4": {
+   "title": "Show \"Waiting to upload\" for a queued proof",
+   "kind": "task",
+   "alias": "E9.8",
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#414 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/overview/OverviewQuestRow.kt",
+    "ui/venuepage/QuestDetailsScreen.kt",
+    "tests"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Alisher",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the \"Waiting to upload\" design"
+    }
+   ]
+  }
+ },
+ "edges": [
+  {
+   "from": "T1",
+   "to": "T2",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "T2 places OfflineBanner(modifier) and starts with an empty one"
+  },
+  {
+   "from": "T2",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes the banner"
+  },
+  {
+   "from": "T3",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes the map offline"
+  },
+  {
+   "from": "T4",
+   "to": "T5",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T6",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T7",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T8",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T9",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T10",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T11",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "uses OfflineHint(modifier); starts with an empty one"
+  },
+  {
+   "from": "T4",
+   "to": "T5",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "CancelReservationAction gets a required offline: Boolean; T4 passes false at QuestDetailsScreen; merge one at a time"
+  },
+  {
+   "from": "T4",
+   "to": "T6",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "CancelReservationAction gets a required offline: Boolean; T4 passes false at OverviewQuestRow; merge one at a time"
+  },
+  {
+   "from": "T5",
+   "to": "T8",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change VenuePageViewModel; merge one at a time"
+  },
+  {
+   "from": "T5",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T6",
+   "to": "T13",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change OverviewViewModel and OverviewQuestRow; merge one at a time"
+  },
+  {
+   "from": "T6",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T7",
+   "to": "S3",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change CompletionViewModel; merge one at a time"
+  },
+  {
+   "from": "T7",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T8",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T9",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T10",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T11",
+   "to": "T12",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "T13",
+   "to": "T14",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the app stops members cancelling before the rules forbid it"
+  },
+  {
+   "from": "S1",
+   "to": "S2",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the worker uploads the saved photo"
+  },
+  {
+   "from": "S1",
+   "to": "S3",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the queued proof points at the saved photo"
+  },
+  {
+   "from": "S2",
+   "to": "S3",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "S3 enqueues this worker"
+  },
+  {
+   "from": "S3",
+   "to": "S4",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "S4 shows the queued proof's state"
+  }
+ ]
+}

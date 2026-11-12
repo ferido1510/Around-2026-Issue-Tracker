@@ -34,13 +34,45 @@ service cloud.firestore {
         && request.resource.data.name.size() <= 60
         && request.resource.data.startedAt == request.time;
 
-      // Mark any in-progress task done (the claimer may have handed it off
-      // without releasing it). Nothing else may change.
-      allow update: if isTeam()
-        && resource.data.status == 'in-progress'
-        && request.resource.data.status == 'done'
-        && request.resource.data.doneAt == request.time
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'doneAt']);
+      // Moves between the three states. Nothing but the listed fields may change.
+      //
+      //   in-progress -> done      tasks with no reviewer: any team member (the
+      //                            claimer may have handed it off without releasing it)
+      //   in-progress -> review    the assignee says the work is complete
+      //   review -> done           the reviewer approves it: it records who, and
+      //                            it can't be the person who completed it
+      //   review -> in-progress    changes requested, or the assignee takes it back
+      //   done -> in-progress      reopened
+      //
+      // Who is the assignee or the reviewer lives in the sprint file, not in
+      // Firestore, so the board enforces that part and these rules enforce the rest.
+      allow update: if isTeam() && (
+        (resource.data.status == 'in-progress'
+          && request.resource.data.status == 'done'
+          && request.resource.data.doneAt == request.time
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'doneAt']))
+
+        || (resource.data.status == 'in-progress'
+          && request.resource.data.status == 'review'
+          && request.resource.data.reviewAt == request.time
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'reviewAt']))
+
+        || (resource.data.status == 'review'
+          && request.resource.data.status == 'done'
+          && request.resource.data.doneAt == request.time
+          && request.resource.data.reviewerUid == request.auth.uid
+          && request.resource.data.reviewerName is string
+          && request.resource.data.reviewerName.size() <= 60
+          && resource.data.uid != request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['status', 'doneAt', 'reviewerUid', 'reviewerName']))
+
+        || (resource.data.status in ['review', 'done']
+          && request.resource.data.status == 'in-progress'
+          && request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'startedAt'])
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['status', 'reviewAt', 'doneAt', 'reviewerUid', 'reviewerName']))
+      );
 
       // Release your own task, or reopen any done task.
       allow delete: if isTeam()

@@ -103,6 +103,7 @@
       <li class="stat st-blocked"><span class="stat-dot"></span><b id="nBlocked">–</b><span>blocked</span></li>
       <li class="stat st-free"><span class="stat-dot"></span><b id="nFree">–</b><span>free</span></li>
       <li class="stat st-progress"><span class="stat-dot"></span><b id="nProgress">–</b><span>in progress</span></li>
+      <li class="stat st-review" id="statReview" hidden><span class="stat-dot"></span><b id="nReview">–</b><span>in review</span></li>
       <li class="stat st-done"><span class="stat-dot"></span><b id="nDone">–</b><span>done</span></li>
     </ul>
   </section>
@@ -154,8 +155,10 @@
         <li><span class="box mini s-blocked">ID</span><span><b>Blocked</b>: waiting on a task that isn't done</span></li>
         <li><span class="box mini s-free">ID</span><span><b>Free</b>: nothing blocks it, and nothing waits on it</span></li>
         <li><span class="box mini s-free blocking">ID<span class="warn" aria-hidden="true"></span></span><span><b>Free, others wait on it</b>: do these first</span></li>
-        <li><span class="box mini s-progress">ID</span><span><b>In progress</b>: click yours to finish or release it</span></li>
-        <li><span class="box mini s-done">ID</span><span><b>Done</b>: click to reopen</span></li>
+        <li><span class="box mini s-progress">ID</span><span><b>In progress</b>: someone is on it. Click yours to complete or release it</span></li>
+        <li><span class="box mini s-review">ID</span><span><b>In review</b>: completed by its assignee, waiting for the reviewer to approve it</span></li>
+        <li><span class="box mini s-done">ID</span><span><b>Done</b>: approved (or marked done). Click to reopen</span></li>
+        <li><span class="box mini s-review needs-me">ID</span><span><b>Ringed</b>: yours to act on, a task you're working on or one waiting for your review</span></li>
         <li><span class="box mini s-free stretch">ID</span><span><b>Striped</b>: stretch task</span></li>
       </ul>
       <h3 class="legend-sub">Letters after an ID</h3>
@@ -170,6 +173,7 @@
         </div>
       </dl>
       <p class="note">Click a free box to take it. Hover any box for its blockers.</p>
+      <p class="note">Tasks with an assignee and a reviewer (Sprint 6 on): rows are assignees and columns are reviewers, so a task sits where its two names cross. The assignee starts the task and marks it complete, then the reviewer approves it. Only approved tasks count as done and unblock others.</p>
     </details>
   </aside>
 

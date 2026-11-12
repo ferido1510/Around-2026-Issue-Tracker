@@ -2,7 +2,14 @@
 //
 // State is one Firestore document per task at sprints/{sprintId}/tasks/{taskId}.
 // A missing document means nobody has picked the task up yet.
-//   { status: "in-progress" | "done", uid, name, email, startedAt, doneAt? }
+//   { status: "in-progress" | "review" | "done", uid, name, email, startedAt,
+//     reviewAt?, doneAt?, reviewerUid?, reviewerName? }
+//
+// Tasks with no assignee in the sprint file go in-progress -> done (finish).
+// Tasks with an assignee and a reviewer go in-progress -> review (the assignee
+// completes it, submit) -> done (the reviewer approves it, approve). A reviewer
+// can send it back to in-progress (requestChanges), and a done task can be
+// reopened to in-progress (reopenAssigned).
 
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
@@ -78,6 +85,48 @@ export async function createFirebaseStore(config) {
       });
     },
 
+    // The assignee says the work is complete; it now waits for the reviewer.
+    submit(sprint, id) {
+      return F.runTransaction(db, async (tx) => {
+        const d = (await tx.get(ref(sprint, id))).data();
+        if (!d || d.status !== "in-progress") throw new Error(`${id} is not in progress any more`);
+        tx.update(ref(sprint, id), { status: "review", reviewAt: F.serverTimestamp() });
+      });
+    },
+
+    // The reviewer approves it. You can't approve what you completed yourself.
+    approve(sprint, id, user) {
+      return F.runTransaction(db, async (tx) => {
+        const d = (await tx.get(ref(sprint, id))).data();
+        if (!d || d.status !== "review") throw new Error(`${id} is not waiting for a review any more`);
+        if (d.uid === user.uid) throw new Error("Someone else has to approve what you completed");
+        tx.update(ref(sprint, id), {
+          status: "done", doneAt: F.serverTimestamp(), reviewerUid: user.uid, reviewerName: user.name,
+        });
+      });
+    },
+
+    // Reviewer: needs more work. Assignee: take it back. Either way, in progress again.
+    requestChanges(sprint, id) {
+      return F.runTransaction(db, async (tx) => {
+        const d = (await tx.get(ref(sprint, id))).data();
+        if (!d || d.status !== "review") throw new Error(`${id} is not waiting for a review any more`);
+        tx.update(ref(sprint, id), { status: "in-progress", reviewAt: F.deleteField() });
+      });
+    },
+
+    // A done task that turned out not to be: back to in progress for its assignee.
+    reopenAssigned(sprint, id) {
+      return F.runTransaction(db, async (tx) => {
+        const d = (await tx.get(ref(sprint, id))).data();
+        if (!d || d.status !== "done") throw new Error(`${id} is not done`);
+        tx.update(ref(sprint, id), {
+          status: "in-progress", doneAt: F.deleteField(), reviewAt: F.deleteField(),
+          reviewerUid: F.deleteField(), reviewerName: F.deleteField(),
+        });
+      });
+    },
+
     release: (sprint, id) => F.deleteDoc(ref(sprint, id)),
     reopen: (sprint, id) => F.deleteDoc(ref(sprint, id)),
   };
@@ -127,6 +176,35 @@ export function createDemoStore() {
     async finish(sprint, id) {
       const state = stateOf(sprint);
       state.set(id, { ...state.get(id), status: "done", doneAt: Date.now() });
+      save(sprint, state);
+    },
+    async submit(sprint, id) {
+      const state = stateOf(sprint);
+      const d = state.get(id);
+      if (!d || d.status !== "in-progress") throw new Error(`${id} is not in progress any more`);
+      state.set(id, { ...d, status: "review", reviewAt: Date.now() });
+      save(sprint, state);
+    },
+    async approve(sprint, id, u) {
+      const state = stateOf(sprint);
+      const d = state.get(id);
+      if (!d || d.status !== "review") throw new Error(`${id} is not waiting for a review any more`);
+      // No own-work check here: demo mode has a single user, who plays every role.
+      state.set(id, { ...d, status: "done", doneAt: Date.now(), reviewerUid: u.uid, reviewerName: u.name });
+      save(sprint, state);
+    },
+    async requestChanges(sprint, id) {
+      const state = stateOf(sprint);
+      const { reviewAt, ...d } = state.get(id) || {};
+      if (d.status !== "review") throw new Error(`${id} is not waiting for a review any more`);
+      state.set(id, { ...d, status: "in-progress" });
+      save(sprint, state);
+    },
+    async reopenAssigned(sprint, id) {
+      const state = stateOf(sprint);
+      const { reviewAt, doneAt, reviewerUid, reviewerName, ...d } = state.get(id) || {};
+      if (d.status !== "done") throw new Error(`${id} is not done`);
+      state.set(id, { ...d, status: "in-progress" });
       save(sprint, state);
     },
     async release(sprint, id) { const state = stateOf(sprint); state.delete(id); save(sprint, state); },

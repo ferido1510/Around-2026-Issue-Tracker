@@ -30,6 +30,7 @@
   --blocked: #e5484d; --blocked-hi: #f4736f; --blocked-lo: #a8262c;
   --free: #2fae68;    --free-hi: #4fcb84;    --free-lo: #1d7f49;
   --progress: #c98f06; --progress-hi: #e2ab25; --progress-lo: #8f6502; /* dark yellow */
+  --review: #3b78e0;  --review-hi: #6b9bf2;  --review-lo: #2553a6;   /* completed, waiting for its reviewer */
   --done: #b4b4a4;    --done-hi: #c6c6b6;    --done-lo: #8c8c7d;
 
   /* blocking kind chips */
@@ -506,7 +507,10 @@ code { font: 0.9em var(--mono); background: var(--surface-2); padding: 1px 5px; 
 .st-blocked .stat-dot { background: var(--blocked); box-shadow: 0 2px 0 var(--blocked-lo); }
 .st-free .stat-dot { background: var(--free); box-shadow: 0 2px 0 var(--free-lo); }
 .st-progress .stat-dot { background: var(--progress); box-shadow: 0 2px 0 var(--progress-lo); }
+.st-review .stat-dot { background: var(--review); box-shadow: 0 2px 0 var(--review-lo); }
 .st-done .stat-dot { background: var(--done); box-shadow: 0 2px 0 var(--done-lo); }
+/* five stats: the last one takes the whole bottom row of the two-column grid */
+.stats.has-review .stat:last-child { grid-column: 1 / -1; }
 
 /* ============ leaderboard ============ */
 
@@ -641,6 +645,36 @@ main { padding: 16px 28px 90px; /* room so the collapsed legends never hide the 
 tr.complete .rid { background: var(--free); color: #fff; }
 tr.complete .rcount::after { content: " 🎉"; }
 
+/* ============ assignee (rows) by reviewer (columns) ============ */
+
+.board.grid { --row-head: 170px; }
+.board .colhead.person { width: auto; min-width: calc(var(--box-w) * 2 + 28px); vertical-align: bottom; }
+.colhead.person .pname { display: block; font: 800 15px var(--heading); letter-spacing: -0.01em; }
+.colhead.person .pcount {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font: 600 11px var(--font);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+.colhead.person.me { box-shadow: inset 0 -3px 0 var(--accent-2); }
+.colhead.person.me .pname::after, tr.me .rid::after { content: " · you"; font-weight: 600; opacity: 0.8; }
+tr.me > .rowhead { box-shadow: inset 4px 0 0 var(--accent-2); }
+.board td.cell, .board td.self { text-align: center; vertical-align: middle; }
+.cellbox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 8px;
+  max-width: calc(var(--box-w) * 2 + 8px);
+  margin: 0 auto;
+}
+/* nobody reviews their own work */
+.board td.self.empty {
+  background: repeating-linear-gradient(135deg, transparent 0 7px, color-mix(in srgb, var(--line) 80%, transparent) 7px 9px);
+}
+
 /* ============ boxes ============ */
 
 .box {
@@ -667,14 +701,15 @@ tr.complete .rcount::after { content: " 🎉"; }
 .s-blocked { --c: var(--blocked); --c-hi: var(--blocked-hi); --c-lo: var(--blocked-lo); }
 .s-free { --c: var(--free); --c-hi: var(--free-hi); --c-lo: var(--free-lo); }
 .s-progress { --c: var(--progress); --c-hi: var(--progress-hi); --c-lo: var(--progress-lo); }
+.s-review { --c: var(--review); --c-hi: var(--review-hi); --c-lo: var(--review-lo); }
 .s-done { --c: var(--done); --c-hi: var(--done-hi); --c-lo: var(--done-lo); }
 
 .board .box:hover, .board .box:focus-visible {
   transform: translateY(-3px);
   box-shadow: 0 8px 0 var(--c-lo), 0 16px 20px -10px var(--c-lo), inset 0 2px 0 rgba(255, 255, 255, 0.3);
 }
-.board .box.s-free:hover, .board .box.mine:hover { transform: translateY(-4px) rotate(-3deg) scale(1.04); }
-.board .box.s-free:active, .board .box.mine:active, .board .box.s-done:active {
+.board .box.s-free:hover, .board .box.mine:hover, .board .box.needs-me:hover { transform: translateY(-4px) rotate(-3deg) scale(1.04); }
+.board .box.s-free:active, .board .box.mine:active, .board .box.needs-me:active, .board .box.s-done:active {
   transform: translateY(4px);
   box-shadow: 0 1px 0 var(--c-lo), inset 0 2px 0 rgba(255, 255, 255, 0.3);
 }
@@ -694,15 +729,16 @@ tr.complete .rcount::after { content: " 🎉"; }
   text-shadow: none;
 }
 
-.board .box.s-free, .board .box.s-done, .board .box.mine { cursor: pointer; }
+.board .box.s-free, .board .box.s-done, .board .box.s-review, .board .box.mine { cursor: pointer; }
 .box.s-done { color: rgba(255, 255, 255, 0.92); }
 .box.s-done .bid::before { content: "✓ "; }
-.box.mine::after {
+.box.needs-me { --ring: var(--review); }
+.box.mine::after, .box.needs-me::after {
   content: "";
   position: absolute;
   inset: -6px;
   border-radius: 18px;
-  border: 3px solid var(--progress);
+  border: 3px solid var(--ring, var(--progress));
   animation: ring 1.8s ease-out infinite;
   pointer-events: none;
 }
@@ -780,6 +816,7 @@ tr.complete .rcount::after { content: " 🎉"; }
 .tip[data-status="blocked"] { border-top-color: var(--blocked); }
 .tip[data-status="free"] { border-top-color: var(--free); }
 .tip[data-status="progress"] { border-top-color: var(--progress); }
+.tip[data-status="review"] { border-top-color: var(--review); }
 .tip[data-status="done"] { border-top-color: var(--done); }
 .tip.pinned { pointer-events: auto; }
 .tip-head { display: flex; align-items: center; gap: 8px; }
@@ -788,9 +825,15 @@ tr.complete .rcount::after { content: " 🎉"; }
 .tip-status.s-blocked { background: var(--blocked); }
 .tip-status.s-free { background: var(--free); }
 .tip-status.s-progress { background: var(--progress); }
+.tip-status.s-review { background: var(--review); }
 .tip-status.s-done { background: var(--done); }
 .tip-title { font-weight: 700; font-size: 15px; margin: 6px 0 2px; line-height: 1.3; }
 .tip-meta { color: var(--muted); font-size: 12px; }
+.tip-people { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+.tip-people b { color: var(--text); font-weight: 700; }
+.tip-people b.me { color: var(--accent-text); }
+.tip-note { margin-top: 8px; padding: 6px 10px; border-radius: 10px; background: var(--surface-2); font-size: 12.5px; line-height: 1.4; }
+.tip-hint { margin: 12px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
 .tip-sec {
   margin: 12px 0 5px;
   font-size: 11px;
@@ -810,6 +853,7 @@ tr.complete .rcount::after { content: " 🎉"; }
 }
 .edges .mark { color: var(--blocked); font-weight: 800; }
 .edges li.met .mark { color: var(--free); }
+.edges li.review .mark { color: var(--review); }
 .edges li.met .eid { text-decoration: line-through; color: var(--muted); }
 .edges .eid { font: 800 13px var(--heading); }
 .edges .etitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
@@ -1073,6 +1117,8 @@ body.party-ultra .blob { animation-duration: 2s; opacity: calc(var(--blob-alpha)
 @media (max-width: 1100px) {
   .hero { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stats.has-review { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .stats.has-review .stat:last-child { grid-column: auto; }
 }
 
 @media (max-width: 900px) {
@@ -1084,7 +1130,8 @@ body.party-ultra .blob { animation-duration: 2s; opacity: calc(var(--blob-alpha)
   .hero { padding: 12px 16px 0; }
   .progress-card { padding: 14px 16px 12px; }
   .pct { font-size: 44px; }
-  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats, .stats.has-review { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats.has-review .stat:last-child { grid-column: 1 / -1; }
   .stat { padding: 8px 12px; }
   .stat b { font-size: 20px; }
   main { padding: 12px 16px 120px; }
