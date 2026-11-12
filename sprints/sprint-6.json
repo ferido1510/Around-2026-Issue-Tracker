@@ -14,7 +14,12 @@
     "#530",
     "#531",
     "#532",
-    "#534"
+    "#534",
+    "#412",
+    "#413",
+    "#538",
+    "#537",
+    "#414"
    ]
   },
   {
@@ -42,17 +47,6 @@
    "children": [
     "#393",
     "#513"
-   ]
-  },
-  {
-   "id": "E9+",
-   "title": "Use the app offline: stretch",
-   "prio": "stretch",
-   "children": [
-    "#412",
-    "#413",
-    "#537",
-    "#414"
    ]
   }
  ],
@@ -145,7 +139,7 @@
    ]
   },
   "#410": {
-   "title": "Needs-a-connection hint and cancel's offline state",
+   "title": "\"Needs a connection\" hint, and cancel's offline state",
    "kind": "task",
    "alias": "E9.4a",
    "prio": "must",
@@ -176,7 +170,7 @@
    ]
   },
   "#528": {
-   "title": "Disable cancelling offline on the quest details",
+   "title": "Cancel disabled offline on the quest details",
    "kind": "task",
    "alias": "E9.4b",
    "prio": "must",
@@ -197,7 +191,7 @@
    "reviewer": "Ferit"
   },
   "#529": {
-   "title": "Disable cancelling offline on the Quests tab",
+   "title": "Cancel disabled offline on the Quests tab",
    "kind": "task",
    "alias": "E9.4c",
    "prio": "must",
@@ -218,7 +212,7 @@
    "reviewer": "Jiayi"
   },
   "#530": {
-   "title": "Disable sending a photo proof offline",
+   "title": "Photo proof disabled offline",
    "kind": "task",
    "alias": "E9.4d",
    "prio": "must",
@@ -240,7 +234,7 @@
    "notes": "A written proof stays enabled, since Firestore queues it."
   },
   "#531": {
-   "title": "Disable accepting a quest offline",
+   "title": "Accept disabled offline on the venue page",
    "kind": "task",
    "alias": "E9.4e",
    "prio": "must",
@@ -260,7 +254,7 @@
    "reviewer": "Vali"
   },
   "#532": {
-   "title": "Disable changing the profile picture offline",
+   "title": "Disable saving the profile offline",
    "kind": "task",
    "alias": "E9.4f",
    "prio": "must",
@@ -280,7 +274,7 @@
    "reviewer": "Yiğit"
   },
   "#534": {
-   "title": "Make the README's offline section match the app",
+   "title": "README's offline section matches the app",
    "kind": "task",
    "alias": "E9.5",
    "prio": "must",
@@ -298,8 +292,118 @@
    "reviewer": "Zaynab",
    "notes": "The README still describes leaderboards and offline completions syncing, which the app doesn't do."
   },
+  "#412": {
+   "title": "Keep the proof photo in app storage",
+   "kind": "task",
+   "alias": "E9.6",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#412 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/completion/ProofPhotos.kt",
+    "ui/completion/CompletionViewModel.kt (delete the copy after submitting)",
+    "tests"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Jiayi"
+  },
+  "#413": {
+   "title": "Add WorkManager and the photo upload worker",
+   "kind": "task",
+   "alias": "E9.7a",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#413 (part of #406)",
+   "existing": null,
+   "files": [
+    "gradle/libs.versions.toml",
+    "*.lockfile",
+    "a new upload worker",
+    "tests with WorkManagerTestInitHelper"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Yiğit"
+  },
+  "#538": {
+   "title": "Add the proof upload queue",
+   "kind": "task",
+   "alias": "E9.7b",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#538 (part of #406)",
+   "existing": null,
+   "files": [
+    "model/reservation/ProofUploadQueue.kt (new interface)",
+    "its WorkManager implementation",
+    "FakeProofUploadQueue in app/src/test",
+    "tests"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Vali"
+  },
+  "#537": {
+   "title": "Queue a photo proof when offline",
+   "kind": "task",
+   "alias": "E9.7c",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#537 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/completion/CompletionViewModel.kt",
+    "ui/completion/CompletionScreen.kt",
+    "tests"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Ece"
+  },
+  "#414": {
+   "title": "Show \"Waiting to upload\" on the Quests tab",
+   "kind": "task",
+   "alias": "E9.8",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#414 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/overview/OverviewViewModel.kt",
+    "ui/overview/OverviewQuestRow.kt",
+    "tests"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Alisher",
+   "external": [
+    {
+     "ref": "#401",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the \"Waiting to upload\" design"
+    }
+   ]
+  },
   "#416": {
-   "title": "Disable approve and decline offline",
+   "title": "Approve and decline a reservation disabled offline",
    "kind": "task",
    "alias": "V14.1",
    "prio": "must",
@@ -328,7 +432,7 @@
    ]
   },
   "#533": {
-   "title": "Disable approving and rejecting a proof offline",
+   "title": "Approve and reject a proof disabled offline",
    "kind": "task",
    "alias": "V14.2",
    "prio": "must",
@@ -349,7 +453,7 @@
    "reviewer": "Ferit"
   },
   "#535": {
-   "title": "Let a member leave from the Quests tab",
+   "title": "Quests tab: a member leaves instead of cancelling",
    "kind": "task",
    "alias": "E8.9",
    "prio": "must",
@@ -379,7 +483,7 @@
    ]
   },
   "#536": {
-   "title": "Let only the creator cancel a reservation",
+   "title": "Rules: only the creator cancels a reservation",
    "kind": "task",
    "alias": "E8.10",
    "prio": "must",
@@ -399,7 +503,7 @@
    "reviewer": "Ece"
   },
   "#393": {
-   "title": "Flaky tests (map tab, early Firestore timeouts)",
+   "title": "Flaky tests: the map tab after Play services, and early Firestore timeouts on CI",
    "kind": "task",
    "alias": null,
    "prio": "must",
@@ -420,10 +524,10 @@
    "reviewer": "Yiğit"
   },
   "#513": {
-   "title": "Share one text button readable in dark mode",
+   "title": "Share one text button that stays readable in dark mode",
    "kind": "task",
    "alias": null,
-   "prio": "must",
+   "prio": "stretch",
    "size": "est. 0.5 h",
    "window": [
     null,
@@ -436,95 +540,8 @@
     "the screens that use the button"
    ],
    "assignee": "Zaynab",
-   "reviewer": "Ferit"
-  },
-  "#412": {
-   "title": "Keep the proof photo in app storage",
-   "kind": "task",
-   "alias": "E9.6",
-   "prio": "stretch",
-   "size": "est. 2 h",
-   "window": [
-    null,
-    null
-   ],
-   "github": "#412 (part of #406)",
-   "existing": null,
-   "files": [
-    "ui/completion/ProofPhotos.kt",
-    "ui/completion/ProofPhotoPicker.kt",
-    "tests"
-   ],
-   "assignee": "Alisher",
-   "reviewer": "Ferit"
-  },
-  "#413": {
-   "title": "Add WorkManager and the photo upload worker",
-   "kind": "task",
-   "alias": "E9.7a",
-   "prio": "stretch",
-   "size": "est. 3 h",
-   "window": [
-    null,
-    null
-   ],
-   "github": "#413 (part of #406)",
-   "existing": null,
-   "files": [
-    "gradle/libs.versions.toml",
-    "*.lockfile",
-    "a new upload worker",
-    "tests with WorkManagerTestInitHelper"
-   ],
-   "assignee": "Alisher",
-   "reviewer": "Ferit"
-  },
-  "#537": {
-   "title": "Queue a photo proof when offline",
-   "kind": "task",
-   "alias": "E9.7b",
-   "prio": "stretch",
-   "size": "est. 2 h",
-   "window": [
-    null,
-    null
-   ],
-   "github": "#537 (part of #406)",
-   "existing": null,
-   "files": [
-    "ui/completion/CompletionViewModel.kt",
-    "tests"
-   ],
-   "assignee": "Ferit",
-   "reviewer": "Alisher"
-  },
-  "#414": {
-   "title": "Show \"Waiting to upload\" for a queued proof",
-   "kind": "task",
-   "alias": "E9.8",
-   "prio": "stretch",
-   "size": "est. 2 h",
-   "window": [
-    null,
-    null
-   ],
-   "github": "#414 (part of #406)",
-   "existing": null,
-   "files": [
-    "ui/overview/OverviewQuestRow.kt",
-    "ui/venuepage/QuestDetailsScreen.kt",
-    "tests"
-   ],
-   "assignee": "Ferit",
-   "reviewer": "Alisher",
-   "external": [
-    {
-     "ref": "#401",
-     "kind": "decision",
-     "blocks": "start",
-     "reason": "the \"Waiting to upload\" design"
-    }
-   ]
+   "reviewer": "Ferit",
+   "notes": "Not part of offline, so stretch: keeps the sprint at 20 must-haves."
   }
  },
  "edges": [
@@ -641,11 +658,11 @@
    "reason": "the README describes what is disabled offline"
   },
   {
-   "from": "#530",
-   "to": "#537",
+   "from": "#529",
+   "to": "#414",
    "kind": "file",
    "blocks": "start",
-   "reason": "both change CompletionViewModel; merge one at a time"
+   "reason": "both change OverviewViewModel and OverviewQuestRow"
   },
   {
    "from": "#530",
@@ -653,6 +670,13 @@
    "kind": "hard",
    "blocks": "start",
    "reason": "the README describes what is disabled offline"
+  },
+  {
+   "from": "#530",
+   "to": "#537",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change CompletionViewModel; #537 replaces this task's offline block for photos"
   },
   {
    "from": "#531",
@@ -690,32 +714,39 @@
    "reason": "the app stops members cancelling before the rules forbid it"
   },
   {
+   "from": "#535",
+   "to": "#414",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change OverviewViewModel and OverviewQuestRow"
+  },
+  {
    "from": "#412",
    "to": "#413",
    "kind": "hard",
    "blocks": "start",
-   "reason": "the worker uploads the saved photo"
-  },
-  {
-   "from": "#412",
-   "to": "#537",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "the queued proof points at the saved photo"
+   "reason": "the worker uploads the copy it keeps"
   },
   {
    "from": "#413",
-   "to": "#537",
+   "to": "#538",
    "kind": "hard",
    "blocks": "start",
-   "reason": "#537 enqueues this worker"
+   "reason": "the queue enqueues this worker"
   },
   {
-   "from": "#537",
+   "from": "#538",
+   "to": "#537",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "starts against ProofUploadQueue and its fake"
+  },
+  {
+   "from": "#538",
    "to": "#414",
-   "kind": "hard",
-   "blocks": "start",
-   "reason": "#414 shows the queued proof's state"
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "starts against ProofUploadQueue.waiting and its fake"
   }
  ]
 }

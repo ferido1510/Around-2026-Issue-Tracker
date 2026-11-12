@@ -31,8 +31,11 @@ Two input shapes are understood.
                 blockedBy: [{ref, type, reason}], blocks: [{ref, type, reason}]}]
    One row per story (its stretch tasks go in a separate "<story>+" row after
    the others, and tasks without a story in an "Other tasks" row). An edge is
-   taken from either side's blockedBy / blocks and de-duplicated. A ref that is
-   not a task of this sprint (e.g. "#401") is kept on the task as `external`
+   taken from either side's blockedBy / blocks and de-duplicated. A ref is a
+   task's key ("T2") or its issue number ("#408"). When every task has a
+   `github` number the boxes are named by it ("#408"), and keys mentioned in
+   reasons and notes are renamed to match. A ref that is not a task of this
+   sprint (e.g. "#401") is kept on the task as `external`
    and shown in the tooltip, but never blocks the box. Every task gets its
    assignee and reviewer: the assignee completes it, the reviewer approves it.
 
@@ -177,6 +180,20 @@ def convert_assigned(plan: dict):
             print(f"warning: {key} has the same assignee and reviewer ({t['assignee']})", file=sys.stderr)
         tasks[key] = t
 
+    # Board IDs are the GitHub issue numbers ("#527") when every task has one, so
+    # the boxes read like the issues; otherwise the keys. A ref may be either.
+    use_issue = all(t.get("github") for t in tasks.values())
+    bid = {k: (f"#{t['github']}" if use_issue else k) for k, t in tasks.items()}
+    if len(set(bid.values())) != len(bid):
+        sys.exit("Two tasks share a GitHub issue number")
+    by_ref = {k: k for k in tasks}
+    by_ref.update({f"#{t['github']}": k for k, t in tasks.items() if t.get("github")})
+    key_re = re.compile(r"\b(" + "|".join(re.escape(k) for k in sorted(tasks, key=len, reverse=True)) + r")\b")
+
+    def words(text):
+        """A reason or note that says 'T2' or 'Q4' should say what the board calls them."""
+        return key_re.sub(lambda m: bid[m.group(1)], text) if text else text
+
     # Rows: one per story, then tasks without a story, then one stretch row per story.
     def story_title(sid):
         s = stories[sid]
@@ -201,13 +218,13 @@ def convert_assigned(plan: dict):
         for side, items in (("blockedBy", t.get("blockedBy", [])), ("blocks", t.get("blocks", []))):
             for item in items:
                 kind, blocks = parse_edge_type(item["type"])
-                other = item["ref"]
-                if other not in tasks:
+                other = by_ref.get(item["ref"])
+                if other is None:
                     if side == "blockedBy":
                         external.setdefault(key, []).append(
-                            {"ref": other, "kind": kind, "blocks": blocks, "reason": item.get("reason", "")})
+                            {"ref": item["ref"], "kind": kind, "blocks": blocks, "reason": words(item.get("reason", ""))})
                     else:
-                        print(f"warning: {key} blocks {other}, which is not a task of this sprint", file=sys.stderr)
+                        print(f"warning: {key} blocks {item['ref']}, which is not a task of this sprint", file=sys.stderr)
                     continue
                 if kind not in KEPT_EDGE_KINDS:
                     print(f"warning: ignored edge kind {kind!r} on {key}", file=sys.stderr)
@@ -217,13 +234,13 @@ def convert_assigned(plan: dict):
                 if sig in seen:
                     seen[sig]["sides"].add(side if side == "blockedBy" else "blocks")
                     continue
-                edge = {"from": frm, "to": to, "kind": kind, "blocks": blocks, "reason": item.get("reason", "")}
+                edge = {"from": bid[frm], "to": bid[to], "kind": kind, "blocks": blocks, "reason": words(item.get("reason", ""))}
                 seen[sig] = {"edge": edge, "sides": {side}}
                 edges.append(edge)
     for sig, info in seen.items():
         if len(info["sides"]) == 1:
             frm, to, kind, _ = sig
-            print(f"note: {kind} edge {frm} -> {to} is only listed on the "
+            print(f"note: {kind} edge {bid[frm]} -> {bid[to]} is only listed on the "
                   f"{'blocked' if 'blockedBy' in info['sides'] else 'blocking'} side", file=sys.stderr)
 
     out_tasks = {}
@@ -251,10 +268,13 @@ def convert_assigned(plan: dict):
                 "reviewer": t["reviewer"],
             }
             if t.get("notes"):
-                out["notes"] = t["notes"]
+                out["notes"] = words(t["notes"])
             if key in external:
                 out["external"] = external[key]
-            out_tasks[key] = out
+            out_tasks[bid[key]] = out
+
+    for row in rows:
+        row["children"] = [bid[k] for k in row["children"]]
 
     load = Counter(t["assignee"] for t in out_tasks.values())
     reviews = Counter(t["reviewer"] for t in out_tasks.values())
