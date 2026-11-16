@@ -364,7 +364,7 @@
     {
       "key": "T33", "title": "Scroll the venue page to the quest tapped on the map", "type": "Stretch",
       "story": "V23", "subId": "V23.4",
-      "estimateHours": 1.5, "github": 549, "assignee": "Zaynab", "reviewer": null,
+      "estimateHours": 1.5, "github": 549, "assignee": "Zaynab", "reviewer": "Alisher",
       "blockedBy": [],
       "blocks": [{ "ref": "#563", "type": "file", "reason": "both change how a map tap opens a quest; merge one at a time" }],
       "touchedFiles": ["ui/map/MapScreen.kt", "ui/navigation/Routes.kt", "ui/navigation/AroundApp.kt", "ui/venuepage/VenuePageScreen.kt", "ui/venuepage/VenuePageViewModel.kt", "their tests"]
@@ -372,7 +372,7 @@
     {
       "key": "T34", "title": "Update the venue's details in the repository and screen", "type": "Stretch",
       "story": "V2", "subId": "V2.2",
-      "estimateHours": 2.5, "github": 454, "assignee": "Vali", "reviewer": null,
+      "estimateHours": 2.5, "github": 454, "assignee": "Vali", "reviewer": "Zaynab",
       "blockedBy": [{ "ref": "#453", "type": "decision · start", "reason": "the edit frames in Figma (done)" }],
       "blocks": [{ "ref": "#457", "type": "file", "reason": "both add a method to VenueRepository; merge one at a time" }],
       "touchedFiles": ["model/venue/VenueRepository.kt", "model/venue/VenueRepositoryFirestore.kt", "the fake VenueRepository", "a new venue edit screen and its ViewModel", "their tests"]
@@ -380,7 +380,7 @@
     {
       "key": "T35", "title": "Set the venue's profile picture", "type": "Stretch",
       "story": "V2", "subId": "V2.3",
-      "estimateHours": 3, "github": 457, "assignee": "Zaynab", "reviewer": null,
+      "estimateHours": 3, "github": 457, "assignee": "Zaynab", "reviewer": "Ferit",
       "blockedBy": [
         { "ref": "#453", "type": "decision · start", "reason": "the profile picture section in Figma (done)" },
         { "ref": "#454", "type": "file", "reason": "both add a method to VenueRepository; merge one at a time" }
