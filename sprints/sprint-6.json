@@ -41,6 +41,14 @@
    ]
   },
   {
+   "id": "V8",
+   "title": "Edit a published quest (story #440)",
+   "prio": "must",
+   "children": [
+    "#511"
+   ]
+  },
+  {
    "id": "TEST",
    "title": "Test infrastructure, carried over from S5 (no story)",
    "prio": "must",
@@ -83,6 +91,23 @@
     "#563",
     "#564",
     "#565"
+   ]
+  },
+  {
+   "id": "V2+",
+   "title": "Update my venue's details: stretch",
+   "prio": "stretch",
+   "children": [
+    "#454",
+    "#457"
+   ]
+  },
+  {
+   "id": "V23+",
+   "title": "Set a location for a single quest: stretch",
+   "prio": "stretch",
+   "children": [
+    "#549"
    ]
   }
  ],
@@ -538,6 +563,28 @@
    "assignee": "Jiayi",
    "reviewer": "Ece"
   },
+  "#511": {
+   "title": "Replace the \"Explorers see\" placeholder with the reserved quest banner",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#511 (part of #440)",
+   "existing": null,
+   "files": [
+    "ui/quest/create/CreateQuestScreen.kt",
+    "ui/quest/create/CreateQuestViewModel.kt",
+    "ui/quest/create/CreateQuestUiState.kt",
+    "res/values/create_quest_strings.xml",
+    "their tests"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Jiayi"
+  },
   "#393": {
    "title": "Flaky tests: the map tab after Play services, and early Firestore timeouts on CI",
    "kind": "task",
@@ -880,6 +927,90 @@
    "assignee": "Yiğit",
    "reviewer": "Alisher",
    "notes": "Feedback from Ece. Check Figma first: the pill may be the design."
+  },
+  "#454": {
+   "title": "Update the venue's details in the repository and screen",
+   "kind": "task",
+   "alias": "V2.2",
+   "prio": "stretch",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#454 (part of #441)",
+   "existing": null,
+   "files": [
+    "model/venue/VenueRepository.kt",
+    "model/venue/VenueRepositoryFirestore.kt",
+    "the fake VenueRepository",
+    "a new venue edit screen and its ViewModel",
+    "their tests"
+   ],
+   "assignee": "Vali",
+   "reviewer": null,
+   "external": [
+    {
+     "ref": "#453",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the edit frames in Figma (done)"
+    }
+   ]
+  },
+  "#457": {
+   "title": "Set the venue's profile picture",
+   "kind": "task",
+   "alias": "V2.3",
+   "prio": "stretch",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#457 (part of #441)",
+   "existing": null,
+   "files": [
+    "model/venue/Venue.kt (picture field)",
+    "model/venue/VenueRepository.kt",
+    "model/venue/VenueRepositoryFirestore.kt",
+    "storage.rules",
+    "ui/venuepage/VenuePageScreen.kt",
+    "their tests"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": null,
+   "external": [
+    {
+     "ref": "#453",
+     "kind": "decision",
+     "blocks": "start",
+     "reason": "the profile picture section in Figma (done)"
+    }
+   ]
+  },
+  "#549": {
+   "title": "Scroll the venue page to the quest tapped on the map",
+   "kind": "task",
+   "alias": "V23.4",
+   "prio": "stretch",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#549 (part of #429)",
+   "existing": null,
+   "files": [
+    "ui/map/MapScreen.kt",
+    "ui/navigation/Routes.kt",
+    "ui/navigation/AroundApp.kt",
+    "ui/venuepage/VenuePageScreen.kt",
+    "ui/venuepage/VenuePageViewModel.kt",
+    "their tests"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": null
   }
  },
  "edges": [
@@ -1176,6 +1307,20 @@
    "kind": "file",
    "blocks": "start",
    "reason": "both change NearbyQuestPager; merge one at a time"
+  },
+  {
+   "from": "#549",
+   "to": "#563",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change how a map tap opens a quest; merge one at a time"
+  },
+  {
+   "from": "#454",
+   "to": "#457",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both add a method to VenueRepository; merge one at a time"
   }
  ]
 }

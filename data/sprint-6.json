@@ -4,7 +4,10 @@
   "stories": [
     { "id": "E9", "title": "Use the app offline", "github": 406 },
     { "id": "V14", "title": "Know which answers need a connection", "github": 415 },
-    { "id": "E8", "title": "Quest with my friends", "github": 402 }
+    { "id": "E8", "title": "Quest with my friends", "github": 402 },
+    { "id": "V2", "title": "Update my venue's details", "github": 441 },
+    { "id": "V8", "title": "Edit a published quest", "github": 440 },
+    { "id": "V23", "title": "Set a location for a single quest", "github": 429 }
   ],
   "tasks": [
     {
@@ -350,6 +353,40 @@
       "blocks": [],
       "touchedFiles": ["ui/map/NearbyQuestPager.kt (page dots)", "its Compose test"],
       "notes": "Feedback from Ece. Check Figma first: the pill may be the design."
+    },
+    {
+      "key": "T32", "title": "Replace the \"Explorers see\" placeholder with the reserved quest banner", "type": "Must have",
+      "story": "V8", "subId": null,
+      "estimateHours": 1, "github": 511, "assignee": "Zaynab", "reviewer": "Jiayi",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/quest/create/CreateQuestScreen.kt", "ui/quest/create/CreateQuestViewModel.kt", "ui/quest/create/CreateQuestUiState.kt", "res/values/create_quest_strings.xml", "their tests"]
+    },
+    {
+      "key": "T33", "title": "Scroll the venue page to the quest tapped on the map", "type": "Stretch",
+      "story": "V23", "subId": "V23.4",
+      "estimateHours": 1.5, "github": 549, "assignee": "Zaynab", "reviewer": null,
+      "blockedBy": [],
+      "blocks": [{ "ref": "#563", "type": "file", "reason": "both change how a map tap opens a quest; merge one at a time" }],
+      "touchedFiles": ["ui/map/MapScreen.kt", "ui/navigation/Routes.kt", "ui/navigation/AroundApp.kt", "ui/venuepage/VenuePageScreen.kt", "ui/venuepage/VenuePageViewModel.kt", "their tests"]
+    },
+    {
+      "key": "T34", "title": "Update the venue's details in the repository and screen", "type": "Stretch",
+      "story": "V2", "subId": "V2.2",
+      "estimateHours": 2.5, "github": 454, "assignee": "Vali", "reviewer": null,
+      "blockedBy": [{ "ref": "#453", "type": "decision · start", "reason": "the edit frames in Figma (done)" }],
+      "blocks": [{ "ref": "#457", "type": "file", "reason": "both add a method to VenueRepository; merge one at a time" }],
+      "touchedFiles": ["model/venue/VenueRepository.kt", "model/venue/VenueRepositoryFirestore.kt", "the fake VenueRepository", "a new venue edit screen and its ViewModel", "their tests"]
+    },
+    {
+      "key": "T35", "title": "Set the venue's profile picture", "type": "Stretch",
+      "story": "V2", "subId": "V2.3",
+      "estimateHours": 3, "github": 457, "assignee": "Zaynab", "reviewer": null,
+      "blockedBy": [
+        { "ref": "#453", "type": "decision · start", "reason": "the profile picture section in Figma (done)" },
+        { "ref": "#454", "type": "file", "reason": "both add a method to VenueRepository; merge one at a time" }
+      ],
+      "blocks": [],
+      "touchedFiles": ["model/venue/Venue.kt (picture field)", "model/venue/VenueRepository.kt", "model/venue/VenueRepositoryFirestore.kt", "storage.rules", "ui/venuepage/VenuePageScreen.kt", "their tests"]
     }
   ]
 }
