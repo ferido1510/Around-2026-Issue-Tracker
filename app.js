@@ -71,7 +71,11 @@ let prevLevel = null;       // celebration level at the last render (null = no l
 
 const LEVELS = ["none", "victory", "ultra"];
 
-const isDone = (id) => state.get(id)?.status === "done";
+// A task's record: what Firestore holds, or, for a task the plan says was closed
+// elsewhere (`closedBy`) and that nobody touched on the board, a done record.
+const recOf = (id) => state.get(id) ||
+  (PLAN.tasks[id]?.closedBy ? { status: "done", name: PLAN.tasks[id].closedBy, closed: true } : undefined);
+const isDone = (id) => recOf(id)?.status === "done";
 
 // ---------- who is who ----------
 //
@@ -98,7 +102,7 @@ const canApprove = (t, rec) => isReviewer(t) && (isDemo() || rec?.uid !== user?.
 const isStranger = () => !!user && !isDemo() && PEOPLE.size > 0 && !PEOPLE.has(norm(user.name));
 
 function info(id) {
-  const s = state.get(id);
+  const s = recOf(id);
   const unmet = incoming.get(id).filter((e) => !isDone(e.from));
   const waiting = outgoing.get(id).filter((e) => !isDone(e.to));
   let status;
@@ -465,9 +469,11 @@ function renderTip() {
   } else if (status === "review") {
     html += `<div class="tip-who">${esc(rec.name)} completed it ${esc(fmtTime(rec.reviewAt))}. Waiting for ${esc(t.reviewer)} to review it.</div>`;
   } else if (status === "done") {
-    html += `<div class="tip-who">${t.assignee
-      ? `Completed by ${esc(rec.name)}${rec.reviewerName ? `, approved by ${esc(rec.reviewerName)}` : ""}`
-      : `Done by ${esc(rec.name)}`} ${esc(fmtTime(rec.doneAt))}</div>`;
+    html += rec.closed
+      ? `<div class="tip-who">Closed by ${esc(rec.name)} outside the board: the plan marks it done.</div>`
+      : `<div class="tip-who">${t.assignee
+        ? `Completed by ${esc(rec.name)}${rec.reviewerName ? `, approved by ${esc(rec.reviewerName)}` : ""}`
+        : `Done by ${esc(rec.name)}`} ${esc(fmtTime(rec.doneAt))}</div>`;
   }
 
   if (tipPinned) html += actionsHtml(id, status, rec);
@@ -499,7 +505,10 @@ function actionsHtml(id, status, rec) {
       if (canApprove(t, rec)) out = b("approve", "Approve", "primary") + b("changes", "Request changes");
       else if (isReviewer(t)) hint = "You completed this one yourself, so someone else has to approve it.";
       if (assignee) out += b("changes", "Take back");
-    } else if (status === "done") { if (assignee || isReviewer(t)) out = b("reopen", "Reopen"); }
+    } else if (status === "done") {
+      if (rec.closed) hint = "Closed outside the board. To reopen it, remove its closedBy from the sprint plan.";
+      else if (assignee || isReviewer(t)) out = b("reopen", "Reopen");
+    }
     if (!out && !hint && isStranger()) {
       hint = `You're signed in as “${user.name}”, who isn't an assignee or reviewer in this sprint. Names are matched on the first name of your Google account.`;
     }

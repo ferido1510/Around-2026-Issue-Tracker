@@ -121,6 +121,7 @@ Details:
 - The board knows people by the **first name on their Google account**, compared without case or accents (`Yigit` matches `Yiğit`). If someone signs in under a name that isn't in the plan, their tooltip says so and offers no buttons. Fix the name in the plan, or change the Google account's first name.
 - To reassign a task, change `assignee` or `reviewer` in the plan and run the sprint script again (below). Progress is kept.
 - A task with an `assignee` but no `reviewer` (for example a Figma-only task) goes in the grid's **No review** column. Its assignee clicks *Mark done* and that's final, since there is nobody to approve it.
+- A task that was closed somewhere else can say so in the plan with `"closedBy": "Ece"`. The board then shows it done (grey, "Closed by Ece outside the board") and unblocks what waited on it, without anything in Firestore. It has no Reopen button: remove `closedBy` from the plan and run the script again.
 - A task with no `assignee` keeps the old behaviour (anyone takes it, anyone marks it done), so the earlier sprints still work.
 - Links to things outside the sprint (a Figma frame, another PR) go in `blockedBy` too. If the `ref` is not one of the sprint's tasks (e.g. `#401`), it is shown under *Outside this sprint* in the tooltip and doesn't block the box.
 

@@ -225,7 +225,7 @@
     {
       "key": "T18", "title": "Figma: rejected proofs on the venue's dashboard", "type": "Stretch",
       "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
-      "estimateHours": 1, "github": 552, "assignee": "Ece", "reviewer": null,
+      "estimateHours": 1, "github": 552, "assignee": "Ece", "reviewer": null, "closedBy": "Ece",
       "blockedBy": [],
       "blocks": [{ "ref": "#553", "type": "soft", "reason": "the screen it designs; the ViewModel can start before" }],
       "touchedFiles": ["Figma M2 page"],
@@ -296,7 +296,7 @@
     {
       "key": "T26", "title": "Figma: open a nearby quest's details from its whole card, with an \"Accept\" footer", "type": "Stretch",
       "story": null, "storyNote": "No story: user feedback", "subId": null,
-      "estimateHours": 1, "github": 560, "assignee": "Alisher", "reviewer": null,
+      "estimateHours": 1, "github": 560, "assignee": "Alisher", "reviewer": null, "closedBy": "Ece",
       "blockedBy": [],
       "blocks": [
         { "ref": "#561", "type": "hard", "reason": "the card it designs" },

@@ -616,6 +616,7 @@
    ],
    "assignee": "Ece",
    "reviewer": null,
+   "closedBy": "Ece",
    "notes": "Figma only, so no reviewer."
   },
   "#553": {
@@ -776,6 +777,7 @@
    ],
    "assignee": "Alisher",
    "reviewer": null,
+   "closedBy": "Ece",
    "notes": "Figma only, so no reviewer. Feedback from Zaynab."
   },
   "#561": {

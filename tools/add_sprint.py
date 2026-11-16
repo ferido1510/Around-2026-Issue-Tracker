@@ -28,6 +28,7 @@ Two input shapes are understood.
      tasks:   [{key, title, type ("Must have" | "Should have" | "Stretch"),
                 story?, storyNote?, subId?, estimateHours?, github?, assignee,
                 reviewer? (none: the assignee marks it done, e.g. Figma-only),
+                closedBy? (a name: the task was closed elsewhere, so the board shows it done),
                 notes?, touchedFiles?,
                 blockedBy: [{ref, type, reason}], blocks: [{ref, type, reason}]}]
    One row per story (its stretch tasks go in a separate "<story>+" row after
@@ -281,6 +282,8 @@ def convert_assigned(plan: dict):
                 "assignee": t["assignee"],
                 "reviewer": t.get("reviewer"),
             }
+            if t.get("closedBy"):
+                out["closedBy"] = t["closedBy"]       # already closed elsewhere: the board shows it done
             if t.get("notes"):
                 out["notes"] = words(t["notes"])
             if key in external:
