@@ -647,8 +647,8 @@ tr.complete .rcount::after { content: " 🎉"; }
 
 /* ============ assignee (rows) by reviewer (columns) ============ */
 
-.board.grid { --row-head: 170px; }
-.board .colhead.person { width: auto; min-width: calc(var(--box-w) * 2 + 28px); vertical-align: bottom; }
+.board.grid { --row-head: 150px; }
+.board .colhead.person { width: auto; min-width: calc(var(--box-w) + 24px); vertical-align: bottom; }
 .colhead.person .pname { display: block; font: 800 15px var(--heading); letter-spacing: -0.01em; }
 .colhead.person .pcount {
   display: block;
@@ -659,6 +659,7 @@ tr.complete .rcount::after { content: " 🎉"; }
   font-variant-numeric: tabular-nums;
 }
 .colhead.person.me { box-shadow: inset 0 -3px 0 var(--accent-2); }
+.colhead.person.none .pname { color: var(--muted); font-weight: 700; }
 .colhead.person.me .pname::after, tr.me .rid::after { content: " · you"; font-weight: 600; opacity: 0.8; }
 tr.me > .rowhead { box-shadow: inset 4px 0 0 var(--accent-2); }
 .board td.cell, .board td.self { text-align: center; vertical-align: middle; }

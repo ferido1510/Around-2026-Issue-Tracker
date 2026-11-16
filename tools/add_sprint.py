@@ -26,11 +26,12 @@ Two input shapes are understood.
    list whose items have a `key`:
      stories: [{id, title, github?}]
      tasks:   [{key, title, type ("Must have" | "Should have" | "Stretch"),
-                story?, subId?, estimateHours?, github?, assignee, reviewer,
+                story?, storyNote?, subId?, estimateHours?, github?, assignee,
+                reviewer? (none: the assignee marks it done, e.g. Figma-only),
                 notes?, touchedFiles?,
                 blockedBy: [{ref, type, reason}], blocks: [{ref, type, reason}]}]
    One row per story (its stretch tasks go in a separate "<story>+" row after
-   the others, and tasks without a story in an "Other tasks" row). An edge is
+   the others, and tasks without a story in one row per `storyNote`). An edge is
    taken from either side's blockedBy / blocks and de-duplicated. A ref is a
    task's key ("T2") or its issue number ("#408"). When every task has a
    `github` number the boxes are named by it ("#408"), and keys mentioned in
@@ -173,10 +174,10 @@ def convert_assigned(plan: dict):
             sys.exit(f"{key}: unknown story {t['story']!r}")
         if t["type"].lower() not in TYPE_PRIO:
             sys.exit(f"{key}: unknown type {t['type']!r} (use Must have, Should have or Stretch)")
-        for role in ("assignee", "reviewer"):
-            if not t.get(role):
-                sys.exit(f"{key}: missing {role}")
-        if t["assignee"] == t["reviewer"]:
+        if not t.get("assignee"):
+            sys.exit(f"{key}: missing assignee")
+        # No reviewer (e.g. a Figma-only task): the assignee marks it done, nobody approves it.
+        if t["assignee"] == t.get("reviewer"):
             print(f"warning: {key} has the same assignee and reviewer ({t['assignee']})", file=sys.stderr)
         tasks[key] = t
 
@@ -207,9 +208,22 @@ def convert_assigned(plan: dict):
             rows.append({"id": sid, "title": story_title(sid), "prio": "must", "children": keep})
         if late:
             stretch_rows.append({"id": f"{sid}+", "title": f"{stories[sid]['title']}: stretch", "prio": "stretch", "children": late})
-    loose = [k for k, t in tasks.items() if not t.get("story")]
-    if loose:
-        rows.append({"id": "OTHER", "title": "Other tasks (no story)", "prio": "must", "children": loose})
+    # Tasks without a story: one row per `storyNote` ("No story: user feedback"), so the
+    # hover box says why they exist. The row ID is the note's first word.
+    groups = {}
+    for k, t in tasks.items():
+        if not t.get("story"):
+            groups.setdefault((t.get("storyNote") or "").removeprefix("No story:").strip(), []).append(k)
+    used = {r["id"] for r in rows} | {r["id"] for r in stretch_rows}
+    for note, keys in groups.items():
+        base = re.sub(r"[^A-Za-z0-9]", "", note.split()[0]).upper()[:6] if note else "OTHER"
+        rid, n = base or "OTHER", 2
+        while rid in used:
+            rid, n = f"{base}{n}", n + 1
+        used.add(rid)
+        title = f"{note[:1].upper()}{note[1:]} (no story)" if note else "Other tasks (no story)"
+        late = all(TYPE_PRIO[tasks[k]["type"].lower()] == "stretch" for k in keys)
+        rows.append({"id": rid, "title": title, "prio": "stretch" if late else "must", "children": keys})
     rows += stretch_rows
 
     # Edges: from either side, de-duplicated by (from, to, kind, blocks).
@@ -265,7 +279,7 @@ def convert_assigned(plan: dict):
                 "existing": None,
                 "files": t.get("touchedFiles", []),
                 "assignee": t["assignee"],
-                "reviewer": t["reviewer"],
+                "reviewer": t.get("reviewer"),
             }
             if t.get("notes"):
                 out["notes"] = words(t["notes"])
@@ -277,9 +291,12 @@ def convert_assigned(plan: dict):
         row["children"] = [bid[k] for k in row["children"]]
 
     load = Counter(t["assignee"] for t in out_tasks.values())
-    reviews = Counter(t["reviewer"] for t in out_tasks.values())
+    reviews = Counter(t["reviewer"] for t in out_tasks.values() if t["reviewer"])
     people = sorted(set(load) | set(reviews))
     print("  " + "\n  ".join(f"{p}: {load[p]} to do, {reviews[p]} to review" for p in people))
+    unreviewed = [k for k, t in out_tasks.items() if not t["reviewer"]]
+    if unreviewed:
+        print(f"  no reviewer (assignee marks them done): {', '.join(unreviewed)}")
     return rows, out_tasks, edges
 
 

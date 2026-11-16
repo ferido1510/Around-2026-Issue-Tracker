@@ -120,6 +120,7 @@ Details:
 - Only the assignee of a task sees *Start*, *Mark complete* and *Release*, and only its reviewer sees *Approve* and *Request changes*. This part is enforced by the page, not by Firestore: the assignee and reviewer live in the sprint file, which the rules can't see. It is a team board, not a security boundary.
 - The board knows people by the **first name on their Google account**, compared without case or accents (`Yigit` matches `Yiğit`). If someone signs in under a name that isn't in the plan, their tooltip says so and offers no buttons. Fix the name in the plan, or change the Google account's first name.
 - To reassign a task, change `assignee` or `reviewer` in the plan and run the sprint script again (below). Progress is kept.
+- A task with an `assignee` but no `reviewer` (for example a Figma-only task) goes in the grid's **No review** column. Its assignee clicks *Mark done* and that's final, since there is nobody to approve it.
 - A task with no `assignee` keeps the old behaviour (anyone takes it, anyone marks it done), so the earlier sprints still work.
 - Links to things outside the sprint (a Figma frame, another PR) go in `blockedBy` too. If the `ref` is not one of the sprint's tasks (e.g. `#401`), it is shown under *Outside this sprint* in the tooltip and doesn't block the box.
 
@@ -135,7 +136,7 @@ There are two formats. A plan with assignees and reviewers (Sprint 6 on) is a `.
 python3 tools/add_sprint.py data/sprint-6.json --id sprint-6 --name "Sprint 6"
 ```
 
-The script prints how many tasks each person has to do and to review, and notes any edge that is only listed on one side. Each story becomes a row, its stretch tasks go in a `<story>+` row, and tasks without a story go in "Other tasks". See the docstring in [`tools/add_sprint.py`](tools/add_sprint.py) for the exact shape. The rest of this section describes the older blocking-report format:
+The script prints how many tasks each person has to do and to review, and notes any edge that is only listed on one side. Each story becomes a row, its stretch tasks go in a `<story>+` row, and tasks without a story are grouped by their `storyNote` ("No story: user feedback" becomes a "User feedback" row), which is what the hover box shows as the task's issue. A task may have no `reviewer`. See the docstring in [`tools/add_sprint.py`](tools/add_sprint.py) for the exact shape. The rest of this section describes the older blocking-report format:
 
 1. Get the sprint's blocking report in the same format as [`data/sprint-2-blocking-report.md`](data/sprint-2-blocking-report.md) or [`data/sprint-3-blocking-report.md`](data/sprint-3-blocking-report.md): a Markdown file with a ```` ```json ```` block that has `tasks` and `edges` (section 11 of those reports), or that JSON on its own. Save it in `data/`, e.g. `data/sprint-4-blocking-report.md`.
 2. Run:

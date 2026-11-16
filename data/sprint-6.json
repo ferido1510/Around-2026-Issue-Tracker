@@ -213,6 +213,143 @@
       "blockedBy": [], "blocks": [],
       "touchedFiles": ["ui/theme", "the screens that use the button"],
       "notes": "Not part of offline, so stretch: keeps the sprint at 20 must-haves."
+    },
+    {
+      "key": "T17", "title": "Let the venue drag and zoom the map when picking a quest's location", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 1, "github": 551, "assignee": "Yiğit", "reviewer": "Alisher",
+      "blockedBy": [],
+      "blocks": [{ "ref": "#559", "type": "file", "reason": "both may change StillRadiusMap; merge one at a time" }],
+      "touchedFiles": ["ui/quest/StillRadiusMap.kt (MapUiSettings)", "ui/quest/create/QuestRadiusMap.kt", "tests"]
+    },
+    {
+      "key": "T18", "title": "Figma: rejected proofs on the venue's dashboard", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 1, "github": 552, "assignee": "Ece", "reviewer": null,
+      "blockedBy": [],
+      "blocks": [{ "ref": "#553", "type": "soft", "reason": "the screen it designs; the ViewModel can start before" }],
+      "touchedFiles": ["Figma M2 page"],
+      "notes": "Figma only, so no reviewer."
+    },
+    {
+      "key": "T19", "title": "Let the venue look at a proof it rejected", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 2.5, "github": 553, "assignee": "Ece", "reviewer": "Yiğit",
+      "blockedBy": [
+        { "ref": "#552", "type": "soft", "reason": "the frame it builds" },
+        { "ref": "#416", "type": "file", "reason": "both change VenueDashboardViewModel and its UI state; merge one at a time" }
+      ],
+      "blocks": [],
+      "touchedFiles": ["ui/dashboard/VenueDashboardViewModel.kt (dashboardOf)", "ui/dashboard/VenueDashboardUiState.kt", "ui/dashboard/VenueDashboardScreen.kt", "tests"],
+      "notes": "observeForVenue already returns every completion: no repository change."
+    },
+    {
+      "key": "T20", "title": "Show an empty party on the quest details before anyone accepted", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 1, "github": 554, "assignee": "Ece", "reviewer": "Jiayi",
+      "blockedBy": [{ "ref": "#528", "type": "file", "reason": "both change QuestDetailsScreen; merge one at a time" }],
+      "blocks": [],
+      "touchedFiles": ["ui/venuepage/QuestDetailsScreen.kt (party seats)", "its Compose test"]
+    },
+    {
+      "key": "T21", "title": "Show the party's proof itself to every member", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 3, "github": 555, "assignee": "Jiayi", "reviewer": "Ece",
+      "blockedBy": [
+        { "ref": "#528", "type": "file", "reason": "both change VenuePageViewModel and QuestDetailsScreen; merge one at a time" },
+        { "ref": "#531", "type": "file", "reason": "both change VenuePageViewModel; merge one at a time" }
+      ],
+      "blocks": [],
+      "touchedFiles": ["ui/venuepage/VenuePageViewModel.kt", "ui/venuepage/VenuePageUiState.kt", "ui/venuepage/QuestDetailsScreen.kt", "tests"],
+      "notes": "Follow-up of #468. storage.rules already let every joined member get the photo."
+    },
+    {
+      "key": "T22", "title": "Give profile photos a border so they stand out from the background", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 1, "github": 556, "assignee": "Ferit", "reviewer": "Zaynab",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["the avatar / profile picture composables", "tests"]
+    },
+    {
+      "key": "T23", "title": "Stop reward chips from reading \"Free Free muffin\"", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 1, "github": 557, "assignee": "Yiğit", "reviewer": "Vali",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/quest/QuestChips.kt (rewardText)", "ui/quest/create/RewardFields.kt (maybe)", "strings", "tests"]
+    },
+    {
+      "key": "T24", "title": "Make the radius and party size readable in dark mode", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 0.5, "github": 558, "assignee": "Jiayi", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#513", "type": "file", "reason": "same fix (accentText on dark); reuse it if merged first" }],
+      "blocks": [],
+      "touchedFiles": ["the quest's radius and party size values", "tests"]
+    },
+    {
+      "key": "T25", "title": "Use the dark map style for the venue location map", "type": "Stretch",
+      "story": null, "storyNote": "No story: Bug found while testing the app", "subId": null,
+      "estimateHours": 1, "github": 559, "assignee": "Ferit", "reviewer": "Jiayi",
+      "blockedBy": [{ "ref": "#551", "type": "file", "reason": "both may change StillRadiusMap; merge one at a time" }],
+      "blocks": [],
+      "touchedFiles": ["ui/venue/VenueAreaScreen.kt or ui/quest/StillRadiusMap.kt", "tests"]
+    },
+    {
+      "key": "T26", "title": "Figma: open a nearby quest's details from its whole card, with an \"Accept\" footer", "type": "Stretch",
+      "story": null, "storyNote": "No story: user feedback", "subId": null,
+      "estimateHours": 1, "github": 560, "assignee": "Alisher", "reviewer": null,
+      "blockedBy": [],
+      "blocks": [
+        { "ref": "#561", "type": "hard", "reason": "the card it designs" },
+        { "ref": "#562", "type": "hard", "reason": "the footer it designs" }
+      ],
+      "touchedFiles": ["Figma M2 page"],
+      "notes": "Figma only, so no reviewer. Feedback from Zaynab."
+    },
+    {
+      "key": "T27", "title": "Open a nearby quest's details by tapping anywhere on its card", "type": "Stretch",
+      "story": null, "storyNote": "No story: user feedback", "subId": null,
+      "estimateHours": 1, "github": 561, "assignee": "Alisher", "reviewer": "Ece",
+      "blockedBy": [{ "ref": "#560", "type": "hard", "reason": "the frame it builds" }],
+      "blocks": [{ "ref": "#562", "type": "file", "reason": "both change NearbyQuestPager; merge one at a time" }],
+      "touchedFiles": ["ui/map/NearbyQuestPager.kt", "its Compose test"]
+    },
+    {
+      "key": "T28", "title": "Accept a quest from the nearby card's footer", "type": "Stretch",
+      "story": null, "storyNote": "No story: user feedback", "subId": null,
+      "estimateHours": 2.5, "github": 562, "assignee": "Alisher", "reviewer": "Vali",
+      "blockedBy": [
+        { "ref": "#560", "type": "hard", "reason": "the frame it builds" },
+        { "ref": "#561", "type": "file", "reason": "both change NearbyQuestPager; merge one at a time" },
+        { "ref": "#409", "type": "file", "reason": "both change MapViewModel; merge one at a time" }
+      ],
+      "blocks": [],
+      "touchedFiles": ["ui/map/NearbyQuestPager.kt", "ui/map/MapViewModel.kt", "tests"]
+    },
+    {
+      "key": "T29", "title": "Open the right quest when tapping its flag on the map", "type": "Stretch",
+      "story": null, "storyNote": "No story: user feedback", "subId": null,
+      "estimateHours": 2, "github": 563, "assignee": "Ferit", "reviewer": "Zaynab",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/map/QuestMarkers.kt", "ui/map/marker/QuestPin.kt (anchor, maybe)", "tests"],
+      "notes": "Feedback from Ece."
+    },
+    {
+      "key": "T30", "title": "Lighten the dark mode's gray and purple", "type": "Stretch",
+      "story": null, "storyNote": "No story: user feedback", "subId": null,
+      "estimateHours": 1.5, "github": 564, "assignee": "Vali", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#513", "type": "file", "reason": "both change ui/theme; merge one at a time" }],
+      "blocks": [],
+      "touchedFiles": ["Figma colour styles", "ui/theme colours", "tests"],
+      "notes": "Feedback from Ece."
+    },
+    {
+      "key": "T31", "title": "Keep the quest pager's dots round while swiping", "type": "Stretch",
+      "story": null, "storyNote": "No story: user feedback", "subId": null,
+      "estimateHours": 0.5, "github": 565, "assignee": "Yiğit", "reviewer": "Alisher",
+      "blockedBy": [{ "ref": "#561", "type": "file", "reason": "both change NearbyQuestPager; merge one at a time" }],
+      "blocks": [],
+      "touchedFiles": ["ui/map/NearbyQuestPager.kt (page dots)", "its Compose test"],
+      "notes": "Feedback from Ece. Check Figma first: the pill may be the design."
     }
   ]
 }

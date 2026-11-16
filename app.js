@@ -21,7 +21,8 @@ let ALL_IDS = [];
 let MUST_IDS = [];
 let PEOPLE = new Set();     // normalised names of every assignee and reviewer in the sprint
 let HAS_ASSIGNED = false;   // the sprint uses the assignee / reviewer flow
-let GRID = null;            // when every task has both: the names on both axes, sorted; else null
+let GRID = null;            // when every task has an assignee: the names on both axes, sorted; else null
+let GRID_NO_REVIEW = false; // some tasks have no reviewer (Figma only): the grid gets a "No review" column
 
 function setPlan(plan) {
   PLAN = plan;
@@ -36,13 +37,15 @@ function setPlan(plan) {
   MUST_IDS = ALL_IDS.filter((id) => (PLAN.tasks[id].prio || "must") === "must");
   HAS_ASSIGNED = ALL_IDS.some((id) => PLAN.tasks[id].assignee);
   PEOPLE = new Set(ALL_IDS.flatMap((id) => [PLAN.tasks[id].assignee, PLAN.tasks[id].reviewer]).filter(Boolean).map(norm));
-  // With an assignee and a reviewer on every task, the board is a grid: assignees
-  // down the side, reviewers along the top, each task in the cell of its pair.
-  // The same people are on both axes, so the diagonal is "reviewing yourself".
-  GRID = ALL_IDS.length && ALL_IDS.every((id) => PLAN.tasks[id].assignee && PLAN.tasks[id].reviewer)
-    ? [...new Map(ALL_IDS.flatMap((id) => [PLAN.tasks[id].assignee, PLAN.tasks[id].reviewer]).map((n) => [norm(n), n])).values()]
+  // With an assignee on every task, the board is a grid: assignees down the side,
+  // reviewers along the top, each task in the cell of its pair. The same people are
+  // on both axes, so the diagonal is "reviewing yourself". A task with no reviewer
+  // goes in an extra "No review" column.
+  GRID = ALL_IDS.length && ALL_IDS.every((id) => PLAN.tasks[id].assignee)
+    ? [...new Map(ALL_IDS.flatMap((id) => [PLAN.tasks[id].assignee, PLAN.tasks[id].reviewer]).filter(Boolean).map((n) => [norm(n), n])).values()]
         .sort((a, b) => a.localeCompare(b))
     : null;
+  GRID_NO_REVIEW = !!GRID && ALL_IDS.some((id) => !PLAN.tasks[id].reviewer);
 }
 
 // The tasks a person has (role "assignee") or reviews (role "reviewer"); `person` is a normalised name.
@@ -114,20 +117,23 @@ const STATUS_LABEL = { blocked: "Blocked", free: "Free", progress: "In progress"
 
 function buildGrid() {
   const boxCount = { n: 0 };
+  const cols = [...GRID.map((name) => ({ name })), ...(GRID_NO_REVIEW ? [{ name: "No review", none: true }] : [])];
   let html = `<thead><tr><th class="corner" scope="col"><span>Assignee ↓</span><span>Reviewer →</span></th>`;
-  for (const name of GRID) {
-    html += `<th scope="col" class="colhead person" data-person="${esc(norm(name))}"><b class="pname">${esc(name)}</b><i class="pcount"></i></th>`;
+  for (const c of cols) {
+    html += `<th scope="col" class="colhead person${c.none ? " none" : ""}" data-person="${c.none ? "" : esc(norm(c.name))}"><b class="pname">${esc(c.name)}</b><i class="pcount"></i></th>`;
   }
   html += `</tr></thead><tbody>`;
   for (const a of GRID) {
     html += `<tr data-person="${esc(norm(a))}"><th scope="row" class="rowhead person">
       <span class="rtop"><span class="rid">${esc(a)}</span></span>
       <span class="rprog"><span class="rbar"><i></i></span><span class="rcount"></span></span></th>`;
-    for (const r of GRID) {
-      const ids = ALL_IDS.filter((id) => sameName(PLAN.tasks[id].assignee, a) && sameName(PLAN.tasks[id].reviewer, r));
+    for (const c of cols) {
+      const ids = ALL_IDS.filter((id) => sameName(PLAN.tasks[id].assignee, a) &&
+        (c.none ? !PLAN.tasks[id].reviewer : sameName(PLAN.tasks[id].reviewer, c.name)));
       const boxes = ids.map((id) =>
         `<button type="button" class="box" data-id="${esc(id)}" style="--i:${boxCount.n++}" aria-describedby="tip"></button>`).join("");
-      html += `<td class="${sameName(a, r) ? "self" : "cell"}${ids.length ? "" : " empty"}"${sameName(a, r) && !ids.length ? ` aria-hidden="true"` : ""}>` +
+      const self = !c.none && sameName(a, c.name);
+      html += `<td class="${self ? "self" : "cell"}${ids.length ? "" : " empty"}"${self && !ids.length ? ` aria-hidden="true"` : ""}>` +
         (ids.length ? `<div class="cellbox">${boxes}</div>` : "") + `</td>`;
     }
     html += `</tr>`;
@@ -186,7 +192,7 @@ function renderBoard() {
       (who ? `<span class="who">${esc(who)}</span>` : "") +
       (blocking ? `<span class="warn" aria-hidden="true"></span>` : "");
     btn.setAttribute("aria-label", `${id}: ${t.title}. ${STATUS_LABEL[status]}` +
-      (t.assignee ? `, assigned to ${t.assignee}, reviewed by ${t.reviewer}` : status === "progress" ? `, ${rec.name}` : "") +
+      (t.assignee ? `, assigned to ${t.assignee}${t.reviewer ? `, reviewed by ${t.reviewer}` : ", no review"}` : status === "progress" ? `, ${rec.name}` : "") +
       (needsMe ? ", waiting for your review" : "") + (blocking ? ", other tasks wait on it" : ""));
   }
   for (const tr of document.querySelectorAll(".board tbody tr")) {
@@ -204,8 +210,10 @@ function renderBoard() {
     const done = ids.filter(isDone).length;
     const waiting = ids.filter((id) => state.get(id)?.status === "review").length;
     th.querySelector(".pcount").textContent = ids.length ? `${done}/${ids.length}${waiting ? ` · ${waiting} ⧗` : ""}` : "–";
-    th.title = `${th.querySelector(".pname").textContent} reviews ${ids.length} task${ids.length === 1 ? "" : "s"}: ${done} approved` +
-      (waiting ? `, ${waiting} waiting for review` : "");
+    th.title = th.classList.contains("none")
+      ? `${ids.length} task${ids.length === 1 ? "" : "s"} with no reviewer (Figma only): the assignee marks them done, ${done} done`
+      : `${th.querySelector(".pname").textContent} reviews ${ids.length} task${ids.length === 1 ? "" : "s"}: ${done} approved` +
+        (waiting ? `, ${waiting} waiting for review` : "");
     th.classList.toggle("me", isPerson(th.dataset.person));
   }
   renderProgress(counts);
@@ -430,7 +438,7 @@ function renderTip() {
   if (t.assignee) {
     const who = (name, mine) => `<b${mine ? ` class="me"` : ""}>${esc(name)}${mine && !isDemo() ? " (you)" : ""}</b>`;
     html += `<div class="tip-people"><span>Assignee ${who(t.assignee, isAssignee(t))}</span>
-      <span>Reviewer ${who(t.reviewer, isReviewer(t))}</span></div>`;
+      <span>Reviewer ${t.reviewer ? who(t.reviewer, isReviewer(t)) : `<b>none</b> (the assignee marks it done)`}</span></div>`;
   }
   if (t.notes) html += `<div class="tip-note">${esc(t.notes)}</div>`;
 
@@ -483,7 +491,10 @@ function actionsHtml(id, status, rec) {
     // Assignee completes, reviewer approves.
     const assignee = isAssignee(t);
     if (status === "free") { if (assignee) out = b("claim", "Start working on it", "primary"); }
-    else if (status === "progress") { if (assignee) out = b("submit", "Mark complete", "primary") + b("release", "Release"); }
+    else if (status === "progress") {
+      // With no reviewer there is nobody to approve it: the assignee's word is final.
+      if (assignee) out = (t.reviewer ? b("submit", "Mark complete", "primary") : b("finish", "Mark done", "primary")) + b("release", "Release");
+    }
     else if (status === "review") {
       if (canApprove(t, rec)) out = b("approve", "Approve", "primary") + b("changes", "Request changes");
       else if (isReviewer(t)) hint = "You completed this one yourself, so someone else has to approve it.";

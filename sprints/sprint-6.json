@@ -41,12 +41,48 @@
    ]
   },
   {
-   "id": "OTHER",
-   "title": "Other tasks (no story)",
+   "id": "TEST",
+   "title": "Test infrastructure, carried over from S5 (no story)",
    "prio": "must",
    "children": [
-    "#393",
+    "#393"
+   ]
+  },
+  {
+   "id": "UI",
+   "title": "UI housekeeping (no story)",
+   "prio": "stretch",
+   "children": [
     "#513"
+   ]
+  },
+  {
+   "id": "BUG",
+   "title": "Bug found while testing the app (no story)",
+   "prio": "stretch",
+   "children": [
+    "#551",
+    "#552",
+    "#553",
+    "#554",
+    "#555",
+    "#556",
+    "#557",
+    "#558",
+    "#559"
+   ]
+  },
+  {
+   "id": "USER",
+   "title": "User feedback (no story)",
+   "prio": "stretch",
+   "children": [
+    "#560",
+    "#561",
+    "#562",
+    "#563",
+    "#564",
+    "#565"
    ]
   }
  ],
@@ -542,6 +578,306 @@
    "assignee": "Zaynab",
    "reviewer": "Ferit",
    "notes": "Not part of offline, so stretch: keeps the sprint at 20 must-haves."
+  },
+  "#551": {
+   "title": "Let the venue drag and zoom the map when picking a quest's location",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#551",
+   "existing": null,
+   "files": [
+    "ui/quest/StillRadiusMap.kt (MapUiSettings)",
+    "ui/quest/create/QuestRadiusMap.kt",
+    "tests"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Alisher"
+  },
+  "#552": {
+   "title": "Figma: rejected proofs on the venue's dashboard",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#552",
+   "existing": null,
+   "files": [
+    "Figma M2 page"
+   ],
+   "assignee": "Ece",
+   "reviewer": null,
+   "notes": "Figma only, so no reviewer."
+  },
+  "#553": {
+   "title": "Let the venue look at a proof it rejected",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#553",
+   "existing": null,
+   "files": [
+    "ui/dashboard/VenueDashboardViewModel.kt (dashboardOf)",
+    "ui/dashboard/VenueDashboardUiState.kt",
+    "ui/dashboard/VenueDashboardScreen.kt",
+    "tests"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Yiğit",
+   "notes": "observeForVenue already returns every completion: no repository change."
+  },
+  "#554": {
+   "title": "Show an empty party on the quest details before anyone accepted",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#554",
+   "existing": null,
+   "files": [
+    "ui/venuepage/QuestDetailsScreen.kt (party seats)",
+    "its Compose test"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Jiayi"
+  },
+  "#555": {
+   "title": "Show the party's proof itself to every member",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#555",
+   "existing": null,
+   "files": [
+    "ui/venuepage/VenuePageViewModel.kt",
+    "ui/venuepage/VenuePageUiState.kt",
+    "ui/venuepage/QuestDetailsScreen.kt",
+    "tests"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Ece",
+   "notes": "Follow-up of #468. storage.rules already let every joined member get the photo."
+  },
+  "#556": {
+   "title": "Give profile photos a border so they stand out from the background",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#556",
+   "existing": null,
+   "files": [
+    "the avatar / profile picture composables",
+    "tests"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Zaynab"
+  },
+  "#557": {
+   "title": "Stop reward chips from reading \"Free Free muffin\"",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#557",
+   "existing": null,
+   "files": [
+    "ui/quest/QuestChips.kt (rewardText)",
+    "ui/quest/create/RewardFields.kt (maybe)",
+    "strings",
+    "tests"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Vali"
+  },
+  "#558": {
+   "title": "Make the radius and party size readable in dark mode",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 0.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#558",
+   "existing": null,
+   "files": [
+    "the quest's radius and party size values",
+    "tests"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Ferit"
+  },
+  "#559": {
+   "title": "Use the dark map style for the venue location map",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#559",
+   "existing": null,
+   "files": [
+    "ui/venue/VenueAreaScreen.kt or ui/quest/StillRadiusMap.kt",
+    "tests"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Jiayi"
+  },
+  "#560": {
+   "title": "Figma: open a nearby quest's details from its whole card, with an \"Accept\" footer",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#560",
+   "existing": null,
+   "files": [
+    "Figma M2 page"
+   ],
+   "assignee": "Alisher",
+   "reviewer": null,
+   "notes": "Figma only, so no reviewer. Feedback from Zaynab."
+  },
+  "#561": {
+   "title": "Open a nearby quest's details by tapping anywhere on its card",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#561",
+   "existing": null,
+   "files": [
+    "ui/map/NearbyQuestPager.kt",
+    "its Compose test"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Ece"
+  },
+  "#562": {
+   "title": "Accept a quest from the nearby card's footer",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#562",
+   "existing": null,
+   "files": [
+    "ui/map/NearbyQuestPager.kt",
+    "ui/map/MapViewModel.kt",
+    "tests"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Vali"
+  },
+  "#563": {
+   "title": "Open the right quest when tapping its flag on the map",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#563",
+   "existing": null,
+   "files": [
+    "ui/map/QuestMarkers.kt",
+    "ui/map/marker/QuestPin.kt (anchor, maybe)",
+    "tests"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Zaynab",
+   "notes": "Feedback from Ece."
+  },
+  "#564": {
+   "title": "Lighten the dark mode's gray and purple",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#564",
+   "existing": null,
+   "files": [
+    "Figma colour styles",
+    "ui/theme colours",
+    "tests"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Ferit",
+   "notes": "Feedback from Ece."
+  },
+  "#565": {
+   "title": "Keep the quest pager's dots round while swiping",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 0.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#565",
+   "existing": null,
+   "files": [
+    "ui/map/NearbyQuestPager.kt (page dots)",
+    "its Compose test"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Alisher",
+   "notes": "Feedback from Ece. Check Figma first: the pill may be the design."
   }
  },
  "edges": [
@@ -747,6 +1083,97 @@
    "kind": "soft",
    "blocks": "finish",
    "reason": "starts against ProofUploadQueue.waiting and its fake"
+  },
+  {
+   "from": "#551",
+   "to": "#559",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both may change StillRadiusMap; merge one at a time"
+  },
+  {
+   "from": "#552",
+   "to": "#553",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the screen it designs; the ViewModel can start before"
+  },
+  {
+   "from": "#416",
+   "to": "#553",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change VenueDashboardViewModel and its UI state; merge one at a time"
+  },
+  {
+   "from": "#528",
+   "to": "#554",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change QuestDetailsScreen; merge one at a time"
+  },
+  {
+   "from": "#528",
+   "to": "#555",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change VenuePageViewModel and QuestDetailsScreen; merge one at a time"
+  },
+  {
+   "from": "#531",
+   "to": "#555",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change VenuePageViewModel; merge one at a time"
+  },
+  {
+   "from": "#513",
+   "to": "#558",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "same fix (accentText on dark); reuse it if merged first"
+  },
+  {
+   "from": "#560",
+   "to": "#561",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the card it designs"
+  },
+  {
+   "from": "#560",
+   "to": "#562",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "the footer it designs"
+  },
+  {
+   "from": "#561",
+   "to": "#562",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change NearbyQuestPager; merge one at a time"
+  },
+  {
+   "from": "#409",
+   "to": "#562",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change MapViewModel; merge one at a time"
+  },
+  {
+   "from": "#513",
+   "to": "#564",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change ui/theme; merge one at a time"
+  },
+  {
+   "from": "#561",
+   "to": "#565",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change NearbyQuestPager; merge one at a time"
   }
  ]
 }
