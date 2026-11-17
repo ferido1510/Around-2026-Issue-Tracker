@@ -20,7 +20,7 @@ Letters after a task ID (also explained in the board's **Boxes** legend):
 | `a`, `b`, `c` | Parts of one item that was too big for one PR; each part is its own task with its own blockers | V4.3 → V4.3a, V4.3b, V4.3c |
 
 - **Hover** a box to see its title, what blocks it, what it blocks, and the kind of each block (hard / soft / file / decision).
-- **Click** a free box to take it. It turns yellow with your name on it.
+- **Click** a box to open its actions, on a desktop as on a phone, and press a button to use one: *Start working on it* on a free box (it turns yellow with your name on it), *Mark done* or *Release* on a yellow one, and so on. A click on its own never changes anything.
 - **Click a yellow box** to *Mark done* (anyone can, in case the person who took it passed it on without releasing it) or, if it's yours, to *Release* it. Marking done turns grey and unblocks whatever was waiting on it. In sprints with assignees and reviewers it works differently, see [Assignees and reviewers](#assignees-and-reviewers).
 - **Click a grey box** to reopen it (if it was marked done by mistake).
 - On a phone, tap a box to see its details and the action buttons.
@@ -113,7 +113,7 @@ Sprint 6 and later plans give every task an `assignee` and a `reviewer`. For the
 3. **In review** (blue): the box now shows `→ reviewer`. The reviewer clicks it and chooses *Approve*, which turns it grey and unblocks what waited on it, or *Request changes*, which sends it back to yellow. The assignee can also *Take back* a task that nobody has reviewed yet.
 4. **Done** (grey ✓): the tooltip says who completed it and who approved it. The assignee or the reviewer can *Reopen* it, which puts it back to yellow.
 
-**Deferring.** The assignee of a task can put it off with *Defer* (from the box's actions; hold Shift or Alt while clicking a free box to open them without taking it), as long as it is **non-blocking**: nothing that is still open (not done, not deferred) waits on it. Otherwise the tooltip says which tasks do. A deferred task is **purple** (‖) and is *deducted* from the sprint: it isn't counted in the progress bar, the must-have and everything counters, the row and column counts or the leaderboard, so a sprint whose other tasks are done is at 100%. *Bring it back* (the assignee) undoes it and makes the task unclaimed again; a deferral can be undone at any time. A task that was in progress when it was deferred comes back free, not in progress. Whether a task is non-blocking is checked by the page from the sprint's blocking edges, not by Firestore.
+**Deferring.** The assignee of a task can put it off with *Defer* (from the box's actions), as long as it is **non-blocking**: nothing that is still open (not done, not deferred) waits on it. Otherwise the tooltip says which tasks do. A deferred task is **purple** (‖) and is *deducted* from the sprint: it isn't counted in the progress bar, the must-have and everything counters, the row and column counts or the leaderboard, so a sprint whose other tasks are done is at 100%. *Bring it back* (the assignee) undoes it and makes the task unclaimed again; a deferral can be undone at any time. A task that was in progress when it was deferred comes back free, not in progress. Whether a task is non-blocking is checked by the page from the sprint's blocking edges, not by Firestore.
 
 Details:
 - A blue box does **not** unblock anything: only approved tasks do. A task that waits on a blue one shows a ⧗ next to it in the tooltip.

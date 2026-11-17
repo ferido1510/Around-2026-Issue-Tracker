@@ -634,14 +634,9 @@ async function run(act, id) {
   }
 }
 
-function onBoxClick(btn, e) {
-  const id = btn.dataset.id;
-  const t = PLAN.tasks[id];
-  const { status } = info(id);
-  // A click takes a free task on the spot, but only for its assignee if it has one.
-  // (Hold Shift or Alt to open the box's actions instead, to defer a free task without taking it.)
-  const peek = e && (e.shiftKey || e.altKey);
-  if (lastPointer !== "touch" && live && status === "free" && (!t.assignee || isAssignee(t)) && !peek) return run("claim", id);
+// A click opens the box's actions, the same on a desktop as on a phone: nothing is
+// taken or changed until you press a button in the tooltip.
+function onBoxClick(btn) {
   showTip(btn, true);
 }
 
@@ -824,7 +819,7 @@ function wire() {
   document.addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; }, true);
   board.addEventListener("click", (e) => {
     const btn = e.target.closest(".box");
-    if (btn) onBoxClick(btn, e);
+    if (btn) onBoxClick(btn);
   });
   board.addEventListener("mouseover", (e) => {
     const btn = e.target.closest(".box");
