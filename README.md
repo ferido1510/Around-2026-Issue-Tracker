@@ -113,6 +113,8 @@ Sprint 6 and later plans give every task an `assignee` and a `reviewer`. For the
 3. **In review** (blue): the box now shows `→ reviewer`. The reviewer clicks it and chooses *Approve*, which turns it grey and unblocks what waited on it, or *Request changes*, which sends it back to yellow. The assignee can also *Take back* a task that nobody has reviewed yet.
 4. **Done** (grey ✓): the tooltip says who completed it and who approved it. The assignee or the reviewer can *Reopen* it, which puts it back to yellow.
 
+**Deferring.** The assignee of a task can put it off with *Defer* (from the box's actions; hold Shift or Alt while clicking a free box to open them without taking it), as long as it is **non-blocking**: nothing that is still open (not done, not deferred) waits on it. Otherwise the tooltip says which tasks do. A deferred task is **purple** (‖) and is *deducted* from the sprint: it isn't counted in the progress bar, the must-have and everything counters, the row and column counts or the leaderboard, so a sprint whose other tasks are done is at 100%. *Bring it back* (the assignee) undoes it and makes the task unclaimed again; a deferral can be undone at any time. A task that was in progress when it was deferred comes back free, not in progress. Whether a task is non-blocking is checked by the page from the sprint's blocking edges, not by Firestore.
+
 Details:
 - A blue box does **not** unblock anything: only approved tasks do. A task that waits on a blue one shows a ⧗ next to it in the tooltip.
 - A ringed box is yours to act on: a task you are working on (yellow ring) or one waiting for your review (blue ring). The *in review* count in the top right is the number of blue boxes.

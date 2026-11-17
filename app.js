@@ -76,6 +76,14 @@ const LEVELS = ["none", "victory", "ultra"];
 const recOf = (id) => state.get(id) ||
   (PLAN.tasks[id]?.closedBy ? { status: "done", name: PLAN.tasks[id].closedBy, closed: true } : undefined);
 const isDone = (id) => recOf(id)?.status === "done";
+const isDeferred = (id) => recOf(id)?.status === "deferred";
+
+// Deferring: an assignee can put a task off, and bring it back later, as long as
+// nothing still open waits on it. A deferred task doesn't count towards the
+// sprint's progress or its goals, so a sprint whose other tasks are all done is at 100%.
+// The tasks that still wait on `id`: not done and not deferred themselves.
+const openDependents = (id) => [...new Set(outgoing.get(id).map((e) => e.to))]
+  .filter((to) => !["done", "deferred"].includes(recOf(to)?.status));
 
 // ---------- who is who ----------
 //
@@ -107,6 +115,7 @@ function info(id) {
   const waiting = outgoing.get(id).filter((e) => !isDone(e.to));
   let status;
   if (s?.status === "done") status = "done";
+  else if (s?.status === "deferred") status = "deferred";
   else if (s?.status === "review") status = "review";
   else if (s?.status === "in-progress") status = "progress";
   else if (unmet.length) status = "blocked";
@@ -115,7 +124,7 @@ function info(id) {
   return { status, rec: s, unmet, waiting, blocking: status === "free" && waiting.length > 0 };
 }
 
-const STATUS_LABEL = { blocked: "Blocked", free: "Free", progress: "In progress", review: "In review", done: "Done" };
+const STATUS_LABEL = { blocked: "Blocked", free: "Free", progress: "In progress", review: "In review", deferred: "Deferred", done: "Done" };
 
 // ---------- board ----------
 
@@ -172,7 +181,7 @@ function buildBoard() {
 }
 
 function renderBoard() {
-  const counts = { blocked: 0, free: 0, progress: 0, review: 0, done: 0 };
+  const counts = { blocked: 0, free: 0, progress: 0, review: 0, deferred: 0, done: 0 };
   for (const btn of document.querySelectorAll(".board .box")) {
     const id = btn.dataset.id;
     const t = PLAN.tasks[id];
@@ -201,7 +210,8 @@ function renderBoard() {
   }
   for (const tr of document.querySelectorAll(".board tbody tr")) {
     // A row is an issue, or in the grid an assignee: its progress is done / all of its tasks.
-    const ids = GRID ? tasksOf("assignee", tr.dataset.person) : PLAN.rows.find((r) => r.id === tr.dataset.row).children;
+    // (Deferred tasks aren't counted.)
+    const ids = (GRID ? tasksOf("assignee", tr.dataset.person) : PLAN.rows.find((r) => r.id === tr.dataset.row).children).filter((id) => !isDeferred(id));
     const done = ids.filter(isDone).length;
     tr.querySelector(".rbar i").style.width = ids.length ? `${(100 * done) / ids.length}%` : "0%";
     tr.querySelector(".rcount").textContent = ids.length ? `${done}/${ids.length}` : "–";
@@ -210,7 +220,7 @@ function renderBoard() {
   }
   // A column is a reviewer: tasks approved / tasks they review, and how many wait for them.
   for (const th of document.querySelectorAll(".board .colhead.person")) {
-    const ids = tasksOf("reviewer", th.dataset.person);
+    const ids = tasksOf("reviewer", th.dataset.person).filter((id) => !isDeferred(id));
     const done = ids.filter(isDone).length;
     const waiting = ids.filter((id) => state.get(id)?.status === "review").length;
     th.querySelector(".pcount").textContent = ids.length ? `${done}/${ids.length}${waiting ? ` · ${waiting} ⧗` : ""}` : "–";
@@ -238,8 +248,8 @@ function boxWho(t, status, rec, mine) {
 
 function renderProgress(counts) {
   if (sweeping) return;       // the debug demo owns the bar for a few seconds
-  const total = ALL_IDS.length;
-  const pct = live ? Math.round((100 * counts.done) / total) : 0;
+  const total = ALL_IDS.length - counts.deferred;      // deferred tasks are deducted
+  const pct = live && total ? Math.round((100 * counts.done) / total) : 0;
   $("pct").textContent = live ? pct : "–";
   // One rounded bar holding two bands: done, then in progress. The done band's
   // gradient is scaled to the whole track so a short bar shows its start, not
@@ -248,20 +258,21 @@ function renderProgress(counts) {
   const filled = done + (live ? counts.progress + counts.review : 0);
   // A bar with anything in it is at least as wide as it is tall, so a single
   // task shows as a round stub rather than an oval.
-  $("barValue").style.width = filled ? `max(var(--bar-h), ${(100 * filled) / total}%)` : "0%";
+  $("barValue").style.width = filled && total ? `max(var(--bar-h), ${(100 * filled) / total}%)` : "0%";
   $("barDone").style.width = filled ? `${(100 * done) / filled}%` : "0%";
   $("barProg").style.width = filled ? `${(100 * (filled - done)) / filled}%` : "0%";
   $("barDone").style.setProperty("--track-scale", done ? String(total / done) : "1");
   $("bar").setAttribute("aria-valuenow", String(pct));
-  $("bar").classList.toggle("full", live && counts.done === total);
+  $("bar").classList.toggle("full", live && total > 0 && counts.done === total);
   $("progressMeta").textContent = live
-    ? `${counts.done} of ${total} tasks done${counts.progress ? ` · ${counts.progress} in progress` : ""}${counts.review ? ` · ${counts.review} in review` : ""}`
+    ? `${counts.done} of ${total} tasks done${counts.progress ? ` · ${counts.progress} in progress` : ""}${counts.review ? ` · ${counts.review} in review` : ""}${counts.deferred ? ` · ${counts.deferred} deferred` : ""}`
     : "Sign in to see progress";
 
-  const mustDone = MUST_IDS.filter(isDone).length;
-  $("goalMustCount").textContent = `${live ? mustDone : 0}/${MUST_IDS.length}`;
+  const mustIds = MUST_IDS.filter((id) => !isDeferred(id));
+  const mustDone = mustIds.filter(isDone).length;
+  $("goalMustCount").textContent = `${live ? mustDone : 0}/${mustIds.length}`;
   $("goalAllCount").textContent = `${live ? counts.done : 0}/${total}`;
-  const level = !live ? 0 : counts.done === total ? 2 : mustDone === MUST_IDS.length ? 1 : 0;
+  const level = !live ? 0 : total > 0 && counts.done === total ? 2 : mustIds.length > 0 && mustDone === mustIds.length ? 1 : 0;
   $("goalMust").disabled = level < 1;
   $("goalAll").disabled = level < 2;
   $("goalMust").classList.toggle("won", level >= 1);
@@ -269,7 +280,7 @@ function renderProgress(counts) {
   $("goalMust").title = level >= 1 ? "Play the victory again" : "Finish every must-have task";
   $("goalAll").title = level >= 2 ? "Play the ultra victory again" : "Finish every task, should-haves and stretch included";
 
-  for (const [k, n] of Object.entries({ Blocked: counts.blocked, Free: counts.free, Progress: counts.progress, Review: counts.review, Done: counts.done })) {
+  for (const [k, n] of Object.entries({ Blocked: counts.blocked, Free: counts.free, Progress: counts.progress, Review: counts.review, Done: counts.done, Deferred: counts.deferred })) {
     $(`n${k}`).textContent = live ? n : "–";
   }
 
@@ -321,7 +332,7 @@ function renderLeaderboard() {
 
   const people = new Map();
   for (const [id, rec] of state) {
-    if (!PLAN.tasks[id] || !rec?.uid) continue;
+    if (!PLAN.tasks[id] || !rec?.uid || rec.status === "deferred") continue;
     const p = people.get(rec.uid) || { uid: rec.uid, name: rec.name || "Someone", done: [], progress: [], review: [] };
     if (rec.status === "done") p.done.push(id);
     else if (rec.status === "review") p.review.push(id);
@@ -411,8 +422,9 @@ function edgeLine(e, otherId, met) {
   const other = PLAN.tasks[otherId];
   // Completed but not approved yet: not met, but on its way.
   const waiting = !met && state.get(otherId)?.status === "review";
-  return `<li class="${met ? "met" : waiting ? "review" : ""}"${waiting ? ` title="Completed, waiting for its review"` : ""}>
-    <span class="mark">${met ? "✓" : waiting ? "⧗" : "✗"}</span>
+  const deferred = !met && state.get(otherId)?.status === "deferred";
+  return `<li class="${met ? "met" : waiting ? "review" : deferred ? "deferred" : ""}"${waiting ? ` title="Completed, waiting for its review"` : deferred ? ` title="Deferred"` : ""}>
+    <span class="mark">${met ? "✓" : waiting ? "⧗" : deferred ? "‖" : "✗"}</span>
     <span class="eid">${esc(otherId)}</span>${kindChip(e)}
     <span class="etitle">${esc(other.title)}</span>
     <span class="reason">${esc(e.reason)}</span></li>`;
@@ -466,6 +478,8 @@ function renderTip() {
   if (status === "progress") {
     html += `<div class="tip-who">${esc(rec.name)} ${t.assignee ? "started" : "took"} it ${esc(fmtTime(rec.startedAt))}</div>`;
     if (unmet.length) html += `<div class="tip-who stale">A blocker was reopened after this was taken.</div>`;
+  } else if (status === "deferred") {
+    html += `<div class="tip-who">Deferred by ${esc(rec.name)} ${esc(fmtTime(rec.deferredAt))}. It doesn't count towards the sprint's progress.</div>`;
   } else if (status === "review") {
     html += `<div class="tip-who">${esc(rec.name)} completed it ${esc(fmtTime(rec.reviewAt))}. Waiting for ${esc(t.reviewer)} to review it.</div>`;
   } else if (status === "done") {
@@ -496,10 +510,19 @@ function actionsHtml(id, status, rec) {
   } else {
     // Assignee completes, reviewer approves.
     const assignee = isAssignee(t);
-    if (status === "free") { if (assignee) out = b("claim", "Start working on it", "primary"); }
+    // The assignee can defer a task until something else is done, but only if nothing open waits on it.
+    let defer = "";
+    if (assignee && ["free", "blocked", "progress"].includes(status)) {
+      const open = openDependents(id);
+      if (open.length) hint = `Can't be deferred: ${open.join(", ")} still ${open.length === 1 ? "waits" : "wait"} on it.`;
+      else defer = b("defer", "Defer");
+    }
+    if (status === "free") { if (assignee) out = b("claim", "Start working on it", "primary") + defer; }
+    else if (status === "blocked") out = defer;
+    else if (status === "deferred") { if (assignee) out = b("undefer", "Bring it back", "primary"); }
     else if (status === "progress") {
       // With no reviewer there is nobody to approve it: the assignee's word is final.
-      if (assignee) out = (t.reviewer ? b("submit", "Mark complete", "primary") : b("finish", "Mark done", "primary")) + b("release", "Release");
+      if (assignee) out = (t.reviewer ? b("submit", "Mark complete", "primary") : b("finish", "Mark done", "primary")) + b("release", "Release") + defer;
     }
     else if (status === "review") {
       if (canApprove(t, rec)) out = b("approve", "Approve", "primary") + b("changes", "Request changes");
@@ -591,6 +614,14 @@ async function run(act, id) {
       await store.requestChanges(sprintId, id);
       toast(`${id} is back in progress`);
     }
+    if (act === "defer") {
+      // Re-check: someone may have reopened a task that depends on it since the tooltip was drawn.
+      const open = openDependents(id);
+      if (open.length) return toast(`${id} can't be deferred: ${open.join(", ")} still wait on it`, true);
+      await store.defer(sprintId, id, user);
+      toast(`${id} deferred`);
+    }
+    if (act === "undefer") { await store.undefer(sprintId, id); toast(`${id} is back on the board`); }
     if (act === "release") { await store.release(sprintId, id, user); toast(`${id} released`); }
     if (act === "reopen") {
       if (!confirm(`Reopen ${id}? Tasks that depend on it turn red again.`)) return;
@@ -603,12 +634,14 @@ async function run(act, id) {
   }
 }
 
-function onBoxClick(btn) {
+function onBoxClick(btn, e) {
   const id = btn.dataset.id;
   const t = PLAN.tasks[id];
   const { status } = info(id);
   // A click takes a free task on the spot, but only for its assignee if it has one.
-  if (lastPointer !== "touch" && live && status === "free" && (!t.assignee || isAssignee(t))) return run("claim", id);
+  // (Hold Shift or Alt to open the box's actions instead, to defer a free task without taking it.)
+  const peek = e && (e.shiftKey || e.altKey);
+  if (lastPointer !== "touch" && live && status === "free" && (!t.assignee || isAssignee(t)) && !peek) return run("claim", id);
   showTip(btn, true);
 }
 
@@ -777,6 +810,7 @@ async function showSprint(id) {
   buildBoard();
   $("stats").classList.toggle("has-review", HAS_ASSIGNED);
   $("statReview").hidden = !HAS_ASSIGNED;
+  $("statDeferred").hidden = !HAS_ASSIGNED;
   renderIdLegend();
   renderReplays();
   if (store) subscribe();
@@ -790,7 +824,7 @@ function wire() {
   document.addEventListener("pointerdown", (e) => { lastPointer = e.pointerType || "mouse"; }, true);
   board.addEventListener("click", (e) => {
     const btn = e.target.closest(".box");
-    if (btn) onBoxClick(btn);
+    if (btn) onBoxClick(btn, e);
   });
   board.addEventListener("mouseover", (e) => {
     const btn = e.target.closest(".box");

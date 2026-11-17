@@ -2,14 +2,16 @@
 //
 // State is one Firestore document per task at sprints/{sprintId}/tasks/{taskId}.
 // A missing document means nobody has picked the task up yet.
-//   { status: "in-progress" | "review" | "done", uid, name, email, startedAt,
-//     reviewAt?, doneAt?, reviewerUid?, reviewerName? }
+//   { status: "in-progress" | "review" | "done" | "deferred", uid, name, email,
+//     startedAt?, reviewAt?, doneAt?, reviewerUid?, reviewerName?, deferredAt? }
 //
 // Tasks with no assignee in the sprint file go in-progress -> done (finish).
 // Tasks with an assignee and a reviewer go in-progress -> review (the assignee
 // completes it, submit) -> done (the reviewer approves it, approve). A reviewer
 // can send it back to in-progress (requestChanges), and a done task can be
-// reopened to in-progress (reopenAssigned).
+// reopened to in-progress (reopenAssigned). An assignee can also defer a task that
+// nothing open waits on (defer), which leaves it out of the progress until it is
+// brought back (undefer, which makes it unclaimed again).
 
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
@@ -127,6 +129,33 @@ export async function createFirebaseStore(config) {
       });
     },
 
+    // Put a task off: from unclaimed (a new record) or in progress (the same record).
+    defer(sprint, id, user) {
+      return F.runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref(sprint, id));
+        const d = snap.data();
+        if (!snap.exists()) {
+          tx.set(ref(sprint, id), {
+            status: "deferred", uid: user.uid, name: user.name, email: user.email,
+            deferredAt: F.serverTimestamp(),
+          });
+        } else if (d.status === "in-progress") {
+          tx.update(ref(sprint, id), { status: "deferred", deferredAt: F.serverTimestamp() });
+        } else {
+          throw new Error(`${id} can't be deferred any more`);
+        }
+      });
+    },
+
+    // Bring it back: the task is unclaimed again.
+    undefer(sprint, id) {
+      return F.runTransaction(db, async (tx) => {
+        const d = (await tx.get(ref(sprint, id))).data();
+        if (!d || d.status !== "deferred") throw new Error(`${id} is not deferred any more`);
+        tx.delete(ref(sprint, id));
+      });
+    },
+
     release: (sprint, id) => F.deleteDoc(ref(sprint, id)),
     reopen: (sprint, id) => F.deleteDoc(ref(sprint, id)),
   };
@@ -205,6 +234,20 @@ export function createDemoStore() {
       const { reviewAt, doneAt, reviewerUid, reviewerName, ...d } = state.get(id) || {};
       if (d.status !== "done") throw new Error(`${id} is not done`);
       state.set(id, { ...d, status: "in-progress" });
+      save(sprint, state);
+    },
+    async defer(sprint, id, u) {
+      const state = stateOf(sprint);
+      const d = state.get(id);
+      if (!d) state.set(id, { status: "deferred", uid: u.uid, name: u.name, email: u.email, deferredAt: Date.now() });
+      else if (d.status === "in-progress") state.set(id, { ...d, status: "deferred", deferredAt: Date.now() });
+      else throw new Error(`${id} can't be deferred any more`);
+      save(sprint, state);
+    },
+    async undefer(sprint, id) {
+      const state = stateOf(sprint);
+      if (state.get(id)?.status !== "deferred") throw new Error(`${id} is not deferred any more`);
+      state.delete(id);
       save(sprint, state);
     },
     async release(sprint, id) { const state = stateOf(sprint); state.delete(id); save(sprint, state); },

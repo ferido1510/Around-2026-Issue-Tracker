@@ -24,15 +24,20 @@ service cloud.firestore {
     match /sprints/{sprintId}/tasks/{taskId} {
       allow read: if isTeam();
 
-      // Take a free task: it must be recorded as yours.
+      // Take a free task, or defer it: either way it must be recorded as yours.
       allow create: if isTeam()
-        && request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'startedAt'])
-        && request.resource.data.status == 'in-progress'
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.name is string
         && request.resource.data.name.size() <= 60
-        && request.resource.data.startedAt == request.time;
+        && (
+          (request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'startedAt'])
+            && request.resource.data.status == 'in-progress'
+            && request.resource.data.startedAt == request.time)
+          || (request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'deferredAt'])
+            && request.resource.data.status == 'deferred'
+            && request.resource.data.deferredAt == request.time)
+        );
 
       // Moves between the three states. Nothing but the listed fields may change.
       //
@@ -43,6 +48,8 @@ service cloud.firestore {
       //                            it can't be the person who completed it
       //   review -> in-progress    changes requested, or the assignee takes it back
       //   done -> in-progress      reopened
+      //   in-progress -> deferred  the assignee puts it off (a free task is deferred
+      //                            by creating the record, see above)
       //
       // Who is the assignee or the reviewer lives in the sprint file, not in
       // Firestore, so the board enforces that part and these rules enforce the rest.
@@ -72,11 +79,16 @@ service cloud.firestore {
           && request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'startedAt'])
           && request.resource.data.diff(resource.data).affectedKeys()
                .hasOnly(['status', 'reviewAt', 'doneAt', 'reviewerUid', 'reviewerName']))
+
+        || (resource.data.status == 'in-progress'
+          && request.resource.data.status == 'deferred'
+          && request.resource.data.deferredAt == request.time
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'deferredAt']))
       );
 
-      // Release your own task, or reopen any done task.
+      // Release your own task, reopen any done task, or bring back any deferred one.
       allow delete: if isTeam()
-        && (resource.data.uid == request.auth.uid || resource.data.status == 'done');
+        && (resource.data.uid == request.auth.uid || resource.data.status in ['done', 'deferred']);
     }
 
     // Everything else is closed.
