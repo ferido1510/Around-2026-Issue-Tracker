@@ -21,6 +21,12 @@ let ALL_IDS = [];
 let MUST_IDS = [];
 let PEOPLE = new Set();     // normalised names of every assignee and reviewer in the sprint
 let HAS_ASSIGNED = false;   // the sprint uses the assignee / reviewer flow
+let CHAIN = [];             // [{ sprint, plan }] oldest first, ending with this sprint: the earlier ones can carry deferred tasks over
+let carryStates = new Map(); // earlier sprint id -> Set of the task ids deferred there (live)
+let carryUnsubs = [];
+let planSig = "";           // which tasks the board was last built from
+const planCache = new Map();
+let showCount = 0;
 let GRID = null;            // when every task has an assignee: the names on both axes, sorted; else null
 let GRID_NO_REVIEW = false; // some tasks have no reviewer (Figma only): the grid gets a "No review" column
 
@@ -193,6 +199,7 @@ function renderBoard() {
       (blocking ? " blocking" : "") +
       (mine ? " mine" : "") +
       (needsMe ? " needs-me" : "") +
+      (t.carriedFrom ? " carried" : "") +
       (status === "progress" && unmet.length ? " stale" : "") +
       (t.prio === "stretch" ? " stretch" : "");
     if (live && prevStatus.has(id) && prevStatus.get(id) !== status) {
@@ -444,6 +451,7 @@ function renderTip() {
     t.window[0] ? `planned Day ${t.window[0]}${t.window[1] !== t.window[0] ? "–" + t.window[1] : ""}` : "",
     t.prio === "stretch" ? "stretch" : t.prio === "should" ? "should-have" : "",
     t.github ? `GitHub ${t.github}` : "",
+    t.carriedFrom ? `carried over from ${t.carriedFrom}` : "",
   ].filter(Boolean).map(esc).join(" · ");
 
   let html = `<div class="tip-head"><span class="tip-id">${esc(id)}</span>
@@ -479,7 +487,9 @@ function renderTip() {
     html += `<div class="tip-who">${esc(rec.name)} ${t.assignee ? "started" : "took"} it ${esc(fmtTime(rec.startedAt))}</div>`;
     if (unmet.length) html += `<div class="tip-who stale">A blocker was reopened after this was taken.</div>`;
   } else if (status === "deferred") {
-    html += `<div class="tip-who">Deferred by ${esc(rec.name)} ${esc(fmtTime(rec.deferredAt))}. It doesn't count towards the sprint's progress.</div>`;
+    const next = SPRINTS[SPRINTS.findIndex((x) => x.id === sprintId) + 1];
+    html += `<div class="tip-who">Deferred by ${esc(rec.name)} ${esc(fmtTime(rec.deferredAt))}. It doesn't count towards this sprint's progress, ` +
+      `and ${next ? `is carried over to ${esc(next.name)}` : "will be carried over to the next sprint"} until it is brought back.</div>`;
   } else if (status === "review") {
     html += `<div class="tip-who">${esc(rec.name)} completed it ${esc(fmtTime(rec.reviewAt))}. Waiting for ${esc(t.reviewer)} to review it.</div>`;
   } else if (status === "done") {
@@ -734,9 +744,77 @@ function setBanner(html) {
   b.innerHTML = html || "";
 }
 
+// ---------- carrying deferred tasks over ----------
+//
+// A task deferred in a sprint is carried over to the sprint after it (the next one
+// in sprints/index.json): it shows there, as a normal task with its plan from the
+// earlier sprint, and it counts towards that sprint's progress. Bringing it back
+// in the earlier sprint takes it out of the next one again, live. Deferring a carried
+// task carries it on to the sprint after that. Only the tasks (and the blocking edges
+// among them) are carried; what was done on them stays in the earlier sprint.
+
+// This sprint's plan: its own tasks, plus the tasks deferred in the sprint before it.
+function effectivePlan() {
+  let eff = CHAIN[0].plan;
+  for (let k = 1; k < CHAIN.length; k++) {
+    const prev = CHAIN[k - 1].sprint;
+    const own = CHAIN[k].plan;
+    const deferred = carryStates.get(prev.id) || new Set();
+    const ids = Object.keys(eff.tasks).filter((id) => deferred.has(id) && !own.tasks[id]);
+    if (!ids.length) { eff = own; continue; }
+    const carried = new Set(ids);
+    const tasks = { ...own.tasks };
+    for (const id of ids) {
+      const { closedBy, ...task } = eff.tasks[id];
+      tasks[id] = { ...task, carriedFrom: task.carriedFrom || prev.name };
+    }
+    eff = {
+      rows: [...own.rows, { id: "CARRY", title: `Carried over from ${prev.name}`, prio: "must", children: ids }],
+      tasks,
+      edges: [...own.edges, ...eff.edges.filter((e) => carried.has(e.from) && carried.has(e.to))],
+    };
+  }
+  return eff;
+}
+
+function applyPlan(plan) {
+  planSig = Object.keys(plan.tasks).join("|");
+  setPlan(plan);
+  buildBoard();
+  $("stats").classList.toggle("has-review", HAS_ASSIGNED);
+  $("statReview").hidden = !HAS_ASSIGNED;
+  $("statDeferred").hidden = !HAS_ASSIGNED;
+  renderIdLegend();
+}
+
+// An earlier sprint's deferrals changed: rebuild the board if that changes what is on it.
+function refreshCarry() {
+  const plan = effectivePlan();
+  if (Object.keys(plan.tasks).join("|") === planSig) return;
+  hideTip();
+  applyPlan(plan);
+  renderBoard();
+}
+
+function subscribeCarry(sprint) {
+  for (const { sprint: earlier } of CHAIN.slice(0, -1)) {
+    carryUnsubs.push(store.subscribe(
+      earlier.id,
+      (s) => {
+        if (sprint !== sprintId) return;
+        carryStates.set(earlier.id, new Set([...s].filter(([, rec]) => rec?.status === "deferred").map(([id]) => id)));
+        refreshCarry();
+      },
+      () => { /* can't read it: carry nothing from there */ }));
+  }
+}
+
 function resetLiveState() {
   unsubscribe?.();
   unsubscribe = null;
+  carryUnsubs.forEach((off) => off());
+  carryUnsubs = [];
+  carryStates = new Map();
   state = new Map();
   live = false;
   prevStatus = new Map();
@@ -748,6 +826,7 @@ function subscribe() {
   if (!user || !sprintId) return;
   const sprint = sprintId;
   $("boardWrap").classList.remove("locked");
+  subscribeCarry(sprint);
   unsubscribe = store.subscribe(
     sprint,
     (s) => { if (sprint !== sprintId) return; state = s; live = true; renderBoard(); },
@@ -790,23 +869,36 @@ function renderSprintPicker(title) {
   sel.value = sprintId;
 }
 
+async function loadPlan(sprint) {
+  if (!planCache.has(sprint.id)) planCache.set(sprint.id, await fetchJson(`sprints/${encodeURIComponent(sprint.id)}.json`));
+  return planCache.get(sprint.id);
+}
+
 async function showSprint(id) {
   const sp = SPRINTS.find((x) => x.id === id) || SPRINTS[SPRINTS.length - 1];
-  const plan = await fetchJson(`sprints/${encodeURIComponent(sp.id)}.json`);
+  const mine = ++showCount;
+  const plan = await loadPlan(sp);
+  // The unbroken run of earlier sprints that use assignees: only they can have deferred tasks.
+  const chain = [{ sprint: sp, plan }];
+  for (let j = SPRINTS.indexOf(sp) - 1; j >= 0; j--) {
+    let earlier;
+    try { earlier = await loadPlan(SPRINTS[j]); } catch { break; }
+    // (A sprint with no tasks of its own can still carry some on, so only one that has tasks without assignees ends the run.)
+    const tasks = Object.values(earlier.tasks);
+    if (tasks.length && !tasks.some((t) => t.assignee)) break;
+    chain.unshift({ sprint: SPRINTS[j], plan: earlier });
+  }
+  if (mine !== showCount) return;       // another sprint was picked meanwhile
   resetLiveState();
   sprintId = sp.id;
-  setPlan(plan);
+  CHAIN = chain;
   $("sprintSelect").value = sp.id;
   document.title = `${$("appTitle").textContent} ${sp.name} · Tracker`;
   lsSet("tracker-sprint", sp.id);
   const url = new URL(location.href);
   url.searchParams.set("sprint", sp.id);
   history.replaceState(null, "", url);
-  buildBoard();
-  $("stats").classList.toggle("has-review", HAS_ASSIGNED);
-  $("statReview").hidden = !HAS_ASSIGNED;
-  $("statDeferred").hidden = !HAS_ASSIGNED;
-  renderIdLegend();
+  applyPlan(effectivePlan());
   renderReplays();
   if (store) subscribe();
   renderBoard();

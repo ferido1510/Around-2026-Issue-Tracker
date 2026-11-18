@@ -166,7 +166,7 @@ export async function createFirebaseStore(config) {
 export function createDemoStore() {
   const PREFIX = "around-tracker-demo:";
   const user = { uid: "demo", name: "You", email: "demo@example.com" };
-  let current = null;            // { sprint, state, onData }
+  const subs = new Map();        // sprint -> { state, onData }: the sprints being watched
 
   const load = (sprint) => {
     try { return new Map(Object.entries(JSON.parse(localStorage.getItem(PREFIX + sprint)) || {})); }
@@ -174,14 +174,14 @@ export function createDemoStore() {
   };
   const save = (sprint, state) => {
     try { localStorage.setItem(PREFIX + sprint, JSON.stringify(Object.fromEntries(state))); } catch { /* private window */ }
-    if (current?.sprint === sprint) current.onData(new Map(state));
+    const sub = subs.get(sprint);
+    if (sub) sub.onData(new Map(state));
   };
-  const stateOf = (sprint) => (current?.sprint === sprint ? current.state : load(sprint));
+  const stateOf = (sprint) => subs.get(sprint)?.state || load(sprint);
   try {
     window.addEventListener("storage", (e) => {
-      if (current && e.key === PREFIX + current.sprint) {
-        current.state = load(current.sprint);
-        current.onData(new Map(current.state));
+      for (const [sprint, sub] of subs) {
+        if (e.key === PREFIX + sprint) { sub.state = load(sprint); sub.onData(new Map(sub.state)); }
       }
     });
   } catch { /* ignore */ }
@@ -192,9 +192,10 @@ export function createDemoStore() {
     signIn: async () => {},
     signOut: async () => {},
     subscribe(sprint, onData) {
-      current = { sprint, state: load(sprint), onData };
-      onData(new Map(current.state));
-      return () => { if (current?.onData === onData) current = null; };
+      const sub = { state: load(sprint), onData };
+      subs.set(sprint, sub);
+      onData(new Map(sub.state));
+      return () => { if (subs.get(sprint) === sub) subs.delete(sprint); };
     },
     async claim(sprint, id, u) {
       const state = stateOf(sprint);

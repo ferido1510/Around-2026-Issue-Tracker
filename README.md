@@ -115,6 +115,15 @@ Sprint 6 and later plans give every task an `assignee` and a `reviewer`. For the
 
 **Deferring.** The assignee of a task can put it off with *Defer* (from the box's actions), as long as it is **non-blocking**: nothing that is still open (not done, not deferred) waits on it. Otherwise the tooltip says which tasks do. A deferred task is **purple** (‖) and is *deducted* from the sprint: it isn't counted in the progress bar, the must-have and everything counters, the row and column counts or the leaderboard, so a sprint whose other tasks are done is at 100%. *Bring it back* (the assignee) undoes it and makes the task unclaimed again; a deferral can be undone at any time. A task that was in progress when it was deferred comes back free, not in progress. Whether a task is non-blocking is checked by the page from the sprint's blocking edges, not by Firestore.
 
+**Carrying over.** Every deferred task is automatically carried over to the **next sprint** (the next one in `sprints/index.json`) and bringing it back removes it from there again. In the next sprint it is an ordinary task (free, or blocked by the other carried tasks it depends on), marked ↪ with "carried over from Sprint 6" in its hover box, and it counts towards that sprint's progress. This is live: bring a task back in Sprint 6 and it disappears from Sprint 7 straight away, defer it again and it returns. Deferring it in Sprint 7 carries it on to Sprint 8, and so on. Only the task and the blocking edges *among* the carried tasks come along (an edge to a task that isn't carried is dropped), and what was done on it stays in the earlier sprint. If the next sprint's own plan already lists the same issue number, the plan's entry is used and the task isn't carried a second time. If someone already worked on a carried task in Sprint 7 and it is then brought back in Sprint 6, it leaves Sprint 7's board but its record stays in Firestore, and returns with it if the task is deferred again.
+
+Nothing is carried until the next sprint exists. To open Sprint 7 before its plan is ready (so the carried tasks have somewhere to show), add it with an empty plan and run the script:
+
+```sh
+echo '{ "stories": [], "tasks": [] }' > data/sprint-7.json
+python3 tools/add_sprint.py data/sprint-7.json --id sprint-7 --name "Sprint 7"
+```
+
 Details:
 - A blue box does **not** unblock anything: only approved tasks do. A task that waits on a blue one shows a ⧗ next to it in the tooltip.
 - A ringed box is yours to act on: a task you are working on (yellow ring) or one waiting for your review (blue ring). The *in review* count in the top right is the number of blue boxes.
