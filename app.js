@@ -112,6 +112,11 @@ const isReviewer = (t) => !!t.reviewer && (isDemo() || (!!user && sameName(user.
 const isMine = (t, rec) => (t.assignee ? isAssignee(t) : !!rec && !!user && rec.uid === user.uid);
 // The reviewer approves, but never what they completed themselves.
 const canApprove = (t, rec) => isReviewer(t) && (isDemo() || rec?.uid !== user?.uid);
+// Admins can close any task, for when its assignee and reviewer can't be reached. This
+// decides who sees the button; Firestore only lets these emails do it (isAdmin() in
+// firestore.rules, keep the two lists the same). Demo mode has one user, who is an admin.
+const ADMIN_EMAILS = ["feritbatuhatip@gmail.com"];
+const isAdminUser = () => isDemo() || (!!user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase()));
 // Signed in under a name that isn't in this sprint's plan at all.
 const isStranger = () => !!user && !isDemo() && PEOPLE.size > 0 && !PEOPLE.has(norm(user.name));
 
@@ -340,11 +345,13 @@ function renderLeaderboard() {
   const people = new Map();
   for (const [id, rec] of state) {
     if (!PLAN.tasks[id] || !rec?.uid || rec.status === "deferred") continue;
-    const p = people.get(rec.uid) || { uid: rec.uid, name: rec.name || "Someone", done: [], progress: [], review: [] };
+    // Grouped by name, not account, so a task an admin closed counts for the person it was assigned to.
+    const key = norm(rec.name) || rec.uid;
+    const p = people.get(key) || { uid: rec.uid, key, name: rec.name || "Someone", done: [], progress: [], review: [] };
     if (rec.status === "done") p.done.push(id);
     else if (rec.status === "review") p.review.push(id);
     else if (rec.status === "in-progress") p.progress.push(id);
-    people.set(rec.uid, p);
+    people.set(key, p);
   }
   const ranked = [...people.values()].sort((a, b) =>
     b.done.length - a.done.length || (b.progress.length + b.review.length) - (a.progress.length + a.review.length) || a.name.localeCompare(b.name));
@@ -359,8 +366,8 @@ function renderLeaderboard() {
   list.innerHTML = ranked.map((p, i) => {
     const prev = ranked[i - 1];
     if (!prev || prev.done.length !== p.done.length || prev.progress.length + prev.review.length !== p.progress.length + p.review.length) rank = i + 1;
-    const me = user && p.uid === user.uid;
-    const hue = [...p.uid].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
+    const me = user && (p.uid === user.uid || p.key === norm(user.name));
+    const hue = [...p.key].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
     const title = [p.done.length ? `Done: ${p.done.join(", ")}` : "", p.review.length ? `In review: ${p.review.join(", ")}` : "",
       p.progress.length ? `In progress: ${p.progress.join(", ")}` : ""]
       .filter(Boolean).join(" · ");
@@ -495,6 +502,8 @@ function renderTip() {
   } else if (status === "done") {
     html += rec.closed
       ? `<div class="tip-who">Closed by ${esc(rec.name)} outside the board: the plan marks it done.</div>`
+      : rec.adminClosed
+      ? `<div class="tip-who">Closed by ${esc(rec.reviewerName)} as admin${t.assignee ? `, on behalf of ${esc(t.assignee)}` : ""} ${esc(fmtTime(rec.doneAt))}.</div>`
       : `<div class="tip-who">${t.assignee
         ? `Completed by ${esc(rec.name)}${rec.reviewerName ? `, approved by ${esc(rec.reviewerName)}` : ""}`
         : `Done by ${esc(rec.name)}`} ${esc(fmtTime(rec.doneAt))}</div>`;
@@ -540,8 +549,10 @@ function actionsHtml(id, status, rec) {
       if (assignee) out += b("changes", "Take back");
     } else if (status === "done") {
       if (rec.closed) hint = "Closed outside the board. To reopen it, remove its closedBy from the sprint plan.";
-      else if (assignee || isReviewer(t)) out = b("reopen", "Reopen");
+      else if (assignee || isReviewer(t) || isAdminUser()) out = b("reopen", "Reopen");
     }
+    // An admin can close anything that isn't done yet: it is marked complete and approved by them.
+    if (isAdminUser() && status !== "done") out += b("adminClose", "Close as admin");
     if (!out && !hint && isStranger()) {
       hint = `You're signed in as “${user.name}”, who isn't an assignee or reviewer in this sprint. Names are matched on the first name of your Google account.`;
     }
@@ -624,6 +635,13 @@ async function run(act, id) {
       await store.requestChanges(sprintId, id);
       toast(`${id} is back in progress`);
     }
+    if (act === "adminClose") {
+      const t = PLAN.tasks[id];
+      if (!confirm(`Close ${id} as admin?\n\nIt is marked complete and approved by you${t.assignee ? `, on behalf of ${t.assignee}` : ""}, skipping the normal review.`)) return;
+      await store.adminClose(sprintId, id, user, t.assignee);
+      burstAt(id);
+      toast(`${id} closed as admin`);
+    }
     if (act === "defer") {
       // Re-check: someone may have reopened a task that depends on it since the tooltip was drawn.
       const open = openDependents(id);
@@ -663,7 +681,7 @@ function renderAccount() {
   if (store.mode === "demo") {
     el.innerHTML = `<span class="pill">Demo mode: Firebase not configured, changes stay in this browser</span>`;
   } else if (user) {
-    el.innerHTML = `<span class="me" data-initial="${esc((user.name || "?")[0].toUpperCase())}">${esc(user.name)}</span><span class="email">${esc(user.email)}</span>
+    el.innerHTML = `<span class="me" data-initial="${esc((user.name || "?")[0].toUpperCase())}">${esc(user.name)}</span><span class="email">${esc(user.email)}</span>${isAdminUser() ? `<span class="pill" title="You can close any task from its box">admin</span>` : ""}
       <button type="button" class="btn ghost" id="signOut">Sign out</button>`;
     $("signOut").onclick = () => store.signOut();
   } else {

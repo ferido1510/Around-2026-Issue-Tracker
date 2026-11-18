@@ -19,6 +19,13 @@ service cloud.firestore {
         ];
     }
 
+    // Admins can close any task: it is recorded as completed and approved by them, for
+    // when the assignee and the reviewer can't be reached. They must also be on the team list.
+    // (Keep this in step with ADMIN_EMAILS in app.js, which decides who sees the button.)
+    function isAdmin() {
+      return isTeam() && request.auth.token.email.lower() in ['feritbatuhatip@gmail.com'];
+    }
+
     // One document per task, per sprint: sprints/{sprintId}/tasks/{taskId}
     // (e.g. sprints/sprint-2/tasks/E3.2). No document = nobody took it.
     match /sprints/{sprintId}/tasks/{taskId} {
@@ -38,6 +45,37 @@ service cloud.firestore {
             && request.resource.data.status == 'deferred'
             && request.resource.data.deferredAt == request.time)
         );
+
+      // An admin closes a task nobody has touched: it is done at once, completed and
+      // approved by the admin, under the assignee's name.
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'reviewAt', 'doneAt',
+                                                 'reviewerUid', 'reviewerName', 'adminClosed'])
+        && request.resource.data.status == 'done'
+        && request.resource.data.adminClosed == true
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.reviewerUid == request.auth.uid
+        && request.resource.data.reviewerName is string
+        && request.resource.data.reviewerName.size() <= 60
+        && request.resource.data.reviewAt == request.time
+        && request.resource.data.doneAt == request.time;
+
+      // An admin closes a task somebody started, sent for review or deferred: it is
+      // approved by the admin whoever started it (and whether or not they are its reviewer).
+      allow update: if isAdmin()
+        && resource.data.status in ['in-progress', 'review', 'deferred']
+        && request.resource.data.status == 'done'
+        && request.resource.data.adminClosed == true
+        && request.resource.data.doneAt == request.time
+        && request.resource.data.reviewerUid == request.auth.uid
+        && request.resource.data.reviewerName is string
+        && request.resource.data.reviewerName.size() <= 60
+        && request.resource.data.reviewAt == resource.data.get('reviewAt', request.time)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['status', 'doneAt', 'reviewAt', 'reviewerUid', 'reviewerName', 'adminClosed', 'deferredAt']);
 
       // Moves between the three states. Nothing but the listed fields may change.
       //
@@ -78,7 +116,7 @@ service cloud.firestore {
           && request.resource.data.status == 'in-progress'
           && request.resource.data.keys().hasOnly(['status', 'uid', 'name', 'email', 'startedAt'])
           && request.resource.data.diff(resource.data).affectedKeys()
-               .hasOnly(['status', 'reviewAt', 'doneAt', 'reviewerUid', 'reviewerName']))
+               .hasOnly(['status', 'reviewAt', 'doneAt', 'reviewerUid', 'reviewerName', 'adminClosed']))
 
         || (resource.data.status == 'in-progress'
           && request.resource.data.status == 'deferred'

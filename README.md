@@ -124,6 +124,8 @@ echo '{ "stories": [], "tasks": [] }' > data/sprint-7.json
 python3 tools/add_sprint.py data/sprint-7.json --id sprint-7 --name "Sprint 7"
 ```
 
+**Admin.** An admin can close any task that isn't done, for when its assignee and reviewer can't be reached. Their box actions get a **Close as admin** button (and *Reopen* on any done task), which asks to confirm and then marks the task complete *and* approved by the admin in one step, whatever state it was in (free, blocked, in progress, in review or deferred). The tooltip says "Closed by Ferit as admin, on behalf of Zaynab", and the task counts for its assignee on the leaderboard, not for the admin. Admins have an "admin" tag next to their name. A normal member can't do this: the Firestore rules only allow it for the emails in `isAdmin()`. **To add an admin**, add their email (lowercase, and also on the team list) to `ADMIN_EMAILS` in `app.js` *and* to `isAdmin()` in the published `firestore.rules`.
+
 Details:
 - A blue box does **not** unblock anything: only approved tasks do. A task that waits on a blue one shows a ⧗ next to it in the tooltip.
 - A ringed box is yours to act on: a task you are working on (yellow ring) or one waiting for your review (blue ring). The *in review* count in the top right is the number of blue boxes.

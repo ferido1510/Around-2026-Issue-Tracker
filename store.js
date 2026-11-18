@@ -3,7 +3,8 @@
 // State is one Firestore document per task at sprints/{sprintId}/tasks/{taskId}.
 // A missing document means nobody has picked the task up yet.
 //   { status: "in-progress" | "review" | "done" | "deferred", uid, name, email,
-//     startedAt?, reviewAt?, doneAt?, reviewerUid?, reviewerName?, deferredAt? }
+//     startedAt?, reviewAt?, doneAt?, reviewerUid?, reviewerName?, deferredAt?,
+//     adminClosed? }
 //
 // Tasks with no assignee in the sprint file go in-progress -> done (finish).
 // Tasks with an assignee and a reviewer go in-progress -> review (the assignee
@@ -11,7 +12,8 @@
 // can send it back to in-progress (requestChanges), and a done task can be
 // reopened to in-progress (reopenAssigned). An assignee can also defer a task that
 // nothing open waits on (defer), which leaves it out of the progress until it is
-// brought back (undefer, which makes it unclaimed again).
+// brought back (undefer, which makes it unclaimed again). An admin can close any task
+// that isn't done (adminClose): it is recorded as completed and approved by them.
 
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 
@@ -124,8 +126,31 @@ export async function createFirebaseStore(config) {
         if (!d || d.status !== "done") throw new Error(`${id} is not done`);
         tx.update(ref(sprint, id), {
           status: "in-progress", doneAt: F.deleteField(), reviewAt: F.deleteField(),
-          reviewerUid: F.deleteField(), reviewerName: F.deleteField(),
+          reviewerUid: F.deleteField(), reviewerName: F.deleteField(), adminClosed: F.deleteField(),
         });
+      });
+    },
+
+    // An admin closes a task: completed and approved in one step, for when the assignee and
+    // the reviewer can't be reached. A task nobody touched is recorded under the assignee's name.
+    adminClose(sprint, id, admin, assignee) {
+      return F.runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref(sprint, id));
+        const d = snap.data();
+        if (d?.status === "done") throw new Error(`${id} is already done`);
+        const now = F.serverTimestamp();
+        if (!snap.exists()) {
+          tx.set(ref(sprint, id), {
+            status: "done", uid: admin.uid, name: assignee || admin.name, email: admin.email,
+            reviewAt: now, doneAt: now, reviewerUid: admin.uid, reviewerName: admin.name, adminClosed: true,
+          });
+        } else {
+          tx.update(ref(sprint, id), {
+            status: "done", doneAt: now, ...(d.reviewAt ? {} : { reviewAt: now }),
+            reviewerUid: admin.uid, reviewerName: admin.name, adminClosed: true,
+            ...(d.deferredAt ? { deferredAt: F.deleteField() } : {}),
+          });
+        }
       });
     },
 
@@ -232,9 +257,21 @@ export function createDemoStore() {
     },
     async reopenAssigned(sprint, id) {
       const state = stateOf(sprint);
-      const { reviewAt, doneAt, reviewerUid, reviewerName, ...d } = state.get(id) || {};
+      const { reviewAt, doneAt, reviewerUid, reviewerName, adminClosed, ...d } = state.get(id) || {};
       if (d.status !== "done") throw new Error(`${id} is not done`);
       state.set(id, { ...d, status: "in-progress" });
+      save(sprint, state);
+    },
+    async adminClose(sprint, id, u, assignee) {
+      const state = stateOf(sprint);
+      const d = state.get(id);
+      if (d?.status === "done") throw new Error(`${id} is already done`);
+      const now = Date.now();
+      const { deferredAt, ...rest } = d || {};
+      state.set(id, d
+        ? { ...rest, status: "done", reviewAt: d.reviewAt || now, doneAt: now, reviewerUid: u.uid, reviewerName: u.name, adminClosed: true }
+        : { status: "done", uid: u.uid, name: assignee || u.name, email: u.email, reviewAt: now, doneAt: now,
+            reviewerUid: u.uid, reviewerName: u.name, adminClosed: true });
       save(sprint, state);
     },
     async defer(sprint, id, u) {
