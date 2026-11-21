@@ -462,7 +462,7 @@
     "strings"
    ],
    "assignee": "Vali",
-   "reviewer": "Jiayi"
+   "reviewer": "Zaynab"
   },
   "#625": {
    "title": "Cancel a queued upload with its reservation",
@@ -607,7 +607,7 @@
     "its ViewModel"
    ],
    "assignee": "Jiayi",
-   "reviewer": "Vali"
+   "reviewer": "Zaynab"
   },
   "#542": {
    "title": "Check who may join a party by code",
@@ -628,7 +628,7 @@
     "docs/firestore-schema.md"
    ],
    "assignee": "Alisher",
-   "reviewer": "Ece"
+   "reviewer": "Zaynab"
   },
   "#544": {
    "title": "Give the text fields with a separate label an accessible name",

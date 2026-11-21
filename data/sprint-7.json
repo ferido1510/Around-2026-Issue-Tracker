@@ -145,7 +145,7 @@
     },
     {
       "key": "T17", "title": "Show \"Proof not sent\" on the Quests tab", "type": "Must have", "story": "E9.9", "subId": "E9.9b",
-      "estimateHours": 2, "github": 624, "assignee": "Vali", "reviewer": "Jiayi",
+      "estimateHours": 2, "github": 624, "assignee": "Vali", "reviewer": "Zaynab",
       "blockedBy": [{ "ref": "#623", "type": "soft", "reason": "uses ProofUploadQueue.failed and retry" }],
       "blocks": [],
       "touchedFiles": ["ui/overview (ViewModel, row)", "strings"]
@@ -178,14 +178,14 @@
     },
     {
       "key": "T22", "title": "Show the party's proof itself to every member", "type": "Must have", "story": null, "subId": null,
-      "estimateHours": 3, "github": 555, "assignee": "Jiayi", "reviewer": "Vali",
+      "estimateHours": 3, "github": 555, "assignee": "Jiayi", "reviewer": "Zaynab",
       "blockedBy": [], "blocks": [],
       "touchedFiles": ["ui/venuepage (quest details)", "its ViewModel"],
       "storyNote": "No story: follow-up of #468"
     },
     {
       "key": "T23", "title": "Check who may join a party by code", "type": "Stretch", "story": null, "subId": null,
-      "estimateHours": 3, "github": 542, "assignee": "Alisher", "reviewer": "Ece",
+      "estimateHours": 3, "github": 542, "assignee": "Alisher", "reviewer": "Zaynab",
       "blockedBy": [], "blocks": [],
       "touchedFiles": ["firestore.rules", "FirestoreRulesTest", "ui/joinparty", "docs/firestore-schema.md"],
       "storyNote": "No story: follow-up of #485"
