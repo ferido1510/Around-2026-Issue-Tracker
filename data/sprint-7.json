@@ -246,6 +246,15 @@
       "blocks": [],
       "touchedFiles": ["a local record of this device's writes", "RefusedWrites"],
       "notes": "Bug. Starts with a design note: Firestore keeps no record of a refused write."
+    },
+    {
+      "key": "T32", "title": "Delete the notification tokens FCM says are gone", "type": "Stretch", "story": "E48", "subId": null,
+      "estimateHours": null, "github": 661, "assignee": "Ece", "reviewer": "Zaynab",
+      "blockedBy": [{ "ref": "#632", "type": "hard", "reason": "changes sendToUser (#660)" }],
+      "blocks": [],
+      "touchedFiles": ["functions/src/notify.ts", "functions/test/notify.test.ts"],
+      "storyNote": "Follow-up of #660's review; assignee and estimate to decide",
+      "notes": "Follow-up of #660's review. The estimate is still to decide."
     }
   ]
 }

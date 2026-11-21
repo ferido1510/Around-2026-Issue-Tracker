@@ -121,6 +121,14 @@
    "children": [
     "#559"
    ]
+  },
+  {
+   "id": "E48+",
+   "title": "Be notified when the venue answers my reservation or my proof: stretch",
+   "prio": "stretch",
+   "children": [
+    "#661"
+   ]
   }
  ],
  "tasks": {
@@ -735,6 +743,26 @@
    ],
    "assignee": "Jiayi",
    "reviewer": "Alisher"
+  },
+  "#661": {
+   "title": "Delete the notification tokens FCM says are gone",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": null,
+   "window": [
+    null,
+    null
+   ],
+   "github": "#661 (part of #629)",
+   "existing": null,
+   "files": [
+    "functions/src/notify.ts",
+    "functions/test/notify.test.ts"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Zaynab",
+   "notes": "Follow-up of #660's review. The estimate is still to decide."
   }
  },
  "edges": [
@@ -835,6 +863,13 @@
    "kind": "soft",
    "blocks": "finish",
    "reason": "shares the queue's cancel logic"
+  },
+  {
+   "from": "#632",
+   "to": "#661",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "changes sendToUser (#660)"
   }
  ]
 }
