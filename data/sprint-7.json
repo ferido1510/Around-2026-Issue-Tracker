@@ -1,0 +1,251 @@
+{
+  "sprint": "S7",
+  "feature": "Notifications",
+  "note": "Also finishes Offline (E9.9) and starts messaging (Figma and data model only). Over the guide's caps on purpose: 28 tasks, 22 must-haves. Rebalanced on 21 Nov: Ferit's new offline bugs #646 and #648 added; #634, #541, #559 and #543 moved off him.",
+  "stories": [
+    { "id": "E48", "title": "Be notified when the venue answers my reservation or my proof", "github": 629 },
+    { "id": "V23", "title": "Be notified when a party books my quest or sends a proof", "github": 630 },
+    { "id": "V15", "title": "Be notified when a party cancels their reservation", "github": 627 },
+    { "id": "E42", "title": "Message the venue about my reservation", "github": 628 },
+    { "id": "E9.9", "title": "Handle queued proof uploads that can't be sent", "github": 622 },
+    { "id": "E9", "title": "Use the app offline", "github": 406 },
+    { "id": "V2", "title": "Update my venue's name, address and picture", "github": 441 }
+  ],
+  "tasks": [
+    {
+      "key": "T1", "title": "Figma: the notifications and the permission prompt", "type": "Must have", "story": "E48", "subId": "E48.1",
+      "estimateHours": 1.5, "github": 631, "assignee": "Alisher", "reviewer": null,
+      "blockedBy": [],
+      "blocks": [
+        { "ref": "#635", "type": "decision · start", "reason": "the explanation shown before the permission dialog" },
+        { "ref": "#637", "type": "soft", "reason": "the notifications' texts" }
+      ],
+      "touchedFiles": ["Figma, M2 page"],
+      "notes": "Figma task: no reviewer."
+    },
+    {
+      "key": "T2", "title": "Set up Cloud Functions and sendToUser", "type": "Must have", "story": "E48", "subId": "E48.2",
+      "estimateHours": 4.5, "github": 632, "assignee": "Ece", "reviewer": "Alisher",
+      "blockedBy": [],
+      "blocks": [
+        { "ref": "#638", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" },
+        { "ref": "#639", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" },
+        { "ref": "#640", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" },
+        { "ref": "#641", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" },
+        { "ref": "#642", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" }
+      ],
+      "touchedFiles": ["functions/ (new)", "firebase.json", ".github/workflows/ci.yml", "README.md"],
+      "notes": "The skeleton and sendToUser stub land on day 1."
+    },
+    {
+      "key": "T3", "title": "Save the phone's notification token in Firestore", "type": "Must have", "story": "E48", "subId": "E48.3",
+      "estimateHours": 3, "github": 633, "assignee": "Yiğit", "reviewer": "Ferit",
+      "blockedBy": [],
+      "blocks": [
+        { "ref": "#634", "type": "soft", "reason": "starts against NotificationTokenRepository and its fake" },
+        { "ref": "#636", "type": "soft", "reason": "starts against NotificationTokenRepository and its fake" }
+      ],
+      "touchedFiles": ["model/notification/NotificationTokenRepository*.kt (new)", "firestore.rules", "FirestoreRulesTest", "app/src/testSupport fake", "docs/firestore-schema.md"]
+    },
+    {
+      "key": "T4", "title": "Add FCM and register the phone's token", "type": "Must have", "story": "E48", "subId": "E48.4",
+      "estimateHours": 2.5, "github": 634, "assignee": "Yiğit", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#633", "type": "soft", "reason": "uses NotificationTokenRepository.save" }],
+      "blocks": [{ "ref": "#637", "type": "file", "reason": "both change AroundMessagingService" }],
+      "touchedFiles": ["gradle/libs.versions.toml + lockfiles", "AndroidManifest.xml", "AroundMessagingService.kt (new)"]
+    },
+    {
+      "key": "T5", "title": "Ask for the notification permission after sign-in", "type": "Must have", "story": "E48", "subId": "E48.5",
+      "estimateHours": 2.5, "github": 635, "assignee": "Alisher", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#631", "type": "decision · start", "reason": "the explanation's frame" }],
+      "blocks": [],
+      "touchedFiles": ["a permission ViewModel and composable (new)", "the signed-in shell", "strings"]
+    },
+    {
+      "key": "T6", "title": "Delete the phone's token at sign-out", "type": "Must have", "story": "E48", "subId": "E48.6",
+      "estimateHours": 1.5, "github": 636, "assignee": "Yiğit", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#633", "type": "soft", "reason": "uses NotificationTokenRepository.delete" }],
+      "blocks": [],
+      "touchedFiles": ["the sign-out path (profile ViewModel)", "its tests"]
+    },
+    {
+      "key": "T7", "title": "Show a notification and open the right screen when tapped", "type": "Must have", "story": "E48", "subId": "E48.7",
+      "estimateHours": 3.5, "github": 637, "assignee": "Ferit", "reviewer": "Ece",
+      "blockedBy": [
+        { "ref": "#634", "type": "file", "reason": "adds onMessageReceived to the same service" },
+        { "ref": "#631", "type": "soft", "reason": "the notifications' texts" }
+      ],
+      "blocks": [{ "ref": "#643", "type": "soft", "reason": "the channel ids" }],
+      "touchedFiles": ["AroundMessagingService.kt", "ui/navigation (opening a route from the notification)", "strings"]
+    },
+    {
+      "key": "T8", "title": "Function: tell the party when the venue answers its reservation", "type": "Must have", "story": "E48", "subId": "E48.8",
+      "estimateHours": 3, "github": 638, "assignee": "Vali", "reviewer": "Jiayi",
+      "blockedBy": [{ "ref": "#632", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" }],
+      "blocks": [],
+      "touchedFiles": ["functions/src (new trigger)", "its test"]
+    },
+    {
+      "key": "T9", "title": "Function: tell the venue about a new reservation request", "type": "Must have", "story": "V23", "subId": "V23.1",
+      "estimateHours": 3, "github": 639, "assignee": "Yiğit", "reviewer": "Ece",
+      "blockedBy": [{ "ref": "#632", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" }],
+      "blocks": [],
+      "touchedFiles": ["functions/src (new trigger)", "its test"]
+    },
+    {
+      "key": "T10", "title": "Function: tell the party when the venue answers its proof", "type": "Must have", "story": "E48", "subId": "E48.9",
+      "estimateHours": 3, "github": 640, "assignee": "Jiayi", "reviewer": "Vali",
+      "blockedBy": [{ "ref": "#632", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" }],
+      "blocks": [],
+      "touchedFiles": ["functions/src (new trigger)", "its test"]
+    },
+    {
+      "key": "T11", "title": "Function: tell the venue when a party cancels", "type": "Must have", "story": "V15", "subId": "V15.1",
+      "estimateHours": 3, "github": 641, "assignee": "Jiayi", "reviewer": "Vali",
+      "blockedBy": [{ "ref": "#632", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" }],
+      "blocks": [],
+      "touchedFiles": ["functions/src (new trigger)", "its test"]
+    },
+    {
+      "key": "T12", "title": "Function: tell the venue when a party sends a proof", "type": "Must have", "story": "V23", "subId": "V23.2",
+      "estimateHours": 3, "github": 642, "assignee": "Vali", "reviewer": "Jiayi",
+      "blockedBy": [{ "ref": "#632", "type": "hard", "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub" }],
+      "blocks": [],
+      "touchedFiles": ["functions/src (new trigger)", "its test"]
+    },
+    {
+      "key": "T13", "title": "Notification settings in Profile", "type": "Must have", "story": "E48", "subId": "E48.10",
+      "estimateHours": 2, "github": 643, "assignee": "Alisher", "reviewer": "Ferit",
+      "blockedBy": [{ "ref": "#637", "type": "soft", "reason": "the channel ids" }],
+      "blocks": [],
+      "touchedFiles": ["ui/profile (a Notifications row)", "strings"]
+    },
+    {
+      "key": "T14", "title": "Figma: party and venue chat", "type": "Must have", "story": "E42", "subId": "E42.1",
+      "estimateHours": 2.5, "github": 644, "assignee": "Ece", "reviewer": null,
+      "blockedBy": [],
+      "blocks": [{ "ref": "#645", "type": "soft", "reason": "the data model follows the design" }],
+      "touchedFiles": ["Figma, M2 page"],
+      "notes": "Figma task: no reviewer."
+    },
+    {
+      "key": "T15", "title": "Chat data model in the Firestore schema", "type": "Must have", "story": "E42", "subId": "E42.2",
+      "estimateHours": 1.5, "github": 645, "assignee": "Ece", "reviewer": null,
+      "blockedBy": [{ "ref": "#644", "type": "soft", "reason": "the data model follows the design" }],
+      "blocks": [],
+      "touchedFiles": ["docs/firestore-schema.md"],
+      "notes": "Docs only: no reviewer."
+    },
+    {
+      "key": "T16", "title": "The upload queue reports failed uploads", "type": "Must have", "story": "E9.9", "subId": "E9.9a",
+      "estimateHours": 2, "github": 623, "assignee": "Zaynab", "reviewer": "Jiayi",
+      "blockedBy": [],
+      "blocks": [{ "ref": "#624", "type": "soft", "reason": "starts against ProofUploadQueue.failed and retry" }],
+      "touchedFiles": ["model/reservation/ProofUploadQueue*.kt", "FakeProofUploadQueue"]
+    },
+    {
+      "key": "T17", "title": "Show \"Proof not sent\" on the Quests tab", "type": "Must have", "story": "E9.9", "subId": "E9.9b",
+      "estimateHours": 2, "github": 624, "assignee": "Vali", "reviewer": "Jiayi",
+      "blockedBy": [{ "ref": "#623", "type": "soft", "reason": "uses ProofUploadQueue.failed and retry" }],
+      "blocks": [],
+      "touchedFiles": ["ui/overview (ViewModel, row)", "strings"]
+    },
+    {
+      "key": "T18", "title": "Cancel a queued upload with its reservation", "type": "Must have", "story": "E9.9", "subId": "E9.9c",
+      "estimateHours": 2, "github": 625, "assignee": "Zaynab", "reviewer": "Vali",
+      "blockedBy": [],
+      "blocks": [{ "ref": "#626", "type": "soft", "reason": "shares the queue's cancel logic" }],
+      "touchedFiles": ["model/reservation/ProofUploadQueue*.kt", "OverviewViewModel", "VenuePageViewModel"]
+    },
+    {
+      "key": "T19", "title": "Clear the upload queue at sign-out", "type": "Must have", "story": "E9.9", "subId": "E9.9d",
+      "estimateHours": 1.5, "github": 626, "assignee": "Ece", "reviewer": "Yiğit",
+      "blockedBy": [{ "ref": "#625", "type": "soft", "reason": "shares the queue's cancel logic" }],
+      "blocks": [],
+      "touchedFiles": ["model/reservation/ProofUploadQueue*.kt", "the sign-out path"]
+    },
+    {
+      "key": "T20", "title": "Disable accepting a nearby quest offline", "type": "Must have", "story": "E9", "subId": null,
+      "estimateHours": 1.5, "github": 610, "assignee": "Zaynab", "reviewer": "Jiayi",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/map (NearbyAcceptViewModel, AcceptQuestButton)"]
+    },
+    {
+      "key": "T21", "title": "Set the venue's profile picture", "type": "Must have", "story": "V2", "subId": "V2.3",
+      "estimateHours": 3, "github": 457, "assignee": "Zaynab", "reviewer": "Vali",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["model/venue", "storage.rules", "ui/venuepage", "the venue's profile"]
+    },
+    {
+      "key": "T22", "title": "Show the party's proof itself to every member", "type": "Must have", "story": null, "subId": null,
+      "estimateHours": 3, "github": 555, "assignee": "Jiayi", "reviewer": "Vali",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/venuepage (quest details)", "its ViewModel"],
+      "storyNote": "No story: follow-up of #468"
+    },
+    {
+      "key": "T23", "title": "Check who may join a party by code", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 3, "github": 542, "assignee": "Alisher", "reviewer": "Ece",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["firestore.rules", "FirestoreRulesTest", "ui/joinparty", "docs/firestore-schema.md"],
+      "storyNote": "No story: follow-up of #485"
+    },
+    {
+      "key": "T24", "title": "Give the text fields with a separate label an accessible name", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 1.5, "github": 544, "assignee": "Vali", "reviewer": "Yiğit",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["JoinPartyScreen", "CompletionScreen", "RejectProofSheet"],
+      "storyNote": "No story: accessibility follow-up"
+    },
+    {
+      "key": "T25", "title": "Cap a quest's party size at 10", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 1.5, "github": 541, "assignee": "Zaynab", "reviewer": "Alisher",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["firestore.rules", "CreateQuestViewModel"],
+      "storyNote": "No story: review follow-up"
+    },
+    {
+      "key": "T26", "title": "Keep the quest pager's dots round while swiping", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 0.5, "github": 565, "assignee": "Yiğit", "reviewer": "Alisher",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/map/NearbyQuestPager.kt"],
+      "storyNote": "No story: user feedback"
+    },
+    {
+      "key": "T27", "title": "Rename StillRadiusMap to RadiusMap", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 1, "github": 606, "assignee": "Alisher", "reviewer": "Yiğit",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/quest", "ui/venuepage", "their tests"],
+      "storyNote": "No story: review follow-up"
+    },
+    {
+      "key": "T28", "title": "Add app/src/testSupport to the ktfmt sources", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 0.5, "github": 543, "assignee": "Vali", "reviewer": "Ece",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["app/build.gradle.kts", "app/src/testSupport"],
+      "storyNote": "No story: review follow-up"
+    },
+    {
+      "key": "T29", "title": "Use the dark map style for the venue location map", "type": "Stretch", "story": null, "subId": null,
+      "estimateHours": 1, "github": 559, "assignee": "Jiayi", "reviewer": "Alisher",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ui/venue/VenueAreaScreen.kt or ui/quest/StillRadiusMap.kt"],
+      "storyNote": "No story: user feedback (added after planning)"
+    },
+    {
+      "key": "T30", "title": "Offline: stop actions that need a connection", "type": "Must have", "story": "E9", "subId": null,
+      "estimateHours": 2, "github": 646, "assignee": "Ferit", "reviewer": "Ece",
+      "blockedBy": [], "blocks": [],
+      "touchedFiles": ["ConnectivityRepository", "the guarded ViewModels"],
+      "notes": "Bug. The guards are merged (#649); done once #647 and #648 are."
+    },
+    {
+      "key": "T31", "title": "Keep refusals across restarts and tell the user", "type": "Must have", "story": "E9", "subId": null,
+      "estimateHours": 3, "github": 648, "assignee": "Ferit", "reviewer": "Yiğit",
+      "blockedBy": [{ "ref": "#647", "type": "hard", "reason": "the waiting-to-send state (done)" }],
+      "blocks": [],
+      "touchedFiles": ["a local record of this device's writes", "RefusedWrites"],
+      "notes": "Bug. Starts with a design note: Firestore keeps no record of a refused write."
+    }
+  ]
+}

@@ -1,0 +1,840 @@
+{
+ "rows": [
+  {
+   "id": "E48",
+   "title": "Be notified when the venue answers my reservation or my proof (story #629)",
+   "prio": "must",
+   "children": [
+    "#631",
+    "#632",
+    "#633",
+    "#634",
+    "#635",
+    "#636",
+    "#637",
+    "#638",
+    "#640",
+    "#643"
+   ]
+  },
+  {
+   "id": "V23",
+   "title": "Be notified when a party books my quest or sends a proof (story #630)",
+   "prio": "must",
+   "children": [
+    "#639",
+    "#642"
+   ]
+  },
+  {
+   "id": "V15",
+   "title": "Be notified when a party cancels their reservation (story #627)",
+   "prio": "must",
+   "children": [
+    "#641"
+   ]
+  },
+  {
+   "id": "E42",
+   "title": "Message the venue about my reservation (story #628)",
+   "prio": "must",
+   "children": [
+    "#644",
+    "#645"
+   ]
+  },
+  {
+   "id": "E9.9",
+   "title": "Handle queued proof uploads that can't be sent (story #622)",
+   "prio": "must",
+   "children": [
+    "#623",
+    "#624",
+    "#625",
+    "#626"
+   ]
+  },
+  {
+   "id": "E9",
+   "title": "Use the app offline (story #406)",
+   "prio": "must",
+   "children": [
+    "#610",
+    "#646",
+    "#648"
+   ]
+  },
+  {
+   "id": "V2",
+   "title": "Update my venue's name, address and picture (story #441)",
+   "prio": "must",
+   "children": [
+    "#457"
+   ]
+  },
+  {
+   "id": "FOLLOW",
+   "title": "Follow-up of #468 (no story)",
+   "prio": "must",
+   "children": [
+    "#555"
+   ]
+  },
+  {
+   "id": "FOLLOW2",
+   "title": "Follow-up of #485 (no story)",
+   "prio": "stretch",
+   "children": [
+    "#542"
+   ]
+  },
+  {
+   "id": "ACCESS",
+   "title": "Accessibility follow-up (no story)",
+   "prio": "stretch",
+   "children": [
+    "#544"
+   ]
+  },
+  {
+   "id": "REVIEW",
+   "title": "Review follow-up (no story)",
+   "prio": "stretch",
+   "children": [
+    "#541",
+    "#606",
+    "#543"
+   ]
+  },
+  {
+   "id": "USER",
+   "title": "User feedback (no story)",
+   "prio": "stretch",
+   "children": [
+    "#565"
+   ]
+  },
+  {
+   "id": "USER2",
+   "title": "User feedback (added after planning) (no story)",
+   "prio": "stretch",
+   "children": [
+    "#559"
+   ]
+  }
+ ],
+ "tasks": {
+  "#631": {
+   "title": "Figma: the notifications and the permission prompt",
+   "kind": "task",
+   "alias": "E48.1",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#631 (part of #629)",
+   "existing": null,
+   "files": [
+    "Figma, M2 page"
+   ],
+   "assignee": "Alisher",
+   "reviewer": null,
+   "notes": "Figma task: no reviewer."
+  },
+  "#632": {
+   "title": "Set up Cloud Functions and sendToUser",
+   "kind": "task",
+   "alias": "E48.2",
+   "prio": "must",
+   "size": "est. 4.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#632 (part of #629)",
+   "existing": null,
+   "files": [
+    "functions/ (new)",
+    "firebase.json",
+    ".github/workflows/ci.yml",
+    "README.md"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Alisher",
+   "notes": "The skeleton and sendToUser stub land on day 1."
+  },
+  "#633": {
+   "title": "Save the phone's notification token in Firestore",
+   "kind": "task",
+   "alias": "E48.3",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#633 (part of #629)",
+   "existing": null,
+   "files": [
+    "model/notification/NotificationTokenRepository*.kt (new)",
+    "firestore.rules",
+    "FirestoreRulesTest",
+    "app/src/testSupport fake",
+    "docs/firestore-schema.md"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Ferit"
+  },
+  "#634": {
+   "title": "Add FCM and register the phone's token",
+   "kind": "task",
+   "alias": "E48.4",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#634 (part of #629)",
+   "existing": null,
+   "files": [
+    "gradle/libs.versions.toml + lockfiles",
+    "AndroidManifest.xml",
+    "AroundMessagingService.kt (new)"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Ferit"
+  },
+  "#635": {
+   "title": "Ask for the notification permission after sign-in",
+   "kind": "task",
+   "alias": "E48.5",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#635 (part of #629)",
+   "existing": null,
+   "files": [
+    "a permission ViewModel and composable (new)",
+    "the signed-in shell",
+    "strings"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Ferit"
+  },
+  "#636": {
+   "title": "Delete the phone's token at sign-out",
+   "kind": "task",
+   "alias": "E48.6",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#636 (part of #629)",
+   "existing": null,
+   "files": [
+    "the sign-out path (profile ViewModel)",
+    "its tests"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Ferit"
+  },
+  "#637": {
+   "title": "Show a notification and open the right screen when tapped",
+   "kind": "task",
+   "alias": "E48.7",
+   "prio": "must",
+   "size": "est. 3.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#637 (part of #629)",
+   "existing": null,
+   "files": [
+    "AroundMessagingService.kt",
+    "ui/navigation (opening a route from the notification)",
+    "strings"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Ece"
+  },
+  "#638": {
+   "title": "Function: tell the party when the venue answers its reservation",
+   "kind": "task",
+   "alias": "E48.8",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#638 (part of #629)",
+   "existing": null,
+   "files": [
+    "functions/src (new trigger)",
+    "its test"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Jiayi"
+  },
+  "#640": {
+   "title": "Function: tell the party when the venue answers its proof",
+   "kind": "task",
+   "alias": "E48.9",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#640 (part of #629)",
+   "existing": null,
+   "files": [
+    "functions/src (new trigger)",
+    "its test"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Vali"
+  },
+  "#643": {
+   "title": "Notification settings in Profile",
+   "kind": "task",
+   "alias": "E48.10",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#643 (part of #629)",
+   "existing": null,
+   "files": [
+    "ui/profile (a Notifications row)",
+    "strings"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Ferit"
+  },
+  "#639": {
+   "title": "Function: tell the venue about a new reservation request",
+   "kind": "task",
+   "alias": "V23.1",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#639 (part of #630)",
+   "existing": null,
+   "files": [
+    "functions/src (new trigger)",
+    "its test"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Ece"
+  },
+  "#642": {
+   "title": "Function: tell the venue when a party sends a proof",
+   "kind": "task",
+   "alias": "V23.2",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#642 (part of #630)",
+   "existing": null,
+   "files": [
+    "functions/src (new trigger)",
+    "its test"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Jiayi"
+  },
+  "#641": {
+   "title": "Function: tell the venue when a party cancels",
+   "kind": "task",
+   "alias": "V15.1",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#641 (part of #627)",
+   "existing": null,
+   "files": [
+    "functions/src (new trigger)",
+    "its test"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Vali"
+  },
+  "#644": {
+   "title": "Figma: party and venue chat",
+   "kind": "task",
+   "alias": "E42.1",
+   "prio": "must",
+   "size": "est. 2.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#644 (part of #628)",
+   "existing": null,
+   "files": [
+    "Figma, M2 page"
+   ],
+   "assignee": "Ece",
+   "reviewer": null,
+   "notes": "Figma task: no reviewer."
+  },
+  "#645": {
+   "title": "Chat data model in the Firestore schema",
+   "kind": "task",
+   "alias": "E42.2",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#645 (part of #628)",
+   "existing": null,
+   "files": [
+    "docs/firestore-schema.md"
+   ],
+   "assignee": "Ece",
+   "reviewer": null,
+   "notes": "Docs only: no reviewer."
+  },
+  "#623": {
+   "title": "The upload queue reports failed uploads",
+   "kind": "task",
+   "alias": "E9.9a",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#623 (part of #622)",
+   "existing": null,
+   "files": [
+    "model/reservation/ProofUploadQueue*.kt",
+    "FakeProofUploadQueue"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Jiayi"
+  },
+  "#624": {
+   "title": "Show \"Proof not sent\" on the Quests tab",
+   "kind": "task",
+   "alias": "E9.9b",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#624 (part of #622)",
+   "existing": null,
+   "files": [
+    "ui/overview (ViewModel, row)",
+    "strings"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Jiayi"
+  },
+  "#625": {
+   "title": "Cancel a queued upload with its reservation",
+   "kind": "task",
+   "alias": "E9.9c",
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#625 (part of #622)",
+   "existing": null,
+   "files": [
+    "model/reservation/ProofUploadQueue*.kt",
+    "OverviewViewModel",
+    "VenuePageViewModel"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Vali"
+  },
+  "#626": {
+   "title": "Clear the upload queue at sign-out",
+   "kind": "task",
+   "alias": "E9.9d",
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#626 (part of #622)",
+   "existing": null,
+   "files": [
+    "model/reservation/ProofUploadQueue*.kt",
+    "the sign-out path"
+   ],
+   "assignee": "Ece",
+   "reviewer": "Yiğit"
+  },
+  "#610": {
+   "title": "Disable accepting a nearby quest offline",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#610 (part of #406)",
+   "existing": null,
+   "files": [
+    "ui/map (NearbyAcceptViewModel, AcceptQuestButton)"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Jiayi"
+  },
+  "#646": {
+   "title": "Offline: stop actions that need a connection",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 2 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#646 (part of #406)",
+   "existing": null,
+   "files": [
+    "ConnectivityRepository",
+    "the guarded ViewModels"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Ece",
+   "notes": "Bug. The guards are merged (#649); done once #647 and #648 are."
+  },
+  "#648": {
+   "title": "Keep refusals across restarts and tell the user",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#648 (part of #406)",
+   "existing": null,
+   "files": [
+    "a local record of this device's writes",
+    "RefusedWrites"
+   ],
+   "assignee": "Ferit",
+   "reviewer": "Yiğit",
+   "notes": "Bug. Starts with a design note: Firestore keeps no record of a refused write.",
+   "external": [
+    {
+     "ref": "#647",
+     "kind": "hard",
+     "blocks": "start",
+     "reason": "the waiting-to-send state (done)"
+    }
+   ]
+  },
+  "#457": {
+   "title": "Set the venue's profile picture",
+   "kind": "task",
+   "alias": "V2.3",
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#457 (part of #441)",
+   "existing": null,
+   "files": [
+    "model/venue",
+    "storage.rules",
+    "ui/venuepage",
+    "the venue's profile"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Vali"
+  },
+  "#555": {
+   "title": "Show the party's proof itself to every member",
+   "kind": "task",
+   "alias": null,
+   "prio": "must",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#555",
+   "existing": null,
+   "files": [
+    "ui/venuepage (quest details)",
+    "its ViewModel"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Vali"
+  },
+  "#542": {
+   "title": "Check who may join a party by code",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 3 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#542",
+   "existing": null,
+   "files": [
+    "firestore.rules",
+    "FirestoreRulesTest",
+    "ui/joinparty",
+    "docs/firestore-schema.md"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Ece"
+  },
+  "#544": {
+   "title": "Give the text fields with a separate label an accessible name",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#544",
+   "existing": null,
+   "files": [
+    "JoinPartyScreen",
+    "CompletionScreen",
+    "RejectProofSheet"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Yiğit"
+  },
+  "#541": {
+   "title": "Cap a quest's party size at 10",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#541",
+   "existing": null,
+   "files": [
+    "firestore.rules",
+    "CreateQuestViewModel"
+   ],
+   "assignee": "Zaynab",
+   "reviewer": "Alisher"
+  },
+  "#606": {
+   "title": "Rename StillRadiusMap to RadiusMap",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#606",
+   "existing": null,
+   "files": [
+    "ui/quest",
+    "ui/venuepage",
+    "their tests"
+   ],
+   "assignee": "Alisher",
+   "reviewer": "Yiğit"
+  },
+  "#543": {
+   "title": "Add app/src/testSupport to the ktfmt sources",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 0.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#543",
+   "existing": null,
+   "files": [
+    "app/build.gradle.kts",
+    "app/src/testSupport"
+   ],
+   "assignee": "Vali",
+   "reviewer": "Ece"
+  },
+  "#565": {
+   "title": "Keep the quest pager's dots round while swiping",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 0.5 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#565",
+   "existing": null,
+   "files": [
+    "ui/map/NearbyQuestPager.kt"
+   ],
+   "assignee": "Yiğit",
+   "reviewer": "Alisher"
+  },
+  "#559": {
+   "title": "Use the dark map style for the venue location map",
+   "kind": "task",
+   "alias": null,
+   "prio": "stretch",
+   "size": "est. 1 h",
+   "window": [
+    null,
+    null
+   ],
+   "github": "#559",
+   "existing": null,
+   "files": [
+    "ui/venue/VenueAreaScreen.kt or ui/quest/StillRadiusMap.kt"
+   ],
+   "assignee": "Jiayi",
+   "reviewer": "Alisher"
+  }
+ },
+ "edges": [
+  {
+   "from": "#631",
+   "to": "#635",
+   "kind": "decision",
+   "blocks": "start",
+   "reason": "the explanation shown before the permission dialog"
+  },
+  {
+   "from": "#631",
+   "to": "#637",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the notifications' texts"
+  },
+  {
+   "from": "#632",
+   "to": "#638",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub"
+  },
+  {
+   "from": "#632",
+   "to": "#639",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub"
+  },
+  {
+   "from": "#632",
+   "to": "#640",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub"
+  },
+  {
+   "from": "#632",
+   "to": "#641",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub"
+  },
+  {
+   "from": "#632",
+   "to": "#642",
+   "kind": "hard",
+   "blocks": "start",
+   "reason": "starts from N2's first commit: the functions/ skeleton and the sendToUser stub"
+  },
+  {
+   "from": "#633",
+   "to": "#634",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "starts against NotificationTokenRepository and its fake"
+  },
+  {
+   "from": "#633",
+   "to": "#636",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "starts against NotificationTokenRepository and its fake"
+  },
+  {
+   "from": "#634",
+   "to": "#637",
+   "kind": "file",
+   "blocks": "start",
+   "reason": "both change AroundMessagingService"
+  },
+  {
+   "from": "#637",
+   "to": "#643",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the channel ids"
+  },
+  {
+   "from": "#644",
+   "to": "#645",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "the data model follows the design"
+  },
+  {
+   "from": "#623",
+   "to": "#624",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "starts against ProofUploadQueue.failed and retry"
+  },
+  {
+   "from": "#625",
+   "to": "#626",
+   "kind": "soft",
+   "blocks": "finish",
+   "reason": "shares the queue's cancel logic"
+  }
+ ]
+}
